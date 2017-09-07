@@ -12,5 +12,12 @@
         android:textAppearance="?android:textAppearanceLarge"
         android:layout_gravity="center"
         android:layout_margin="10dp"/>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:id="@+id/rvTBHocPhan">
+
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
