@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">QuanLyLichHoc</string>
+    <string-array name="tab_name">
+        <item>TB Học </item>
+        <item>TB Chung</item>
+        <item>Lịch học</item>
+    </string-array>
+</resources>
