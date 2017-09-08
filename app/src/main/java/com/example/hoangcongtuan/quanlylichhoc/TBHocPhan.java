@@ -53,7 +53,7 @@ public class TBHocPhan extends Fragment {
                     tbObj = dtSnapshot.getValue(ThongBaoObj.class);
                     hocPhanAdapter.addThongBao(new ThongBao(tbObj.day, tbObj.event, tbObj.context));
                 }
-                //hocPhanAdapter.notifyDataSetChanged();
+                hocPhanAdapter.notifyDataSetChanged();
 
             }
 
