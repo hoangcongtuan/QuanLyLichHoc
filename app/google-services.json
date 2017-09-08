@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "929950476484",
+    "firebase_url": "https://server-dut.firebaseio.com",
+    "project_id": "server-dut",
+    "storage_bucket": "server-dut.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929950476484:android:bb10c1b5b1355326",
+        "android_client_info": {
+          "package_name": "com.example.hoangcongtuan.quanlylichhoc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "929950476484-qsh30rd7lq0r2o1acd2mbhurimadn88s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-S2imlLIiwJwvUQw_j7vdks57f4-7MRY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

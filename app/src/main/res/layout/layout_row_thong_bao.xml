@@ -1,46 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/layout_contain">
-        <ImageView
+    android:layout_height="wrap_content">
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/card_margin"
+        android:layout_marginBottom="@dimen/card_margin"
+        android:layout_marginLeft="@dimen/card_margin_left_right"
+        android:layout_marginRight="@dimen/card_margin_left_right"
+        android:elevation="2dp"
+        card_view:cardCornerRadius="@dimen/card_album_radius">
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icn_thongBao"
-            android:id="@+id/imgIcnThongBao"
-            android:layout_margin="5dp"
-            android:layout_toLeftOf="@+id/tvTBThoiGian"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="07/09/2017"
-            android:layout_margin="5dp"
-            android:id="@+id/tvTBThoiGian"
-            android:textColor="@color/colorTBThoiGian"/>
-    </LinearLayout>
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/colorNewFeedHeader"
+                android:id="@+id/layout_contain">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:background="@color/colorNewFeedHeader"
+                    android:padding="@dimen/view_padding">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icn_thongbao"
+                        android:id="@+id/imgIcnThongBao"
+                        android:layout_margin="@dimen/text_margin"
+                        android:layout_gravity="center_vertical"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="07/09/2017"
+                        android:layout_margin="@dimen/text_margin"
+                        android:id="@+id/tvTBThoiGian"
+                        android:textColor="@color/colorTBThoiGian"
+                        android:textSize="@dimen/time_size"
+                        android:layout_gravity="center_vertical"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/icn_down_arow"
+                        android:layout_margin="@dimen/text_margin"/>
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_dots"
+                        android:layout_gravity="right"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorNewFeedHeaderBorder"
+                    android:layout_gravity="bottom"/>
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_below="@+id/layout_contain">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thông báo đến lớp: [14.Nh25] Tuốc bin"
+                    android:id="@+id/tvTBTieude"
+                    android:layout_margin="@dimen/text_margin"
+                    android:textColor="@color/colorTBTieuDe"
+                    android:textSize="@dimen/tittle_size"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thầy/Cô nhắn: Lớp NGHỈ HỌC (Tiết:7-8) ngày: 07/09/2017"
+                    android:id="@+id/tvTBNoiDung"
+                    android:layout_margin="@dimen/text_margin"
+                    android:layout_below="@+id/tvTBTieude"
+                    android:textSize="@dimen/content_size"
+                    android:textColor="@color/colorTBNoiDung"/>
+            </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Thông báo đến lớp: [14.Nh25] Tuốc bin"
-        android:id="@+id/tvTBTieude"
-        android:layout_margin="5dp"
-        android:layout_below="@+id/layout_contain"
-        android:textColor="@color/colorTBTieuDe"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Thầy/Cô nhắn: Lớp NGHỈ HỌC (Tiết:7-8) ngày: 07/09/2017"
-        android:id="@+id/tvTBNoiDung"
-        android:layout_margin="5dp"
-        android:layout_below="@+id/tvTBTieude"
-        android:textAppearance="?android:textAppearanceLarge"
-        android:textColor="@color/colorTBNoiDung"/>
+
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package com.example.hoangcongtuan.quanlylichhoc.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,25 +31,38 @@ public class TBHocPhanAdapter extends RecyclerView.Adapter<TBHocPhanAdapter.Thon
         }
     }
 
-    public TBHocPhanAdapter(List <)
+    public void addThongBao(ThongBao tb) {
+        lstThongBao.add(tb);
+    }
+
+    public TBHocPhanAdapter() {
+        lstThongBao = new ArrayList<>();
+    }
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+    public ThongBaoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_row_thong_bao, parent, false);
+        return new ThongBaoHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(ThongBaoHolder holder, int position) {
-
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+        ThongBao tb = lstThongBao.get(position);
+        holder.tvTBThoiGian.setText(tb.getStrDate());
+        holder.tvTBTieuDe.setText(tb.getTittle());
+        holder.tvThongBaoNoiDung.setText(tb.getContent());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return lstThongBao.size();
+    }
+
+    public List<ThongBao> getLstThongBao() {
+        return lstThongBao;
+    }
+
+    public void setLstThongBao(List<ThongBao> lstThongBao) {
+        this.lstThongBao = lstThongBao;
     }
 
 

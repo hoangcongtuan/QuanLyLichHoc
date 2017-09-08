@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         pagerAdapter.addFragment(new TBHocPhan(), strTabs[0]);
         pagerAdapter.addFragment(new TBChung(), strTabs[1]);
         pagerAdapter.addFragment(new LichHoc(), strTabs[2]);
+
         viewPager.setAdapter(pagerAdapter);
     }
 

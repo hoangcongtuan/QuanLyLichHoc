@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_margin">5dp</dimen>
+    <dimen name="view_padding">5dp</dimen>
+    <dimen name="time_size">15sp</dimen>
+    <dimen name="tittle_size">17sp</dimen>
+    <dimen name="content_size">19sp</dimen>
+    <dimen name="card_margin">5dp</dimen>
+    <dimen name="card_margin_left_right">8dp</dimen>
+    <dimen name="card_album_radius">3dp</dimen>
+</resources>
