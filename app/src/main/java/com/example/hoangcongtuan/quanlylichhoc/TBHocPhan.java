@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 /**
  * Created by hoangcongtuan on 9/6/17.
+ * Java code cua fragment thong bao lop hoc phan
  */
 
 public class TBHocPhan extends Fragment {
@@ -43,8 +44,39 @@ public class TBHocPhan extends Fragment {
         return  viewGroup;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = (RecyclerView)getView().findViewById(R.id.rvTBHocPhan);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        hocPhanAdapter = new TBHocPhanAdapter(recyclerView, getContext());
+        hocPhanAdapter.notifyDataSetChanged();
+
+        recyclerView.setAdapter(hocPhanAdapter);
+
+        //set call back
+        hocPhanAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                Log.d(TAG, "onLoadMore: ");
+                hocPhanAdapter.addThongBao(null);
+                hocPhanAdapter.addThongBao(null);
+                hocPhanAdapter.notifyDataSetChanged();
+                hocPhanAdapter.itemLoadCount += hocPhanAdapter.LOAD_MORE_DELTA;
+                tbHocPhanRef.removeEventListener(tbHocPhanEvenListener);
+                tbHocPhanRef.limitToFirst(hocPhanAdapter.itemLoadCount).addListenerForSingleValueEvent(tbHocPhanEvenListener);
+            }
+        });
+        loadData();
+    }
+
     public void loadData() {
         database = FirebaseDatabase.getInstance().getReference();
+        //them loading item
         hocPhanAdapter.addThongBao(null);
         hocPhanAdapter.addThongBao(null);
         hocPhanAdapter.notifyDataSetChanged();
@@ -54,13 +86,15 @@ public class TBHocPhan extends Fragment {
                 ThongBaoObj tbObj;
                 Iterable<DataSnapshot> lstThongBao;
                 lstThongBao  = dataSnapshot.getChildren();
+
                 //xoa loading itemt
                 hocPhanAdapter.removeLastThongBao();
                 hocPhanAdapter.removeLastThongBao();
                 int count = 0;
                 for (DataSnapshot dtSnapshot :
-                     lstThongBao) {
+                        lstThongBao) {
                     if (count >= hocPhanAdapter.itemLoaded) {
+                        //load tin moi
                         tbObj = dtSnapshot.getValue(ThongBaoObj.class);
                         hocPhanAdapter.addThongBao(new ThongBao(tbObj.day, tbObj.event, tbObj.context));
                         Log.d(TAG, "onDataChange: load item moi");
@@ -83,32 +117,6 @@ public class TBHocPhan extends Fragment {
         tbHocPhanRef = database.child("lop_hoc_phan/data/");
         tbHocPhanRef.limitToFirst(hocPhanAdapter.itemLoadCount).addListenerForSingleValueEvent(tbHocPhanEvenListener);
 
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        recyclerView = (RecyclerView)getView().findViewById(R.id.rvTBHocPhan);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        hocPhanAdapter = new TBHocPhanAdapter(recyclerView, getContext());
-        hocPhanAdapter.notifyDataSetChanged();
-        recyclerView.setAdapter(hocPhanAdapter);
-        hocPhanAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore() {
-                Log.d(TAG, "onLoadMore: ");
-                hocPhanAdapter.addThongBao(null);
-                hocPhanAdapter.addThongBao(null);
-                hocPhanAdapter.notifyDataSetChanged();
-                hocPhanAdapter.itemLoadCount += hocPhanAdapter.LOAD_MORE_DELTA;
-                tbHocPhanRef.removeEventListener(tbHocPhanEvenListener);
-                tbHocPhanRef.limitToFirst(hocPhanAdapter.itemLoadCount).addListenerForSingleValueEvent(tbHocPhanEvenListener);
-            }
-        });
-        loadData();
     }
 
 }

@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Created by hoangcongtuan on 9/6/17.
+ * Adapter cho ViewPager
  */
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
