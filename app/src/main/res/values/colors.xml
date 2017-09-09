@@ -9,4 +9,6 @@
     <color name="colorNewFeddBackground">#e9eaee</color>
     <color name="colorNewFeedHeader">#f6f7f9</color>
     <color name="colorNewFeedHeaderBorder">#dddee2</color>
+    <color name="colorNewFeedLoading">#f4f5f7</color>
+    <color name="colorNewFeedLoadingDark">#dbdde1</color>
 </resources>

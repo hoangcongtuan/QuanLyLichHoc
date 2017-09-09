@@ -6,10 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.hoangcongtuan.quanlylichhoc.adapter.OnLoadMoreListener;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.TBHocPhanAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBaoObj;
@@ -30,6 +32,8 @@ public class TBHocPhan extends Fragment {
     private TBHocPhanAdapter hocPhanAdapter;
     RecyclerView recyclerView;
     DatabaseReference database;
+    DatabaseReference tbHocPhanRef;
+    ValueEventListener tbHocPhanEvenListener;
 
 
     @Nullable
@@ -41,20 +45,34 @@ public class TBHocPhan extends Fragment {
 
     public void loadData() {
         database = FirebaseDatabase.getInstance().getReference();
-        ValueEventListener tbHocPhanEvenListener = new ValueEventListener() {
+        hocPhanAdapter.addThongBao(null);
+        hocPhanAdapter.addThongBao(null);
+        hocPhanAdapter.notifyDataSetChanged();
+        tbHocPhanEvenListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ThongBaoObj tbObj;
-                ThongBao tb;
                 Iterable<DataSnapshot> lstThongBao;
                 lstThongBao  = dataSnapshot.getChildren();
+                //xoa loading itemt
+                hocPhanAdapter.removeLastThongBao();
+                hocPhanAdapter.removeLastThongBao();
+                int count = 0;
                 for (DataSnapshot dtSnapshot :
                      lstThongBao) {
-                    tbObj = dtSnapshot.getValue(ThongBaoObj.class);
-                    hocPhanAdapter.addThongBao(new ThongBao(tbObj.day, tbObj.event, tbObj.context));
-                }
-                hocPhanAdapter.notifyDataSetChanged();
+                    if (count >= hocPhanAdapter.itemLoaded) {
+                        tbObj = dtSnapshot.getValue(ThongBaoObj.class);
+                        hocPhanAdapter.addThongBao(new ThongBao(tbObj.day, tbObj.event, tbObj.context));
+                        Log.d(TAG, "onDataChange: load item moi");
+                    }
+                    count++;
 
+                }
+                //tinh lai so item da load
+                hocPhanAdapter.itemLoaded = count;
+                hocPhanAdapter.itemLoadCount = count;
+                hocPhanAdapter.notifyDataSetChanged();
+                hocPhanAdapter.isLoading = false;
             }
 
             @Override
@@ -62,23 +80,35 @@ public class TBHocPhan extends Fragment {
 
             }
         };
-        DatabaseReference tbHocPhanRef = database.child("lop_hoc_phan/data/");
-        tbHocPhanRef.addListenerForSingleValueEvent(tbHocPhanEvenListener);
+        tbHocPhanRef = database.child("lop_hoc_phan/data/");
+        tbHocPhanRef.limitToFirst(hocPhanAdapter.itemLoadCount).addListenerForSingleValueEvent(tbHocPhanEvenListener);
 
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        hocPhanAdapter = new TBHocPhanAdapter();
-
-        hocPhanAdapter.notifyDataSetChanged();
 
         recyclerView = (RecyclerView)getView().findViewById(R.id.rvTBHocPhan);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        hocPhanAdapter = new TBHocPhanAdapter(recyclerView, getContext());
+        hocPhanAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(hocPhanAdapter);
+        hocPhanAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                Log.d(TAG, "onLoadMore: ");
+                hocPhanAdapter.addThongBao(null);
+                hocPhanAdapter.addThongBao(null);
+                hocPhanAdapter.notifyDataSetChanged();
+                hocPhanAdapter.itemLoadCount += hocPhanAdapter.LOAD_MORE_DELTA;
+                tbHocPhanRef.removeEventListener(tbHocPhanEvenListener);
+                tbHocPhanRef.limitToFirst(hocPhanAdapter.itemLoadCount).addListenerForSingleValueEvent(tbHocPhanEvenListener);
+            }
+        });
         loadData();
     }
+
 }

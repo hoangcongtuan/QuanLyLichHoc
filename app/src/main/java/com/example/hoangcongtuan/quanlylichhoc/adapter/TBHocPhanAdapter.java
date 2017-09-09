@@ -1,9 +1,14 @@
 package com.example.hoangcongtuan.quanlylichhoc.adapter;
 
+import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
@@ -12,44 +17,125 @@ import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by hoangcongtuan on 9/7/17.
  */
 
-public class TBHocPhanAdapter extends RecyclerView.Adapter<TBHocPhanAdapter.ThongBaoHolder> {
+public class TBHocPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<ThongBao> lstThongBao;
+    private OnLoadMoreListener onLoadMoreListener;
+    private Context mContext;
+
+    public boolean isLoading = false;
+    private int lastVisibleItem;
+    public final static int LOAD_MORE_DELTA = 5;
+    public int itemLoadCount = 5;
+    public int itemLoaded;
 
     public class ThongBaoHolder extends RecyclerView.ViewHolder {
 
         private TextView tvTBThoiGian, tvTBTieuDe, tvThongBaoNoiDung;
+        private ImageView btnDots;
         public ThongBaoHolder(View itemView) {
             super(itemView);
             tvTBThoiGian = (TextView)itemView.findViewById(R.id.tvTBThoiGian);
             tvTBTieuDe = (TextView)itemView.findViewById(R.id.tvTBTieude);
             tvThongBaoNoiDung = (TextView)itemView.findViewById(R.id.tvTBNoiDung);
+            btnDots = (ImageView)itemView.findViewById(R.id.btnDots);
         }
+    }
+
+    public class ThongBaoHolderLoading extends RecyclerView.ViewHolder {
+
+        public ThongBaoHolderLoading(View itemView) {
+            super(itemView);
+        }
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        this.onLoadMoreListener = onLoadMoreListener;
     }
 
     public void addThongBao(ThongBao tb) {
         lstThongBao.add(tb);
     }
 
-    public TBHocPhanAdapter() {
-        lstThongBao = new ArrayList<>();
+    public void removeLastThongBao() {
+        lstThongBao.remove(lstThongBao.size() - 1);
     }
-    @Override
-    public ThongBaoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_row_thong_bao, parent, false);
-        return new ThongBaoHolder(itemView);
+
+    public TBHocPhanAdapter(RecyclerView recyclerView, Context context) {
+        lstThongBao = new ArrayList<>();
+        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+        this.mContext = context;
+        isLoading = false;
+        itemLoadCount = LOAD_MORE_DELTA;
+        itemLoaded = 0;
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                //Log.d(TAG, "onScrolled: last visible item: " + lastVisibleItem);
+                if (itemLoadCount == (lastVisibleItem + 1)) {
+                    if (onLoadMoreListener != null) {
+                        isLoading = true;
+                        Log.d(TAG, "onScrolled: load more");
+                        onLoadMoreListener.onLoadMore();
+                    }
+                }
+
+            }
+        });
     }
 
     @Override
-    public void onBindViewHolder(ThongBaoHolder holder, int position) {
-        ThongBao tb = lstThongBao.get(position);
-        holder.tvTBThoiGian.setText(tb.getStrDate());
-        holder.tvTBTieuDe.setText(tb.getTittle());
-        holder.tvThongBaoNoiDung.setText(tb.getContent());
+    public int getItemViewType(int position) {
+        //return super.getItemViewType(position);
+        return lstThongBao.get(position) == null ? 1 : 0;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView;
+        if (viewType == 0) {
+            itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_row_thong_bao, parent, false);
+            return new ThongBaoHolder(itemView);
+        }
+
+        else {
+            itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_row_loading, parent, false);
+            return new ThongBaoHolderLoading(itemView);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ThongBaoHolder) {
+
+            final ThongBaoHolder thongBaoHolder = (ThongBaoHolder)holder;
+
+            ThongBao tb = lstThongBao.get(position);
+            thongBaoHolder.tvTBThoiGian.setText(tb.getStrDate());
+            thongBaoHolder.tvTBTieuDe.setText(tb.getTittle());
+            thongBaoHolder.tvThongBaoNoiDung.setText(tb.getContent());
+            thongBaoHolder.btnDots.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showPopupNewFeed(thongBaoHolder.btnDots);
+                }
+            });
+
+        }
+    }
+
+    public void showPopupNewFeed(View view) {
+        PopupMenu popupMenu = new PopupMenu(mContext, view);
+        popupMenu.inflate(R.menu.menu_new_feed);
+        popupMenu.show();
     }
 
     @Override

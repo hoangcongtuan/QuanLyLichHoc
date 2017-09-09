@@ -12,10 +12,13 @@ import android.view.ViewGroup;
  */
 
 public class TBChung extends Fragment {
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup)inflater.inflate(R.layout.fragment_tb_chung, container, false);
         return  viewGroup;
     }
+
+
 }
