@@ -5,6 +5,6 @@ package com.example.hoangcongtuan.quanlylichhoc.adapter;
  * call back khi nguoi dung keo bang tin xuong, se load them tin moi
  */
 
-public interface OnLoadMoreListener {
+public interface OnLoadMoreListener_backup {
     void onLoadMore();
 }

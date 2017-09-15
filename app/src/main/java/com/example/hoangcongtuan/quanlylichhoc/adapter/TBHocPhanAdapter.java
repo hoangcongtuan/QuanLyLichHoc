@@ -37,6 +37,7 @@ public class TBHocPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public final static int LOAD_MORE_DELTA = 5;    //so luong tin moi lan load
     public int itemLoadCount = 5;       //so ban tin se load
     public int itemLoaded;              //so ban tin da load
+    public boolean allItemLoaded;
 
     //hold noi dung cua moi ban tin
     public class ThongBaoHolder extends RecyclerView.ViewHolder {
@@ -78,6 +79,7 @@ public class TBHocPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
         this.mContext = context;
         isLoading = false;
+        allItemLoaded = false;
         itemLoadCount = LOAD_MORE_DELTA;
         itemLoaded = 0;
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -88,14 +90,21 @@ public class TBHocPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 //Log.d(TAG, "onScrolled: last visible item: " + lastVisibleItem);
                 if (itemLoadCount == (lastVisibleItem + 1)) {   //da keo xuong item cuoi cua ban tin
                     if (onLoadMoreListener != null) {           //load ban tin tiep theo
-                        isLoading = true;
-                        Log.d(TAG, "onScrolled: load more");
-                        onLoadMoreListener.onLoadMore();
+                        if (!allItemLoaded) {
+                            isLoading = true;
+                            Log.d(TAG, "onScrolled: load more");
+                            onLoadMoreListener.onLoadMore();
+                        }
+
                     }
                 }
 
             }
         });
+    }
+
+    public interface OnLoadMoreListener {
+        void onLoadMore();
     }
 
     //neu thong bao chua load no se la null

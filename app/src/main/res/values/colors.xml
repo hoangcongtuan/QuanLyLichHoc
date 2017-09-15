@@ -11,5 +11,4 @@
     <color name="colorNewFeedHeaderBorder">#dddee2</color>
     <color name="colorNewFeedLoading">#f4f5f7</color>
     <color name="colorNewFeedLoadingDark">#dbdde1</color>
-    <color name="colorTabLayout"></color>
 </resources>

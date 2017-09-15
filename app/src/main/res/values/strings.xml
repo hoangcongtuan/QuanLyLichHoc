@@ -5,4 +5,10 @@
         <item>TB Chung</item>
         <item>Lịch học</item>
     </string-array>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="facebook_app_id">1183042115172735</string>
+    <string name="fb_login_protocol_scheme">fb1183042115172735</string>
+
+
 </resources>

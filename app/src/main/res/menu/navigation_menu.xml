@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="Chức năng">
+        <menu>
+            <item
+                android:id="@+id/item_nhac_nho"
+                android:title="Nhắc nhỡ"
+                android:icon="@android:drawable/ic_lock_idle_alarm"/>
+            <item
+                android:id="@+id/item_thay_doi_HP"
+                android:title="Thay đổi Học phần"
+                android:icon="@android:drawable/ic_input_get"/>
+        </menu>
+    </item>
+    <item
+        android:title="Thiết lập">
+        <menu>
+            <item
+                android:id="@+id/item_cat_dat"
+                android:title="Cài đặt"
+                android:icon="@android:drawable/ic_menu_manage"/>
+            <item
+                android:id="@+id/item_dang_xuat"
+                android:title="Đăng xuất"
+                android:icon="@android:drawable/ic_lock_power_off"/>
+        </menu>
+
+    </item>
+</menu>

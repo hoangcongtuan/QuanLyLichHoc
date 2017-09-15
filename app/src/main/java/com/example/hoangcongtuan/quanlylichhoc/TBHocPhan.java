@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.hoangcongtuan.quanlylichhoc.adapter.OnLoadMoreListener;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.TBHocPhanAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBaoObj;
@@ -37,18 +36,20 @@ public class TBHocPhan extends Fragment {
     ValueEventListener tbHocPhanEvenListener;
 
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup viewGroup = (ViewGroup)inflater.inflate(R.layout.fragment_tb_hocphan, container, false);
-        return  viewGroup;
-    }
+        View rootView = (ViewGroup)inflater.inflate(R.layout.fragment_tb_hocphan, container, false);
+        Log.d(TAG, "onCreateView: ");
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        recyclerView = (RecyclerView)getView().findViewById(R.id.rvTBHocPhan);
+        recyclerView = (RecyclerView)rootView.findViewById(R.id.rvTBHocPhan);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -56,10 +57,8 @@ public class TBHocPhan extends Fragment {
         hocPhanAdapter = new TBHocPhanAdapter(recyclerView, getContext());
         hocPhanAdapter.notifyDataSetChanged();
 
-        recyclerView.setAdapter(hocPhanAdapter);
-
         //set call back
-        hocPhanAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+        hocPhanAdapter.setOnLoadMoreListener(new TBHocPhanAdapter.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
                 Log.d(TAG, "onLoadMore: ");
@@ -71,7 +70,16 @@ public class TBHocPhan extends Fragment {
                 tbHocPhanRef.limitToFirst(hocPhanAdapter.itemLoadCount).addListenerForSingleValueEvent(tbHocPhanEvenListener);
             }
         });
+        recyclerView.setAdapter(hocPhanAdapter);
         loadData();
+        return  rootView;
+    }
+
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG, "onViewCreated: ");
     }
 
     public void loadData() {
@@ -87,7 +95,7 @@ public class TBHocPhan extends Fragment {
                 Iterable<DataSnapshot> lstThongBao;
                 lstThongBao  = dataSnapshot.getChildren();
 
-                //xoa loading itemt
+                //xoa loading item
                 hocPhanAdapter.removeLastThongBao();
                 hocPhanAdapter.removeLastThongBao();
                 int count = 0;
@@ -102,6 +110,11 @@ public class TBHocPhan extends Fragment {
                     count++;
 
                 }
+                if (count == hocPhanAdapter.itemLoaded) {
+                    Log.d(TAG, "onDataChange: all item loaded");
+                    hocPhanAdapter.allItemLoaded = true;
+                }
+
                 //tinh lai so item da load
                 hocPhanAdapter.itemLoaded = count;
                 hocPhanAdapter.itemLoadCount = count;
