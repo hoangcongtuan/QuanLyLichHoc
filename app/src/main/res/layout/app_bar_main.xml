@@ -1,16 +1,15 @@
-<android.support.design.widget.AppBarLayout android:layout_width="match_parent"
+<android.support.design.widget.AppBarLayout
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <include
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        tools:layout_scrollFlags="scroll|enterAlways"
-        tools:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        layout="@layout/toolbar_layout"
+        />
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"

@@ -10,5 +10,7 @@
     <string name="facebook_app_id">1183042115172735</string>
     <string name="fb_login_protocol_scheme">fb1183042115172735</string>
 
+    <string name="welcom_title">Welcom</string>
+
 
 </resources>

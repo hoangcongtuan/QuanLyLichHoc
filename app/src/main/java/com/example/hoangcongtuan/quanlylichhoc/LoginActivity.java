@@ -3,6 +3,8 @@ package com.example.hoangcongtuan.quanlylichhoc;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -10,14 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -38,6 +38,10 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.Arrays;
 
+/**
+ * Man hinh dang nhap
+ */
+
 
 public class LoginActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
@@ -51,6 +55,7 @@ public class LoginActivity extends AppCompatActivity
     private CallbackManager callbackManager;
     private TextView tvLoginUser;
     private ProgressBar progressBarLogin;
+    private CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,7 @@ public class LoginActivity extends AppCompatActivity
 
         tvLoginUser = (TextView)findViewById(R.id.tvLoginUser);
         progressBarLogin = (ProgressBar)findViewById(R.id.progresBar_login);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
 
         tvLoginUser.setVisibility(View.INVISIBLE);
         progressBarLogin.setVisibility(View.INVISIBLE);
@@ -76,6 +82,8 @@ public class LoginActivity extends AppCompatActivity
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+        //GoogleSingleton.getsInstance(this);
 
         btnLoginFb = (Button)findViewById(R.id.btnLoginFb);
         btnLoginGg = (Button)findViewById(R.id.btnLoginGg);
@@ -95,7 +103,7 @@ public class LoginActivity extends AppCompatActivity
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "onSuccess: ");
-                startAuthWithFirebase(Profile.getCurrentProfile().getName());
+                startAuthWithFirebase();
                 handleFbLoginResult(loginResult.getAccessToken());
             }
 
@@ -107,6 +115,8 @@ public class LoginActivity extends AppCompatActivity
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "onError: ");
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Đăng nhập Facebook thất bại!!", Snackbar.LENGTH_INDEFINITE);
+                snackbar.show();
             }
         });
 
@@ -130,7 +140,8 @@ public class LoginActivity extends AppCompatActivity
                         }
                         else {
                             Log.d(TAG, "onComplete: Failed");
-                            Toast.makeText(LoginActivity.this, "Auth Failure", Toast.LENGTH_LONG).show();
+                            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Thất bại, có vẻ email của bạn đã được sử dụng!!", Snackbar.LENGTH_INDEFINITE);
+                            snackbar.show();
                             finishAuthWithFirebase();
                         }
                     }
@@ -144,28 +155,28 @@ public class LoginActivity extends AppCompatActivity
         switch (requestCode) {
             case RC_SIGN_IN:
                 GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-                handleSignInResult(googleSignInResult);
+                handleGgSignInResult(googleSignInResult);
                 break;
         }
     }
 
-    public void handleSignInResult(GoogleSignInResult result) {
+    public void handleGgSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult: " + result.isSuccess());
         if (result.isSuccess()) {
             GoogleSignInAccount signInAccount = result.getSignInAccount();
-            startAuthWithFirebase(signInAccount.getDisplayName());
+            startAuthWithFirebase();
             firebaseAuthWithGoogle(signInAccount);
         }
         else {
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Đăng nhập  thất bại!!", Snackbar.LENGTH_INDEFINITE);
+            snackbar.show();
             finishAuthWithFirebase();
         }
 
     }
 
-    public void startAuthWithFirebase(String userName) {
+    public void startAuthWithFirebase() {
         progressBarLogin.setVisibility(View.VISIBLE);
-        tvLoginUser.setVisibility(View.VISIBLE);
-        tvLoginUser.setText("Đang đăng nhập với " + userName);
     }
 
     public void finishAuthWithFirebase() {
@@ -188,7 +199,8 @@ public class LoginActivity extends AppCompatActivity
                         }
                         else {
                             Log.d(TAG, "onComplete: failure");
-                            Toast.makeText(LoginActivity.this, "Auth Failure", Toast.LENGTH_LONG).show();
+                            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Đăng nhập Facebook thất bại!!", Snackbar.LENGTH_INDEFINITE);
+                            snackbar.show();
 
                         }
                     }
@@ -196,7 +208,7 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void handleFirebaseLoginSuccess(FirebaseUser user) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, SetupActivity.class);
         finishAuthWithFirebase();
         startActivity(intent);
     }

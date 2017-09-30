@@ -9,4 +9,7 @@
     <dimen name="card_margin_left_right">8dp</dimen>
     <dimen name="card_album_radius">3dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="textNormal">15sp</dimen>
+    <dimen name="stepperSize">30dp</dimen>
+    <dimen name="layoutPadding">10dp</dimen>
 </resources>

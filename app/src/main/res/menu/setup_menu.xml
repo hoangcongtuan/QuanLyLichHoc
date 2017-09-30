@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/item_dang_xuat"
+        android:title="Đăng xuất"
+        android:icon="@android:drawable/ic_lock_power_off"/>
+</menu>
