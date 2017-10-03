@@ -174,39 +174,5 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
 
             }
         });
-//        dbListThongTinLopHocPhan.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//
-//                LopHPObj itemLopHP;
-//                try {
-//                    String key = dataSnapshot.getKey();
-//                    itemLopHP = dataSnapshot.getValue(LopHPObj.class);
-//                    insertLopHocPhan(new LopHP(key, itemLopHP));
-//                }catch (Exception e){
-//                    Toast.makeText(mContext, e.toString(), Toast.LENGTH_LONG).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
     }
 }
