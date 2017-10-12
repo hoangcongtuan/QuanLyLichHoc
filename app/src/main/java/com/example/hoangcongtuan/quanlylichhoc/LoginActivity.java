@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -162,6 +163,7 @@ public class LoginActivity extends AppCompatActivity
 
     public void handleGgSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult: " + result.isSuccess());
+        Log.d(TAG, "handleGgSignInResult: " + result.getStatus().getStatusMessage());
         if (result.isSuccess()) {
             GoogleSignInAccount signInAccount = result.getSignInAccount();
             startAuthWithFirebase();
@@ -199,7 +201,7 @@ public class LoginActivity extends AppCompatActivity
                         }
                         else {
                             Log.d(TAG, "onComplete: failure");
-                            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Đăng nhập Facebook thất bại!!", Snackbar.LENGTH_INDEFINITE);
+                            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Đăng nhập Google thất bại!!", Snackbar.LENGTH_INDEFINITE);
                             snackbar.show();
 
                         }
@@ -228,7 +230,8 @@ public class LoginActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Toast.makeText(this, connectionResult.getErrorMessage(), Toast.LENGTH_LONG).show();
+        Log.d(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
     }
 
     @Override

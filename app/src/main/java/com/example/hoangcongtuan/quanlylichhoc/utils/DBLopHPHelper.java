@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
-import android.widget.Toast;
+import android.util.Log;
 
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHPObj;
@@ -34,6 +34,14 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
     private DatabaseReference dbListThongTinLopHocPhan;
 
     private static DBLopHPHelper sInstance;
+
+    private OnCheckDB onCheckDB;
+    private OnLoadData onLoadData;
+
+    public void setOnLoadData(OnLoadData onLoadData) {
+        this.onLoadData = onLoadData;
+    }
+
     public static DBLopHPHelper getsInstance(Context context) {
         if (sInstance == null)
             sInstance = new DBLopHPHelper(context);
@@ -45,6 +53,10 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         this.mContext = context;
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         dbListThongTinLopHocPhan = database.child(PATH_INFO_ALL_LOP_HOC_PHAN);
+    }
+
+    public void setOnCheckDB(OnCheckDB onCheckDB) {
+        this.onCheckDB = onCheckDB;
     }
 
     @Override
@@ -121,9 +133,13 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         int count = getAllLopHocPhan().getCount();
         if (count <= 0) {
             //Toast.makeText(mContext, "Loading data", Toast.LENGTH_LONG).show();
+            onCheckDB.onStartDownload();
+            Log.d(TAG, "checkDB: start download");
             loadData();
         } else {
-            Toast.makeText(mContext, "ok", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, "ok", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "checkDB: db available");
+            onCheckDB.onDBAvailable();
         }
     }
 
@@ -134,7 +150,7 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Toast.makeText(mContext, "Start Load", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, "Start Load", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -143,6 +159,7 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
             LopHPObj lopHPObj;
             for (DataSnapshot snapshot: dataSnapshots[0].getChildren()) {
                 lopHPObj = snapshot.getValue(LopHPObj.class);
+                //onLoadData.onLoad(lopHPObj.getTen_hoc_phan());
                 maHP = snapshot.getKey();
                 insertLopHocPhan(new LopHP(maHP, lopHPObj));
                 //Log.d(TAG, "onDataChange: " + maHP);
@@ -153,13 +170,14 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         @Override
         protected void onPostExecute(String dataSnapshot) {
             super.onPostExecute(dataSnapshot);
-            Toast.makeText(mContext, "Finish Load", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, "Finish Load", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "onPostExecute: finish download");
+            onCheckDB.onDownloadFinish();
         }
     }
 
 
     private void loadData() {
-
 
         dbListThongTinLopHocPhan.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -175,4 +193,17 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
             }
         });
     }
+
+    public interface OnCheckDB {
+        public void onDBAvailable();
+        public void onDownloadFinish();
+        public void onStartDownload();
+    }
+
+
+    public interface OnLoadData {
+        public void onLoad(String string);
+    }
+
+
 }

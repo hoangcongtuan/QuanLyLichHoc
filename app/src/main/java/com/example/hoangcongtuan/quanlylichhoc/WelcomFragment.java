@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class WelcomFragment extends Fragment implements View.OnClickListener {
 
+    private final static String TAG = WelcomFragment.class.getName();
+
     private static final int REQUEST_IMAGE_PICK = 0;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_IMAGE_CROP = 2;
@@ -36,6 +39,8 @@ public class WelcomFragment extends Fragment implements View.OnClickListener {
     ImageButton btnPickGallery;
     public ImageView ivImage;
     public Boolean isLoadImage;
+    public Bitmap bitmap;
+    private WelcomFragInterface welcomFragInterface;
 
     private String mCurrentPhotoPath;
 
@@ -142,7 +147,8 @@ public class WelcomFragment extends Fragment implements View.OnClickListener {
                 Uri uri = result.getUri();
                 try {
                     isLoadImage = true;
-                    ivImage.setImageBitmap(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri));
+                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                    ivImage.setImageBitmap(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -159,4 +165,17 @@ public class WelcomFragment extends Fragment implements View.OnClickListener {
         //CropImage.activity(uri).start(getActivity());
     }
 
+    public interface WelcomFragInterface {
+        void onBitmapAvailable();
+    }
+
+    public void setWelcomFragInterface(WelcomFragInterface welcomFragInterface) {
+        this.welcomFragInterface = welcomFragInterface;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: ");
+    }
 }

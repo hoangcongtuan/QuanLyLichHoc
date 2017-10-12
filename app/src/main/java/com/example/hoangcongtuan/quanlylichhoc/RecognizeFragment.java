@@ -12,14 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by hoangcongtuan on 9/27/17.
@@ -55,16 +55,14 @@ public class RecognizeFragment extends Fragment {
     }
 
     public void recognize(Bitmap bitmap) {
-        String str;
-        str = processImage(bitmap);
-        str = str.replace(',', '.').replace('.', '_').replace(" ", "");
+        ArrayList<String> arrayList;
+        arrayList = processImage(bitmap);
+        //str = str.replace(',', '.').replace('.', '_').replace(" ", "");
 
-        List<String> list;
-        list = Arrays.asList(str.split("\\n"));
 
 
         lstMaHP.clear();
-        for (String i : list) {
+        for (String i : arrayList) {
             lstMaHP.add(i);
 
         }
@@ -74,7 +72,7 @@ public class RecognizeFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    public String processImage(Bitmap bitmap) {
+    public ArrayList<String> processImage(Bitmap bitmap) {
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity()).build();
         if(!textRecognizer.isOperational()) {
             Log.e(TAG, "processImage: ");
@@ -84,15 +82,24 @@ public class RecognizeFragment extends Fragment {
         else {
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
             SparseArray<TextBlock> textBlocks = textRecognizer.detect(frame);
-            StringBuilder list = new StringBuilder();
-            if (textBlocks.size() == 0)
-                return null;
-            for(int i = 0; i < textBlocks.size(); i++) {
-                TextBlock item = textBlocks.get(i);
-                if (item != null)
-                    list.append(item.getValue().toString() + System.lineSeparator());
+            String blocks = "";
+            String lines = "";
+            ArrayList<String> arrayList = new ArrayList<>();
+            String words = "";
+            for (int index = 0; index < textBlocks.size(); index++) {
+                //extract scanned text blocks here
+                TextBlock tBlock = textBlocks.valueAt(index);
+                for (Text line : tBlock.getComponents()) {
+                    arrayList.add(line.getValue());
+                }
             }
-            return list.toString();
+            if (textBlocks.size() == 0) {
+                Toast.makeText(getActivity(), "Scan Failed: Found nothing to scan", Toast.LENGTH_LONG).show();
+                return null;
+                //scanResults.setText("Scan Failed: Found nothing to scan");
+            } else {
+                return arrayList;
+            }
         }
 
     }
@@ -100,5 +107,17 @@ public class RecognizeFragment extends Fragment {
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
         imageView.setImageBitmap(bitmap);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: ");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
     }
 }
