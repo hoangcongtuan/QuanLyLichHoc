@@ -17,7 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class DBLopHPHelper extends SQLiteOpenHelper {
-    private static final String TAG = "SQLiteOpenHelper";
+    private static final String TAG = DBLopHPHelper.class.getName();
 
     private static final String DATABASE_NAME = "SQLiteInfo.db";
     private static final int DATABASE_VERSION = 1;
@@ -114,6 +114,7 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
             lopHP.ten_hoc_phan = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_LOP_HOC_PHAN));
             lopHP.tkb = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_TKB));
         }
+        cursor.close();
         return lopHP;
     }
 
