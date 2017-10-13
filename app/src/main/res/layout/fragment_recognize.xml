@@ -9,8 +9,8 @@
                android:layout_margin="5dp"
                android:id="@+id/imgHocPhan"
                android:layout_gravity="center_horizontal"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
+               android:layout_width="match_parent"
+               android:layout_height="200dp"
                app:srcCompat="@drawable/googleg_standard_color_18" />
 
            <ListView

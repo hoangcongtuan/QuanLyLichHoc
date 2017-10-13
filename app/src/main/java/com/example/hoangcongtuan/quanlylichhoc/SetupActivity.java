@@ -1,6 +1,9 @@
 package com.example.hoangcongtuan.quanlylichhoc;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -14,10 +17,15 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.StepPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager;
+import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -25,6 +33,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener,
         NavigationView.OnNavigationItemSelectedListener{
@@ -42,6 +51,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private WelcomFragment welcomFragment;
     private RecognizeFragment recognizeFragment;
     private PrepareFragment prepareFragment;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -76,7 +87,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         welcomFragment.setWelcomFragInterface(new WelcomFragment.WelcomFragInterface() {
             @Override
             public void onBitmapAvailable() {
-                //btnNext.setEnabled(true);
+                btnNext.setEnabled(true);
             }
         });
         recognizeFragment = new RecognizeFragment();
@@ -108,6 +119,23 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onPageSelected(int position) {
                 Log.d(TAG, "onPageSelected: " + position);
+                switch (position) {
+                    case STEP_PREPARE:
+                        btnNext.setEnabled(false);
+                        btnBack.setEnabled(false);
+                        break;
+                    case STEP_GET_IMAGE:
+                        btnBack.setEnabled(false);
+                        if(welcomFragment.bitmap != null)
+                            btnNext.setEnabled(true);
+                        else
+                            btnNext.setEnabled(false);
+                        break;
+                    case STEP_RECONGNIZE:
+                        btnNext.setEnabled(true);
+                        btnBack.setEnabled(true);
+                }
+
             }
 
             @Override
@@ -142,6 +170,37 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         currentStep = STEP_PREPARE;
         setStepper(currentStep);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        final Uri imageUrl = firebaseUser.getPhotoUrl();
+        String userName = firebaseUser.getDisplayName();
+
+        TextView tvUserName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tvUserName);
+        final ImageView imgAvatar = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.imgAvatar);
+
+        tvUserName.setText(userName);
+
+        ImageRequest imageRequest = new ImageRequest(
+                imageUrl.toString(),
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        imgAvatar.setImageBitmap(response);
+                    }
+                },
+                0,
+                0,
+                ImageView.ScaleType.CENTER_CROP,
+                Bitmap.Config.RGB_565,
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "onErrorResponse: ");
+                    }
+                }
+        );
+
+        Utils.VolleyUtils.getsInstance(getApplicationContext()).getRequestQueue().add(imageRequest);
        // DBLopHPHelper.getsInstance(this).checkDB();
     }
 
@@ -162,8 +221,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 tvStep3.setTextColor(Color.WHITE);
                 tvStep3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.background_circle));
 
-//                btnBack.setEnabled(false);
-//                btnNext.setEnabled(false);
                 break;
             case STEP_GET_IMAGE:
                 tvStep1.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorStepperText));
@@ -235,6 +292,13 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btnNext:
                 if(currentStep < STEP_FINISH)
                     currentStep++;
+                else {
+                    //finsish setup, go to main Activity
+                    Intent intent = new Intent(this, MainActivity.class);
+                    //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
                 setStepper(currentStep);
                 break;
         }
@@ -255,7 +319,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 });
 
                 LoginManager.getInstance().logOut();
-
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
                 finish();
                 break;
         }

@@ -1,6 +1,8 @@
 package com.example.hoangcongtuan.quanlylichhoc;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -41,6 +44,11 @@ public class WelcomFragment extends Fragment implements View.OnClickListener {
     public Boolean isLoadImage;
     public Bitmap bitmap;
     private WelcomFragInterface welcomFragInterface;
+    private Activity activity;
+    AlertDialog.Builder alertBuilder;
+    AlertDialog alertDialog;
+    Button btnOk;
+    private Uri imageUri;
 
     private String mCurrentPhotoPath;
 
@@ -56,7 +64,22 @@ public class WelcomFragment extends Fragment implements View.OnClickListener {
         btnPickGallery.setOnClickListener(this);
         btnPickCamera.setOnClickListener(this);
 
+        alertBuilder = new AlertDialog.Builder(getActivity());
+        alertBuilder.setTitle("Crop Guide");
+        LayoutInflater inflater1 = getActivity().getLayoutInflater();
+        View dialogView = inflater1.inflate(R.layout.crop_guide_dialog_layout, null);
+        alertBuilder.setView(dialogView);
+        alertBuilder.setPositiveButton("Da hieu", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                cropImage(imageUri);
+            }
+        });
 
+        alertDialog = alertBuilder.create();
+
+
+        activity = getActivity();
         isLoadImage = false;
 
         return rootView;
@@ -114,21 +137,23 @@ public class WelcomFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode != Activity.RESULT_OK) {
             return;
         }
         switch(requestCode){
             case REQUEST_IMAGE_CAPTURE:
-                Uri uriImage = Uri.fromFile(new File(mCurrentPhotoPath));
-                cropImage(uriImage);
+                imageUri = Uri.fromFile(new File(mCurrentPhotoPath));
+                alertDialog.show();
+
                 break;
 
             case REQUEST_IMAGE_PICK:
                 if(data !=null)
                 {
-                    cropImage(data.getData());
+                    imageUri = data.getData();
+                    alertDialog.show();
                 }
                 break;
             case REQUEST_IMAGE_CROP:
@@ -149,9 +174,11 @@ public class WelcomFragment extends Fragment implements View.OnClickListener {
                     isLoadImage = true;
                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                     ivImage.setImageBitmap(bitmap);
+                    welcomFragInterface.onBitmapAvailable();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                break;
 
             default:
                 break;
@@ -159,8 +186,8 @@ public class WelcomFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private void cropImage(Uri uri) {
 
+    private void cropImage(final Uri uri) {
         CropImage.activity(uri).start(getActivity(), this);
         //CropImage.activity(uri).start(getActivity());
     }

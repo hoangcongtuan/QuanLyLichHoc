@@ -57,12 +57,16 @@ public class RecognizeFragment extends Fragment {
     public void recognize(Bitmap bitmap) {
         ArrayList<String> arrayList;
         arrayList = processImage(bitmap);
-        //str = str.replace(',', '.').replace('.', '_').replace(" ", "");
 
-
-
+        if(arrayList == null) {
+            Toast.makeText(getActivity(), "Khong co du lieu nao!", Toast.LENGTH_SHORT).show();
+            lstMaHP.clear();
+            adapter.notifyDataSetChanged();
+            return;
+        }
         lstMaHP.clear();
         for (String i : arrayList) {
+            i = i.replace(" ", "").replace(",", ".").replace(".", "_");
             lstMaHP.add(i);
 
         }
@@ -72,7 +76,7 @@ public class RecognizeFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    public ArrayList<String> processImage(Bitmap bitmap) {
+    public ArrayList<String> processImage(Bitmap bitmap) throws NullPointerException{
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity()).build();
         if(!textRecognizer.isOperational()) {
             Log.e(TAG, "processImage: ");
@@ -82,10 +86,7 @@ public class RecognizeFragment extends Fragment {
         else {
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
             SparseArray<TextBlock> textBlocks = textRecognizer.detect(frame);
-            String blocks = "";
-            String lines = "";
             ArrayList<String> arrayList = new ArrayList<>();
-            String words = "";
             for (int index = 0; index < textBlocks.size(); index++) {
                 //extract scanned text blocks here
                 TextBlock tBlock = textBlocks.valueAt(index);
@@ -94,7 +95,7 @@ public class RecognizeFragment extends Fragment {
                 }
             }
             if (textBlocks.size() == 0) {
-                Toast.makeText(getActivity(), "Scan Failed: Found nothing to scan", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), "Scan Failed: Found nothing to scan", Toast.LENGTH_LONG).show();
                 return null;
                 //scanResults.setText("Scan Failed: Found nothing to scan");
             } else {

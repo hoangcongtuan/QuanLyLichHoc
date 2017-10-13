@@ -43,8 +43,7 @@
             android:theme="@style/Base.Theme.AppCompat"/>
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".SetupActivity" />
-        <activity android:name=".SQLiteDB"></activity>
+        <activity android:name=".SetupActivity"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

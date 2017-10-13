@@ -213,6 +213,7 @@ public class LoginActivity extends AppCompatActivity
         Intent intent = new Intent(this, SetupActivity.class);
         finishAuthWithFirebase();
         startActivity(intent);
+        finish();
     }
 
     @Override

@@ -33,6 +33,7 @@ public class SplashActivity extends AppCompatActivity {
             //chuyen den man hinh dang nhap
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+            finish();
         }
         else {
             //chuyen den mang hinh chinh
@@ -41,6 +42,7 @@ public class SplashActivity extends AppCompatActivity {
             //Intent intent = new Intent(this, SQLiteDB.class);
             Log.d(TAG, "onStart: Photo url = " + user.getPhotoUrl());
             startActivity(intent);
+            finish();
 
         }
     }

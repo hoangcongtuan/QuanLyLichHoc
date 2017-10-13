@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 LoginManager.getInstance().logOut();
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
                 break;
 
         }
