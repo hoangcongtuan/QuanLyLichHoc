@@ -1,12 +1,15 @@
 package com.example.hoangcongtuan.quanlylichhoc;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -32,14 +35,13 @@ public class FinishFragment extends Fragment {
     private ArrayList<LopHP> listLopHP;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_finish, container, false);
 
         getWidgets(rootView);
@@ -48,6 +50,29 @@ public class FinishFragment extends Fragment {
 
 
         return rootView;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.tkb_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        int position = info.position;
+        int id = item.getItemId();
+        switch (id){
+            case R.id.menu_remove:
+                listLopHP.remove(position);
+                tkbAdapter.notifyDataSetChanged();
+                break;
+            case R.id.menu_edit:
+                break;
+        }
+        return super.onContextItemSelected(item);
     }
 
     private void init() {
@@ -68,7 +93,7 @@ public class FinishFragment extends Fragment {
     private void setWidget() {
 
         lvTKB.setAdapter(tkbAdapter);
-
+        registerForContextMenu(lvTKB);
     }
 
     private void setWidgetEvent() {
@@ -91,6 +116,7 @@ public class FinishFragment extends Fragment {
         Toast.makeText(getContext(), "listLopHP.size() = " + listLopHP.size(), Toast.LENGTH_SHORT).show();
         tkbAdapter.notifyDataSetChanged();
     }
+
     public void addLopHP(String maHP) {
         LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(maHP);
         if (lopHP == null){
@@ -123,7 +149,5 @@ public class FinishFragment extends Fragment {
         }
         return -1;
     }
-
-
 
 }
