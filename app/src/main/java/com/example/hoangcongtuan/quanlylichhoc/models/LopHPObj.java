@@ -7,8 +7,8 @@ package com.example.hoangcongtuan.quanlylichhoc.models;
 
 
 public class LopHPObj {
-    public String ten_giang_vien;
-    public String ten_hoc_phan;
+    public String tenGV;
+    public String tenHP;
     public String tkb;
 
 
@@ -16,20 +16,20 @@ public class LopHPObj {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public String getTen_giang_vien() {
-        return ten_giang_vien;
+    public String getTenGV() {
+        return tenGV;
     }
 
-    public void setTen_giang_vien(String ten_giang_vien) {
-        this.ten_giang_vien = ten_giang_vien;
+    public void setTenGV(String tenGV) {
+        this.tenGV = tenGV;
     }
 
-    public String getTen_hoc_phan() {
-        return ten_hoc_phan;
+    public String getTenHP() {
+        return tenHP;
     }
 
-    public void setTen_hoc_phan(String ten_hoc_phan) {
-        this.ten_hoc_phan = ten_hoc_phan;
+    public void setTenHP(String tenHP) {
+        this.tenHP = tenHP;
     }
 
     public String getTkb() {

@@ -88,9 +88,9 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
     public boolean insertLopHocPhan(LopHP lopHP) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(HOCPHAN_COLUMN_MAHP, lopHP.ma_hoc_phan);
-        contentValues.put(HOCPHAN_COLUMN_GIANG_VIEN, lopHP.ten_giang_vien);
-        contentValues.put(HOCPHAN_COLUMN_LOP_HOC_PHAN, lopHP.ten_hoc_phan);
+        contentValues.put(HOCPHAN_COLUMN_MAHP, lopHP.maHP);
+        contentValues.put(HOCPHAN_COLUMN_GIANG_VIEN, lopHP.tenGV);
+        contentValues.put(HOCPHAN_COLUMN_LOP_HOC_PHAN, lopHP.tenHP);
         contentValues.put(HOCPHAN_COLUMN_TKB, lopHP.tkb);
         db.insert(HOCPHAN_TABLE_NAME, null, contentValues);
         db.close();
@@ -100,11 +100,11 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
     public boolean updateLopHocPhan(LopHP lopHP) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(HOCPHAN_COLUMN_MAHP, lopHP.ma_hoc_phan);
-        contentValues.put(HOCPHAN_COLUMN_GIANG_VIEN, lopHP.ten_giang_vien);
-        contentValues.put(HOCPHAN_COLUMN_LOP_HOC_PHAN, lopHP.ten_hoc_phan);
+        contentValues.put(HOCPHAN_COLUMN_MAHP, lopHP.maHP);
+        contentValues.put(HOCPHAN_COLUMN_GIANG_VIEN, lopHP.tenGV);
+        contentValues.put(HOCPHAN_COLUMN_LOP_HOC_PHAN, lopHP.tenHP);
         contentValues.put(HOCPHAN_COLUMN_TKB, lopHP.tkb);
-        db.update(HOCPHAN_TABLE_NAME, contentValues, HOCPHAN_COLUMN_MAHP + " = ? ", new String[]{lopHP.ma_hoc_phan});
+        db.update(HOCPHAN_TABLE_NAME, contentValues, HOCPHAN_COLUMN_MAHP + " = ? ", new String[]{lopHP.maHP});
         return true;
     }
 
@@ -112,13 +112,14 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + HOCPHAN_TABLE_NAME + " WHERE " +
                 HOCPHAN_COLUMN_MAHP + "=?", new String[]{id});
-        if (cursor == null)
+        if (cursor == null || cursor.getCount() <= 0){
             return null;
+        }
         LopHP lopHP = new LopHP();
         if (cursor.moveToFirst()) {
-            lopHP.ma_hoc_phan = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_MAHP));
-            lopHP.ten_giang_vien = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_GIANG_VIEN));
-            lopHP.ten_hoc_phan = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_LOP_HOC_PHAN));
+            lopHP.maHP = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_MAHP));
+            lopHP.tenGV = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_GIANG_VIEN));
+            lopHP.tenHP = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_LOP_HOC_PHAN));
             lopHP.tkb = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_TKB));
         }
         cursor.close();
@@ -167,7 +168,7 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
             LopHPObj lopHPObj;
             for (DataSnapshot snapshot: dataSnapshots[0].getChildren()) {
                 lopHPObj = snapshot.getValue(LopHPObj.class);
-                //onLoadData.onLoad(lopHPObj.getTen_hoc_phan());
+                //onLoadData.onLoad(lopHPObj.getTenHP());
                 maHP = snapshot.getKey();
                 insertLopHocPhan(new LopHP(maHP, lopHPObj));
                 //Log.d(TAG, "onDataChange: " + maHP);

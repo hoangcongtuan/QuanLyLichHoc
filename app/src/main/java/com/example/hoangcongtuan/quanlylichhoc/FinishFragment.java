@@ -3,13 +3,15 @@ package com.example.hoangcongtuan.quanlylichhoc;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.hoangcongtuan.quanlylichhoc.adapter.TKBAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 
@@ -20,12 +22,14 @@ import java.util.ArrayList;
  */
 
 public class FinishFragment extends Fragment {
+    private final static String TAG = FinishFragment.class.getName();
 
     ListView lvTKB;
     Button btnAdd;
     Button btnRemove;
-    ArrayList<String> lstTKB;
-    ArrayAdapter<String> adapter;
+
+    private TKBAdapter tkbAdapter;
+    private ArrayList<LopHP> listLopHP;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,8 +52,8 @@ public class FinishFragment extends Fragment {
 
     private void init() {
 
-        lstTKB = new ArrayList<>();
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lstTKB);
+        listLopHP = new ArrayList<>();
+        tkbAdapter = new TKBAdapter(getActivity(), android.R.layout.simple_list_item_1, listLopHP);
 
     }
 
@@ -63,7 +67,7 @@ public class FinishFragment extends Fragment {
 
     private void setWidget() {
 
-        lvTKB.setAdapter(adapter);
+        lvTKB.setAdapter(tkbAdapter);
 
     }
 
@@ -71,18 +75,53 @@ public class FinishFragment extends Fragment {
 
     }
 
-    public void processTKB(ArrayList<String> arrayList) {
+    public void processTKB(ArrayList<String> listMaHP) {
 
-        lstTKB.clear();
+        Toast.makeText(getContext(), "listMaHP.size() = " + listMaHP.size(), Toast.LENGTH_SHORT).show();
+        listLopHP.clear();
 
-        for (String i : arrayList) {
-            LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(i);
-            if(lopHP == null)
-                return;
-            lstTKB.add(lopHP.getTen_hoc_phan() + " - " + lopHP.getTen_giang_vien());
+        for (String maHP : listMaHP) {
+
+            LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(maHP);
+            if (lopHP != null){
+                listLopHP.add(lopHP);
+            }
         }
 
-        adapter.notifyDataSetChanged();
+        Toast.makeText(getContext(), "listLopHP.size() = " + listLopHP.size(), Toast.LENGTH_SHORT).show();
+        tkbAdapter.notifyDataSetChanged();
+    }
+    public void addLopHP(String maHP) {
+        LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(maHP);
+        if (lopHP == null){
+            return;
+        }
+        int index = getIndexOf(maHP);
+        if (index == -1) {
+            listLopHP.add(lopHP);
+        } else {
+            listLopHP.set(index, lopHP);
+        }
+
+        tkbAdapter.notifyDataSetChanged();
+    }
+
+    public void removeLopHP(String maHP) {
+        int index = getIndexOf(maHP);
+        if (index == -1) {
+            Log.d(TAG, "removeLopHP: don't have " + maHP);
+        } else {
+            listLopHP.remove(index);
+        }
+    }
+
+    private int getIndexOf(String maHP) {
+        for (int i = 0; i < listLopHP.size(); i++) {
+            if (listLopHP.get(i).maHP.equals(maHP)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
 

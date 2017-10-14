@@ -30,8 +30,8 @@ public class PrepareFragment extends android.support.v4.app.Fragment {
             @Override
             public void onDBAvailable() {
                 //Toast.makeText(getActivity(), "DB Available!", Toast.LENGTH_SHORT).show();
-                LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan("4130403_1710_15_11");
-                Toast.makeText(getActivity(), lopHP.getTen_hoc_phan(), Toast.LENGTH_SHORT).show();
+                //LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan("4130403_1710_15_11");
+                //Toast.makeText(getActivity(), lopHP.getTenHP(), Toast.LENGTH_SHORT).show();
                 prepareFinish.onPrepareFinish();
             }
 

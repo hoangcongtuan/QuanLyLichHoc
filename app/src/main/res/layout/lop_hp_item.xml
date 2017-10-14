@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tenHP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="anh van 2.1"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/btnRemove"
+        android:layout_toStartOf="@+id/btnRemove" />
+
+    <TextView
+        android:id="@+id/tenGV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Le thi hai yen" />
+
+    <TextView
+        android:id="@+id/maHP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="41303sadfasdf.27b"
+        android:layout_below="@+id/tenHP"
+        android:layout_toLeftOf="@+id/btnRemove"
+        android:layout_toStartOf="@+id/btnRemove" />
+
+    <TextView
+        android:id="@+id/tkb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tenGV"
+        android:text="thws 4 1-4" />
+
+    <Button
+        android:id="@+id/btnRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="X" />
+</RelativeLayout>
