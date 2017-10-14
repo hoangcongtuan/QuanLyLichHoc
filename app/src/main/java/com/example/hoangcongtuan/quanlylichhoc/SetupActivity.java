@@ -50,6 +50,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private int currentStep;
     private WelcomFragment welcomFragment;
     private RecognizeFragment recognizeFragment;
+    private FinishFragment finishFragment;
     private PrepareFragment prepareFragment;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -101,10 +102,12 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+        finishFragment = new FinishFragment();
+
         stepperPagerAdapter.addFragment(prepareFragment, "prepare");
         stepperPagerAdapter.addFragment(welcomFragment, "welcom");
-        stepperPagerAdapter.addFragment(recognizeFragment, "Recognize2");
-        stepperPagerAdapter.addFragment(new RecognizeFragment(), "Welcom3");
+        stepperPagerAdapter.addFragment(recognizeFragment, "Recognize");
+        stepperPagerAdapter.addFragment(finishFragment, "finish");
         viewPager.setAdapter(stepperPagerAdapter);
         viewPager.setPagingEnable(false);
 
@@ -134,6 +137,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     case STEP_RECONGNIZE:
                         btnNext.setEnabled(true);
                         btnBack.setEnabled(true);
+                        break;
+                    case STEP_FINISH:
+                        break;
                 }
 
             }
@@ -253,6 +259,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 tvStep3.setTextColor(Color.WHITE);
                 tvStep3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.background_circle));
 
+                recognizeFragment.setBitmap(
+                        welcomFragment.bitmap
+                );
+                recognizeFragment.recongnize();
+
                 break;
             case STEP_FINISH:
                 tvStep3.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorStepperText));
@@ -267,17 +278,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 tvStep1Label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTextDisable));
                 tvStep1.setTextColor(Color.WHITE);
                 tvStep1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.background_circle));
+
+                finishFragment.processTKB(recognizeFragment.lstMaHP);
                 break;
         }
         Log.d(TAG, "setStepper: " + stepId);
-
-
-        if (stepId == STEP_RECONGNIZE) {
-            recognizeFragment.setBitmap(
-                    welcomFragment.bitmap
-            );
-            recognizeFragment.recongnize();
-        }
         viewPager.setCurrentItem(stepId);
     }
 

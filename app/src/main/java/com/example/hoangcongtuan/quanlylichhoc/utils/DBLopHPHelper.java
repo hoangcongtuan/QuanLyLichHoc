@@ -29,7 +29,7 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
     private static final String PATH_INFO_ALL_LOP_HOC_PHAN = "thong_tin_lop_hoc_phan";
     private static final String HOCPHAN_COLUMN_TKB = "TKB";
 
-    private Context mContext;
+    private static Context mContext;
 
     private DatabaseReference dbListThongTinLopHocPhan;
 
@@ -42,15 +42,20 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         this.onLoadData = onLoadData;
     }
 
-    public static DBLopHPHelper getsInstance(Context context) {
-        if (sInstance == null)
+    public static void init(Context context) {
+        mContext = context;
+        if(sInstance == null)
             sInstance = new DBLopHPHelper(context);
+    }
+
+    public static DBLopHPHelper getsInstance() {
+        //if (sInstance == null)
+            //sInstance = new DBLopHPHelper(mContext);
         return sInstance;
     }
 
     private DBLopHPHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.mContext = context;
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         dbListThongTinLopHocPhan = database.child(PATH_INFO_ALL_LOP_HOC_PHAN);
     }
@@ -106,7 +111,9 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
     public LopHP getLopHocPhan(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + HOCPHAN_TABLE_NAME + " WHERE " +
-                HOCPHAN_COLUMN_MAHP + "=" + id, null);
+                HOCPHAN_COLUMN_MAHP + "=?", new String[]{id});
+        if (cursor == null)
+            return null;
         LopHP lopHP = new LopHP();
         if (cursor.moveToFirst()) {
             lopHP.ma_hoc_phan = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_MAHP));
@@ -182,8 +189,12 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         dbListThongTinLopHocPhan.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Log.d(TAG, "onDataChange: " + dataSnapshot.getChildrenCount());
                 ASyncGetLopHP async = new ASyncGetLopHP();
                 async.execute(dataSnapshot);
+
+
 
             }
 
