@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.hoangcongtuan.quanlylichhoc.SpinnerDemo">
+
+    <AutoCompleteTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/autoMaHP"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:completionThreshold="1"
+        android:ems="5"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent">
+
+    </AutoCompleteTextView>
+
+    <AutoCompleteTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/autoTenHP"
+        android:completionThreshold="1"
+        android:ems="5"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/autoMaHP"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent">
+
+    </AutoCompleteTextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvTKB"
+        android:text="Thoi Gian"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/autoTenHP" />
+
+</android.support.constraint.ConstraintLayout>

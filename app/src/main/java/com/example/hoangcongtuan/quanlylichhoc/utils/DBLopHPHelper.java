@@ -16,8 +16,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class DBLopHPHelper extends SQLiteOpenHelper {
-    private static final String TAG = DBLopHPHelper.class.getName();
+    private static final String TAG = "SQLiteOpenHelper";
 
     private static final String DATABASE_NAME = "SQLiteInfo.db";
     private static final int DATABASE_VERSION = 1;
@@ -74,6 +76,8 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         );
     }
 
+
+
     public void clearDB() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(HOCPHAN_TABLE_NAME, null, null);
@@ -122,13 +126,42 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
             lopHP.tenHP = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_LOP_HOC_PHAN));
             lopHP.tkb = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_TKB));
         }
-        cursor.close();
         return lopHP;
     }
 
-      private Cursor getAllLopHocPhan() {
+    private Cursor getAllLopHocPhan() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + HOCPHAN_TABLE_NAME, null);
+    }
+
+    public ArrayList<String> getListMaHP() {
+        ArrayList<String> lstMaHP = new ArrayList<>();
+        Cursor cursor  = getAllLopHocPhan();
+        if(cursor.moveToFirst()) {
+            do {
+                lstMaHP.add(cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_MAHP)));
+
+            }
+            while (cursor.moveToNext());
+        }
+        else
+            return null;
+        return lstMaHP;
+    }
+
+    public ArrayList<String> getListTenHP() {
+        ArrayList<String> lstTenHP = new ArrayList<>();
+        Cursor cursor  = getAllLopHocPhan();
+        if(cursor.moveToFirst()) {
+            do {
+                lstTenHP.add(cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_LOP_HOC_PHAN)));
+
+            }
+            while (cursor.moveToNext());
+        }
+        else
+            return null;
+        return lstTenHP;
     }
 
     public Integer deleteLopHocPhan(String id) {
@@ -151,6 +184,7 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
             onCheckDB.onDBAvailable();
         }
     }
+
 
 
     public class ASyncGetLopHP extends AsyncTask<DataSnapshot, String, String> {

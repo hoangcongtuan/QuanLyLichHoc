@@ -97,6 +97,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         prepareFragment.setPrepareFinish(new PrepareFragment.PrepareFinish() {
             @Override
             public void onPrepareFinish() {
+//                Intent intent = new Intent(SetupActivity.this, SpinnerDemo.class);
+//                startActivity(intent);
+
                 currentStep = STEP_GET_IMAGE;
                 setStepper(currentStep);
             }
@@ -226,6 +229,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 tvStep3Label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTextDisable));
                 tvStep3.setTextColor(Color.WHITE);
                 tvStep3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.background_circle));
+
+                btnNext.setEnabled(false);
+                btnBack.setEnabled(false);
 
                 break;
             case STEP_GET_IMAGE:
