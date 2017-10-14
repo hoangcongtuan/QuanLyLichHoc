@@ -301,8 +301,10 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 setStepper(currentStep);
                 break;
             case R.id.btnNext:
-                if(currentStep < STEP_FINISH)
+                if(currentStep < STEP_FINISH){
                     currentStep++;
+                    setStepper(currentStep);
+                }
                 else {
                     //finsish setup, go to main Activity
                     Intent intent = new Intent(this, MainActivity.class);
@@ -310,7 +312,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     startActivity(intent);
                     finish();
                 }
-                setStepper(currentStep);
                 break;
         }
     }
