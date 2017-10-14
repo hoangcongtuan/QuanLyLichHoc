@@ -31,9 +31,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by hoangcongtuan on 9/25/17.
  */
 
-public class WelcomFragment extends Fragment implements View.OnClickListener {
+public class WelcomeFragment extends Fragment implements View.OnClickListener {
 
-    private final static String TAG = WelcomFragment.class.getName();
+    private final static String TAG = WelcomeFragment.class.getName();
 
     private static final int REQUEST_IMAGE_PICK = 0;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -43,7 +43,7 @@ public class WelcomFragment extends Fragment implements View.OnClickListener {
     public ImageView ivImage;
     public Boolean isLoadImage;
     public Bitmap bitmap;
-    private WelcomFragInterface welcomFragInterface;
+    private WelcomeFragInterface welcomeFragInterface;
     private Activity activity;
     AlertDialog.Builder alertBuilder;
     AlertDialog alertDialog;
@@ -56,7 +56,7 @@ public class WelcomFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_welcom_layout, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_welcome_layout, container, false);
         btnPickCamera = (ImageButton) rootView.findViewById(R.id.btnPickCamera);
         btnPickGallery = (ImageButton)rootView.findViewById(R.id.btnPickGallery);
         ivImage = (ImageView)rootView.findViewById(R.id.ivImage);
@@ -174,7 +174,7 @@ public class WelcomFragment extends Fragment implements View.OnClickListener {
                     isLoadImage = true;
                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                     ivImage.setImageBitmap(bitmap);
-                    welcomFragInterface.onBitmapAvailable();
+                    welcomeFragInterface.onBitmapAvailable();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -192,12 +192,12 @@ public class WelcomFragment extends Fragment implements View.OnClickListener {
         //CropImage.activity(uri).start(getActivity());
     }
 
-    public interface WelcomFragInterface {
+    public interface WelcomeFragInterface {
         void onBitmapAvailable();
     }
 
-    public void setWelcomFragInterface(WelcomFragInterface welcomFragInterface) {
-        this.welcomFragInterface = welcomFragInterface;
+    public void setWelcomeFragInterface(WelcomeFragInterface welcomeFragInterface) {
+        this.welcomeFragInterface = welcomeFragInterface;
     }
 
     @Override

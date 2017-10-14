@@ -48,7 +48,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private StepPagerAdapter stepperPagerAdapter;
     private TextView tvStep1, tvStep2, tvStep3, tvStep1Label, tvStep2Label, tvStep3Label;
     private int currentStep;
-    private WelcomFragment welcomFragment;
+    private WelcomeFragment welcomeFragment;
     private RecognizeFragment recognizeFragment;
     private FinishFragment finishFragment;
     private PrepareFragment prepareFragment;
@@ -84,8 +84,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         tvStep3Label = (TextView)findViewById(R.id.tvStep3Label);
 
         stepperPagerAdapter = new StepPagerAdapter(getSupportFragmentManager());
-        welcomFragment = new WelcomFragment();
-        welcomFragment.setWelcomFragInterface(new WelcomFragment.WelcomFragInterface() {
+        welcomeFragment = new WelcomeFragment();
+        welcomeFragment.setWelcomeFragInterface(new WelcomeFragment.WelcomeFragInterface() {
             @Override
             public void onBitmapAvailable() {
                 btnNext.setEnabled(true);
@@ -105,7 +105,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         finishFragment = new FinishFragment();
 
         stepperPagerAdapter.addFragment(prepareFragment, "prepare");
-        stepperPagerAdapter.addFragment(welcomFragment, "welcom");
+        stepperPagerAdapter.addFragment(welcomeFragment, "welcome");
         stepperPagerAdapter.addFragment(recognizeFragment, "Recognize");
         stepperPagerAdapter.addFragment(finishFragment, "finish");
         viewPager.setAdapter(stepperPagerAdapter);
@@ -129,7 +129,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                         break;
                     case STEP_GET_IMAGE:
                         btnBack.setEnabled(false);
-                        if(welcomFragment.bitmap != null)
+                        if(welcomeFragment.bitmap != null)
                             btnNext.setEnabled(true);
                         else
                             btnNext.setEnabled(false);
@@ -260,7 +260,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 tvStep3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.background_circle));
 
                 recognizeFragment.setBitmap(
-                        welcomFragment.bitmap
+                        welcomeFragment.bitmap
                 );
                 recognizeFragment.recongnize();
 
