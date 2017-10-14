@@ -60,7 +60,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
     private final static int STEP_PREPARE = 0;
     private final static int STEP_GET_IMAGE = 1;
-    private final static int STEP_RECONGNIZE = 2;
+    private final static int STEP_RECOGNIZE = 2;
     private final static int STEP_FINISH = 3;
 
     @Override
@@ -137,7 +137,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                         else
                             btnNext.setEnabled(false);
                         break;
-                    case STEP_RECONGNIZE:
+                    case STEP_RECOGNIZE:
                         btnNext.setEnabled(true);
                         btnBack.setEnabled(true);
                         break;
@@ -250,7 +250,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
 
                 break;
-            case STEP_RECONGNIZE:
+            case STEP_RECOGNIZE:
 
                 tvStep2.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorStepperText));
                 tvStep2Label.setTextColor(Color.WHITE);
@@ -268,7 +268,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 recognizeFragment.setBitmap(
                         welcomeFragment.bitmap
                 );
-                recognizeFragment.recongnize();
+                recognizeFragment.recognize();
 
                 break;
             case STEP_FINISH:

@@ -50,7 +50,7 @@ public class RecognizeFragment extends Fragment {
         return rootView;
     }
 
-    public void recongnize() {
+    public void recognize() {
         recognize(this.bitmap);
     }
 
