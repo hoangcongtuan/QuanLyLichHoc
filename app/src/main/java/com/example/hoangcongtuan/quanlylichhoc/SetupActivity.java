@@ -102,7 +102,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 //                Intent intent = new Intent(SetupActivity.this, SpinnerDemo.class);
 //                startActivity(intent);
 
-                currentStep = STEP_GET_IMAGE;
+                if(currentStep < STEP_GET_IMAGE){
+                    currentStep = STEP_GET_IMAGE;
+                }
                 setStepper(currentStep);
             }
         });
