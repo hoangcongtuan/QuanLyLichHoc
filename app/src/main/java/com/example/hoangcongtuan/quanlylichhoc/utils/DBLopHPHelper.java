@@ -28,6 +28,10 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
     private static final String HOCPHAN_COLUMN_GIANG_VIEN = "TEN_GIANG_VIEN";
     private static final String HOCPHAN_COLUMN_LOP_HOC_PHAN = "TEN_HOC_PHAN";
 
+    private static final String USER_TABLE_NAME = "thong_tin_ma_hoc_phan";
+    private static final String USER_COMLUMN_MAHP = "MA_HP";
+
+
     private static final String PATH_INFO_ALL_LOP_HOC_PHAN = "thong_tin_lop_hoc_phan";
     private static final String HOCPHAN_COLUMN_TKB = "TKB";
 
@@ -68,12 +72,89 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        //create lop hoc phan data
         sqLiteDatabase.execSQL("CREATE TABLE " + HOCPHAN_TABLE_NAME + "(" +
                 HOCPHAN_COLUMN_MAHP + " TEXT PRIMARY KEY, " +
                 HOCPHAN_COLUMN_GIANG_VIEN + " TEXT, " +
                 HOCPHAN_COLUMN_LOP_HOC_PHAN + " TEXT, " +
                 HOCPHAN_COLUMN_TKB + " TEXT)"
         );
+
+        //create user_data
+        sqLiteDatabase.execSQL("CREATE TABLE " + USER_TABLE_NAME + "(" +
+                USER_COMLUMN_MAHP + " TEXT)");
+    }
+
+    public boolean insertUserMaHocPhan(String maHP) {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + USER_TABLE_NAME + " WHERE " +
+                USER_COMLUMN_MAHP + "=?", new String[]{maHP});
+        if (cursor != null && cursor.getCount() > 0){
+            return false;
+        }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(USER_COMLUMN_MAHP, maHP);
+        db.insert(USER_TABLE_NAME, null, contentValues);
+        db.close();
+        return true;
+    }
+
+    public boolean updateUserMaHocPhan(String maHP) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(USER_COMLUMN_MAHP, maHP);
+        db.update(USER_TABLE_NAME, contentValues, USER_COMLUMN_MAHP + " = ?", new String[] {maHP});
+        return true;
+    }
+
+    private Cursor getAllUserMaHocPhan() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM " + USER_TABLE_NAME, null);
+    }
+
+    public ArrayList<String> getListUserMaHP() {
+        ArrayList<String> lstMaHP = new ArrayList<>();
+        Cursor cursor  = getAllUserMaHocPhan();
+        if(cursor != null && cursor.getCount() == 0)
+            return null;
+
+        if(cursor.moveToFirst()) {
+            do {
+                lstMaHP.add(cursor.getString(cursor.getColumnIndex(USER_COMLUMN_MAHP)));
+
+            }
+            while (cursor.moveToNext());
+        }
+        return lstMaHP;
+    }
+
+    public ArrayList<LopHP> getListUserLopHP() {
+        ArrayList<LopHP> lstLopHP = new ArrayList<>();
+        Cursor cursor = getAllUserMaHocPhan();
+        if (cursor.moveToFirst()) {
+            do {
+                lstLopHP.add(getLopHocPhan(cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_MAHP))));
+            }
+            while (cursor.moveToNext());
+        }
+        return lstLopHP;
+    }
+
+    public boolean checkDBUser() {
+        return getAllUserMaHocPhan().getCount() > 0;
+    }
+
+    public Integer deleteUserMaHocPhan(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(USER_TABLE_NAME,
+                USER_COMLUMN_MAHP + " = ? ",
+                new String[]{id});
+    }
+
+    public Integer deleteAllUserMaHocPhan() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(USER_TABLE_NAME, null, null);
     }
 
 
@@ -129,6 +210,23 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         return lopHP;
     }
 
+    public LopHP getLopHPbyName(String name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + HOCPHAN_TABLE_NAME + " WHERE " +
+                HOCPHAN_COLUMN_LOP_HOC_PHAN + "=?", new String[]{name});
+        if (cursor == null || cursor.getCount() <= 0){
+            return null;
+        }
+        LopHP lopHP = new LopHP();
+        if (cursor.moveToFirst()) {
+            lopHP.maHP = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_MAHP));
+            lopHP.tenGV = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_GIANG_VIEN));
+            lopHP.tenHP = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_LOP_HOC_PHAN));
+            lopHP.tkb = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_TKB));
+        }
+        return lopHP;
+    }
+
     private Cursor getAllLopHocPhan() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + HOCPHAN_TABLE_NAME, null);
@@ -144,8 +242,6 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
             }
             while (cursor.moveToNext());
         }
-        else
-            return null;
         return lstMaHP;
     }
 
@@ -159,8 +255,6 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
             }
             while (cursor.moveToNext());
         }
-        else
-            return null;
         return lstTenHP;
     }
 

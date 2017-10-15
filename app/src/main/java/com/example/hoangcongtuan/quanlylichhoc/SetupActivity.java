@@ -41,6 +41,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private CustomViewPager viewPager;
     private Button btnBack;
     private Button btnNext;
+    private Button btnFinish;
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawerLayout;
@@ -71,6 +72,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         viewPager = (CustomViewPager) findViewById(R.id.viewPagerSetup);
         btnBack = (Button)findViewById(R.id.btnBack);
         btnNext = (Button)findViewById(R.id.btnNext);
+        btnFinish = (Button)findViewById(R.id.btnFinish);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_setup);
         navigationView = (NavigationView)findViewById(R.id.setup_navigation);
@@ -102,6 +104,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
                 currentStep = STEP_GET_IMAGE;
                 setStepper(currentStep);
+                finishFragment.initAlertDialog();
             }
         });
 
@@ -140,8 +143,14 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     case STEP_RECOGNIZE:
                         btnNext.setEnabled(true);
                         btnBack.setEnabled(true);
+
+                        btnNext.setVisibility(View.VISIBLE);
+                        btnFinish.setVisibility(View.INVISIBLE);
                         break;
                     case STEP_FINISH:
+
+                        btnFinish.setVisibility(View.VISIBLE);
+                        btnNext.setVisibility(View.INVISIBLE);
                         break;
                 }
 
@@ -164,6 +173,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
         btnBack.setOnClickListener(this);
         btnNext.setOnClickListener(this);
+        btnFinish.setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -305,13 +315,12 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     currentStep++;
                     setStepper(currentStep);
                 }
-                else {
-                    //finsish setup, go to main Activity
-                    Intent intent = new Intent(this, MainActivity.class);
-                    //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }
+                break;
+            case R.id.btnFinish:
+                finishFragment.writelstMaHPtoUserDB();
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
                 break;
         }
     }

@@ -6,9 +6,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -40,10 +44,11 @@ public class RecognizeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recognize, container, false);
         lvLopHP = (ListView)rootView.findViewById(R.id.lstHocPhan);
         lstMaHP = new ArrayList<String>();
-        lstMaHP.add("Demo 1");
         adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, lstMaHP);
         lvLopHP.setAdapter(adapter);
         bitmap = null;
+
+        registerForContextMenu(lvLopHP);
 
         imageView = (ImageView)rootView.findViewById(R.id.imgHocPhan);
 
@@ -103,6 +108,29 @@ public class RecognizeFragment extends Fragment {
             }
         }
 
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.tkb_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int position = info.position;
+        int id = item.getItemId();
+        switch (id){
+            case R.id.menu_remove:
+                lstMaHP.remove(position);
+                adapter.notifyDataSetChanged();
+                break;
+            case R.id.menu_edit:
+                break;
+        }
+        return super.onContextItemSelected(item);
     }
 
     public void setBitmap(Bitmap bitmap) {

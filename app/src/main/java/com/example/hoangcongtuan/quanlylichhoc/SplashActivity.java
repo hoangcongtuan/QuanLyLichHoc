@@ -24,6 +24,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         mAuth = FirebaseAuth.getInstance();
         DBLopHPHelper.init(getApplicationContext());
+
     }
 
     @Override
@@ -39,12 +40,22 @@ public class SplashActivity extends AppCompatActivity {
         }
         else {
             //chuyen den mang hinh chinh
-            //Intent intent = new Intent(this, MainActivity.class);
-            Intent intent = new Intent(this, SetupActivity.class);
-            //Intent intent = new Intent(this, SQLiteDB.class);
-            Log.d(TAG, "onStart: Photo url = " + user.getPhotoUrl());
-            startActivity(intent);
-            finish();
+            if(DBLopHPHelper.getsInstance().checkDBUser()) {
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            else {
+                Intent intent = new Intent(this, SetupActivity.class);
+                //Intent intent = new Intent(this, SQLiteDB.class);
+                Log.d(TAG, "onStart: Photo url = " + user.getPhotoUrl());
+                startActivity(intent);
+                finish();
+            }
+
+//            Intent intent = new Intent(SplashActivity.this, SpinnerDemo.class);
+//            startActivity(intent);
+
 
         }
     }

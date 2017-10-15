@@ -1,25 +1,31 @@
-package com.example.hoangcongtuan.quanlylichhoc;
+package com.example.hoangcongtuan.quanlylichhoc.customview;
 
-import android.os.Bundle;
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
-import com.example.hoangcongtuan.quanlylichhoc.customview.CustomDialogBuilderLopHP;
+import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 
 import java.util.ArrayList;
 
-public class SpinnerDemo extends AppCompatActivity {
+/**
+ * Created by hoangcongtuan on 10/15/17.
+ */
 
-    private final static String TAG = SpinnerDemo.class.getName();
+public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
 
+    private final static String TAG = CustomDialogBuilderLopHP.class.getName();
+
+    View rootView;
     private AutoCompleteTextView autoMaHP;
     private AutoCompleteTextView autoTenHP;
     private TextView tvTKB;
@@ -28,39 +34,45 @@ public class SpinnerDemo extends AppCompatActivity {
     ArrayList<String> lstTenHP;
     ArrayAdapter<String> adapterMaHP;
     ArrayAdapter<String> adapterTenHP;
-
     LopHP currentLopHP;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_spinner_demo);
+
+    public CustomDialogBuilderLopHP(@NonNull Context context) {
+        super(context);
 
         init();
         getWidgets();
         setWidgets();
         setWidgetEvent();
 
-        CustomDialogBuilderLopHP customDialogBuilderLopHP = new CustomDialogBuilderLopHP(this);
-        AlertDialog alertDialog = customDialogBuilderLopHP.create();
-        alertDialog.show();
+        this.setView(rootView);
     }
 
+    public void updateData() {
+        lstMaHP = DBLopHPHelper.getsInstance().getListMaHP();
+        lstTenHP = DBLopHPHelper.getsInstance().getListTenHP();
+        adapterMaHP.notifyDataSetChanged();
+        adapterTenHP.notifyDataSetChanged();
+        Log.d(TAG, "updateData: ");
+    }
     private void init() {
+        Log.d(TAG, "init: custome Alert Dialog");
+        setTitle("Lop Hoc Phan");
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        rootView = inflater.inflate(R.layout.activity_spinner_demo, null);
         lstMaHP = DBLopHPHelper.getsInstance().getListMaHP();
         lstTenHP = DBLopHPHelper.getsInstance().getListTenHP();
 
-        adapterMaHP = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, lstMaHP);
-        adapterTenHP = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, lstTenHP);
+        adapterMaHP = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, lstMaHP);
+        adapterTenHP = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, lstTenHP);
 
-        Log.d(TAG, "init: " + lstMaHP.size());
     }
 
     private void getWidgets() {
 
-        autoMaHP = (AutoCompleteTextView) findViewById(R.id.autoMaHP);
-        autoTenHP = (AutoCompleteTextView) findViewById(R.id.autoTenHP);
-        tvTKB = (TextView) findViewById(R.id.tvTKB);
-        tvGV = (TextView) findViewById(R.id.tvGV);
+        autoMaHP = (AutoCompleteTextView)rootView.findViewById(R.id.autoMaHP);
+        autoTenHP = (AutoCompleteTextView)rootView.findViewById(R.id.autoTenHP);
+        tvTKB = (TextView)rootView.findViewById(R.id.tvTKB);
+        tvGV = (TextView)rootView.findViewById(R.id.tvGV);
 
     }
 
@@ -101,4 +113,5 @@ public class SpinnerDemo extends AppCompatActivity {
     public LopHP getCurrentLopHP() {
         return this.currentLopHP;
     }
+
 }

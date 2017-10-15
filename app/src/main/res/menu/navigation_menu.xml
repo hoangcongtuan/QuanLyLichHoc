@@ -11,6 +11,10 @@
                 android:id="@+id/item_thay_doi_HP"
                 android:title="Thay đổi Học phần"
                 android:icon="@android:drawable/ic_input_get"/>
+            <item
+                android:id="@+id/item_xoa_du_lieu"
+                android:title="Xoa du lieu lop hoc phan"
+                android:icon="@android:drawable/ic_menu_delete"/>
         </menu>
     </item>
     <item

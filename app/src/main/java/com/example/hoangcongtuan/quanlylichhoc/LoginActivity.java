@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -210,10 +211,19 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void handleFirebaseLoginSuccess(FirebaseUser user) {
-        Intent intent = new Intent(this, SetupActivity.class);
         finishAuthWithFirebase();
-        startActivity(intent);
-        finish();
+        if (DBLopHPHelper.getsInstance().checkDBUser()) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        else {
+            Intent intent = new Intent(this, SetupActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
     }
 
     @Override

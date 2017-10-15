@@ -1,13 +1,12 @@
-package com.example.hoangcongtuan.quanlylichhoc;
-
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.TKBAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
@@ -15,20 +14,24 @@ import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import java.util.ArrayList;
 
 /**
- * Created by hoangcongtuan on 9/6/17.
+ * Created by hoangcongtuan on 10/15/17.
  */
 
-public class LichHoc extends Fragment {
-
+public class ThoiKhoaBieu extends Fragment {
     View rootView;
     ListView lvTKB;
     private TKBAdapter tkbAdapter;
     private ArrayList<LopHP> lstLopHP;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        init();
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_lich_hoc, container, false);
+        rootView = inflater.inflate(R.layout.fragment_tkb, container, false);
 
         getWidgets();
         setWidgets();
@@ -36,13 +39,6 @@ public class LichHoc extends Fragment {
 
         return rootView;
     }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        init();
-    }
-
 
     private void init() {
         lstLopHP = new ArrayList<>(DBLopHPHelper.getsInstance().getListUserLopHP());

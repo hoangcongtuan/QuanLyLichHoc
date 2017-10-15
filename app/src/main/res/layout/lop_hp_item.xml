@@ -2,14 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_margin="5dp">
 
     <TextView
         android:id="@+id/tenHP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:text="anh van 2.1" />
+        android:text="anh van 2.1"
+        android:layout_margin="5dp"
+        android:textColor="@android:color/holo_red_light"/>
 
     <TextView
         android:id="@+id/tenGV"
@@ -18,7 +21,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:text="Le thi hai yen" />
+        android:text="Le thi hai yen"
+        android:layout_margin="5dp"
+        android:textColor="@android:color/holo_blue_dark"/>
 
     <TextView
         android:id="@+id/maHP"
@@ -27,7 +32,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/tenGV"
-        android:text="41303sadfasdf.27b" />
+        android:text="41303sadfasdf.27b"
+        android:layout_margin="5dp"
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/tkb"
@@ -36,6 +43,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/tenGV"
-        android:text="thws 4 1-4" />
+        android:text="thws 4 1-4"
+        android:layout_margin="5dp"
+        android:textColor="@android:color/holo_green_dark"/>
 
 </RelativeLayout>

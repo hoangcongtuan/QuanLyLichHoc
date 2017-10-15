@@ -1,5 +1,6 @@
 package com.example.hoangcongtuan.quanlylichhoc;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.ViewPagerAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
@@ -120,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         pagerAdapter.addFragment(new LichHoc(), strTabs[2]);
 
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(3);
     }
 
     @Override
@@ -140,7 +144,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
                 finish();
                 break;
+            case R.id.item_xoa_du_lieu:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Ban co chac muon xoa khong?");
+                builder.setPositiveButton("Xoa", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Log.d(TAG, "onNavigationItemSelected: " + DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan());
+                    }
+                });
 
+                builder.setNegativeButton("Huy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+                break;
         }
         drawerLayout.closeDrawers();
         return true;
