@@ -324,8 +324,6 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
                 ASyncGetLopHP async = new ASyncGetLopHP();
                 async.execute(dataSnapshot);
 
-
-
             }
 
             @Override

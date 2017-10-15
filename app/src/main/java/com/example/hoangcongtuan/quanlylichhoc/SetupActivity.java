@@ -104,7 +104,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
                 currentStep = STEP_GET_IMAGE;
                 setStepper(currentStep);
-                finishFragment.initAlertDialog();
             }
         });
 

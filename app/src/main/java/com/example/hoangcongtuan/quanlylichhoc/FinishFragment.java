@@ -59,31 +59,13 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
         return rootView;
     }
 
-    public void initAlertDialog() {
-        customDialogBuilderLopHP.updateData();
-    }
 
     private void init() {
 
         listLopHP = new ArrayList<>();
         tkbAdapter = new TKBAdapter(getActivity(), android.R.layout.simple_list_item_1, listLopHP);
         lstMaHP = new ArrayList<>();
-        customDialogBuilderLopHP = new CustomDialogBuilderLopHP(getContext());
-        customDialogBuilderLopHP.setNegativeButton("Huy", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
 
-            }
-        });
-
-        customDialogBuilderLopHP.setPositiveButton("Them", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                addLopHP(customDialogBuilderLopHP.getCurrentLopHP().getMaHP());
-            }
-        });
-
-        //alertDialog = customDialogBuilderLopHP.create();
 
     }
 
@@ -191,12 +173,32 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
         return -1;
     }
 
+    public void showAddLopHPDialog() {
+        final CustomDialogBuilderLopHP customDialogBuilderLopHP = new CustomDialogBuilderLopHP(getContext());
+        customDialogBuilderLopHP.setNegativeButton("Huy", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        customDialogBuilderLopHP.setPositiveButton("Them", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                addLopHP(customDialogBuilderLopHP.getCurrentLopHP().getMaHP());
+            }
+        });
+
+        AlertDialog alertDialog = customDialogBuilderLopHP.create();
+        alertDialog.show();
+    }
+
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnAdd:
-                customDialogBuilderLopHP.create().show();
+                showAddLopHPDialog();
                 break;
         }
     }
