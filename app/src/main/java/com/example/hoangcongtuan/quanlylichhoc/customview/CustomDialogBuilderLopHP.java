@@ -3,7 +3,6 @@ package com.example.hoangcongtuan.quanlylichhoc.customview;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,10 +29,12 @@ public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
     private AutoCompleteTextView autoTenHP;
     private TextView tvTKB;
     private TextView tvGV;
+    //danh sach ma hoc phan, tenHP
     ArrayList<String> lstMaHP;
     ArrayList<String> lstTenHP;
     ArrayAdapter<String> adapterMaHP;
     ArrayAdapter<String> adapterTenHP;
+
     LopHP currentLopHP;
 
     public CustomDialogBuilderLopHP(@NonNull Context context) {
@@ -47,15 +48,8 @@ public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
         this.setView(rootView);
     }
 
-    public void updateData() {
-        lstMaHP = DBLopHPHelper.getsInstance().getListMaHP();
-        lstTenHP = DBLopHPHelper.getsInstance().getListTenHP();
-        adapterMaHP.notifyDataSetChanged();
-        adapterTenHP.notifyDataSetChanged();
-        Log.d(TAG, "updateData: ");
-    }
     private void init() {
-        Log.d(TAG, "init: custome Alert Dialog");
+        //Log.d(TAG, "init: custome Alert Dialog");
         setTitle("Lop Hoc Phan");
         LayoutInflater inflater = LayoutInflater.from(getContext());
         rootView = inflater.inflate(R.layout.activity_spinner_demo, null);
@@ -80,11 +74,11 @@ public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
         autoTenHP.setAdapter(adapterTenHP);
         autoMaHP.setAdapter(adapterMaHP);
 
-        adapterTenHP.notifyDataSetChanged();
-        adapterMaHP.notifyDataSetChanged();
+//        adapterTenHP.notifyDataSetChanged();
+//        adapterMaHP.notifyDataSetChanged();
     }
 
-    void update(LopHP lopHP) {
+    void updateUI(LopHP lopHP) {
         autoMaHP.setText(lopHP.getMaHP());
         autoTenHP.setText(lopHP.getTenHP());
         tvGV.setText(lopHP.getTenGV());
@@ -97,14 +91,14 @@ public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
         autoMaHP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                update(DBLopHPHelper.getsInstance().getLopHocPhan(autoMaHP.getText().toString()));
+                updateUI(DBLopHPHelper.getsInstance().getLopHocPhan(autoMaHP.getText().toString()));
             }
         });
 
         autoTenHP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                update(DBLopHPHelper.getsInstance().getLopHPbyName(autoTenHP.getText().toString()));
+                updateUI(DBLopHPHelper.getsInstance().getLopHPbyName(autoTenHP.getText().toString()));
             }
         });
 

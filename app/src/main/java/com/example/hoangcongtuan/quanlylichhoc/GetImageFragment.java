@@ -31,9 +31,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by hoangcongtuan on 9/25/17.
  */
 
-public class WelcomeFragment extends Fragment implements View.OnClickListener {
+public class GetImageFragment extends Fragment implements View.OnClickListener {
 
-    private final static String TAG = WelcomeFragment.class.getName();
+    private final static String TAG = GetImageFragment.class.getName();
 
     private static final int REQUEST_IMAGE_PICK = 0;
     private static final int REQUEST_IMAGE_CAPTURE = 1;

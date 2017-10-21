@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.ViewPagerAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.MainPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.login.LoginManager;
@@ -33,13 +33,15 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private final static String TAG = MainActivity.class.getName();
 
-    ViewPagerAdapter pagerAdapter;
+    MainPagerAdapter pagerAdapter;
     ViewPager viewPager;
     TabLayout tabLayout;
     String[] strTabs;
@@ -48,6 +50,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     FirebaseAuth firebaseAuth;
+    FirebaseUser user;
+    Uri avatarUrl;
+    TextView tvUserName;
+    private DatabaseReference database;
+    private DatabaseReference firebaseDBUserMaHP;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -56,25 +63,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        init();
+        getWidgets();
+        setWidgets();
+        setWidgetsEvent();
+    }
 
-
-        viewPager = (ViewPager)findViewById(R.id.viewPager);
+    private void init() {
+        //init
         strTabs = getResources().getStringArray(R.array.tab_name);
-        setupViewPager(viewPager);
-        tabLayout = (TabLayout)findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-        navigationView = (NavigationView)findViewById(R.id.navigaionView);
-        navigationView.setNavigationItemSelectedListener(this);
-
+        firebaseAuth = FirebaseAuth.getInstance();
         //config google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -84,14 +83,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         mGoogleApiClient.connect();
+        user = firebaseAuth.getCurrentUser();
+        avatarUrl = user.getPhotoUrl();
 
-        //get Firebase photo url
-        firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        Uri url = user.getPhotoUrl();
-        TextView tvUserName = (TextView)navigationView.getHeaderView(0).findViewById(R.id.tvUserName);
-        tvUserName.setText(user.getDisplayName());
-        ImageRequest avatarRequest = new ImageRequest(url.toString(),
+        database = FirebaseDatabase.getInstance().getReference();
+        firebaseDBUserMaHP = database.child("userInfo").child(user.getUid()).child("listMaHocPHan");
+    }
+
+    private void getWidgets() {
+        //getWidgets
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        viewPager = (ViewPager)findViewById(R.id.viewPager);
+
+        tabLayout = (TabLayout)findViewById(R.id.tabs);
+        navigationView = (NavigationView)findViewById(R.id.navigaionView);
+        tvUserName = (TextView)navigationView.getHeaderView(0).findViewById(R.id.tvUserName);
+
+        ImageRequest avatarRequest = new ImageRequest(avatarUrl.toString(),
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap response) {
@@ -114,35 +123,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Utils.VolleyUtils.getsInstance(getApplicationContext()).getRequestQueue().add(avatarRequest);
 
+
+    }
+
+    private void setWidgets() {
+        //setWidgets
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
+        drawerLayout.addDrawerListener(toggle);
+
+        toggle.syncState();
+
+        setupViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
+        navigationView.setNavigationItemSelectedListener(this);
+        tvUserName.setText(user.getDisplayName());
+
+    }
+
+    private void setWidgetsEvent() {
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(new TBHocPhan(), strTabs[0]);
         pagerAdapter.addFragment(new TBChung(), strTabs[1]);
-        pagerAdapter.addFragment(new LichHoc(), strTabs[2]);
+        pagerAdapter.addFragment(new LichHocFragment(), strTabs[2]);
 
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(3);
     }
 
+    public void logOut() {
+        FirebaseAuth.getInstance().signOut();
+
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                //Log.d(TAG, "onResult: ");
+            }
+        });
+
+        LoginManager.getInstance().logOut();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_dang_xuat:
-                FirebaseAuth.getInstance().signOut();
-
-                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        Log.d(TAG, "onResult: ");
-                    }
-                });
-
-                LoginManager.getInstance().logOut();
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
+                logOut();
                 break;
             case R.id.item_xoa_du_lieu:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -150,7 +186,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 builder.setPositiveButton("Xoa", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.d(TAG, "onNavigationItemSelected: " + DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan());
+                        //xoa du lieu local
+                        DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
+                        //xoa du lieu tren firebase
+                        firebaseDBUserMaHP.setValue(null);
+                        logOut();
+                        //Log.d(TAG, "onNavigationItemSelected: " + );
                     }
                 });
 

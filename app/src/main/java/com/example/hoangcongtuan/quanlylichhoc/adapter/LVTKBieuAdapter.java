@@ -12,12 +12,10 @@ import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 
 import java.util.ArrayList;
 
-public class TKBAdapter extends ArrayAdapter<LopHP> {
-    private ArrayList<LopHP> arrayList;
+public class LVTKBieuAdapter extends ArrayAdapter<LopHP> {
 
-    public TKBAdapter(Context context, int resource, ArrayList<LopHP> arrayList) {
+    public LVTKBieuAdapter(Context context, int resource, ArrayList<LopHP> arrayList) {
         super(context, resource, arrayList);
-        this.arrayList = arrayList;
     }
 
     @Override

@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.hoangcongtuan.quanlylichhoc.adapter.TBHocPhanAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBHPhanAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBaoObj;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +29,7 @@ public class TBHocPhan extends Fragment {
 
     private final static String TAG = TBHocPhan.class.getName();
 
-    private TBHocPhanAdapter hocPhanAdapter;
+    private RVTBHPhanAdapter hocPhanAdapter;
     RecyclerView recyclerView;
     DatabaseReference database;
     DatabaseReference tbHocPhanRef;
@@ -54,11 +54,11 @@ public class TBHocPhan extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        hocPhanAdapter = new TBHocPhanAdapter(recyclerView, getContext());
+        hocPhanAdapter = new RVTBHPhanAdapter(recyclerView, getContext());
         hocPhanAdapter.notifyDataSetChanged();
 
         //set call back
-        hocPhanAdapter.setOnLoadMoreListener(new TBHocPhanAdapter.OnLoadMoreListener() {
+        hocPhanAdapter.setOnLoadMoreListener(new RVTBHPhanAdapter.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
                 Log.d(TAG, "onLoadMore: ");

@@ -16,6 +16,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_remove">Xóa</string>
     <string name="menu_edit">Chỉnh sửa</string>
+    <string name="FIREBASE_PATH_ALL_HP">thong_tin_lop_hoc_phan</string>
 
 
 </resources>

@@ -40,7 +40,7 @@ public class SplashActivity extends AppCompatActivity {
         }
         else {
             //chuyen den mang hinh chinh
-            if(DBLopHPHelper.getsInstance().checkDBUser()) {
+            if(DBLopHPHelper.getsInstance().isUserLocalDBAvailable()) {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();

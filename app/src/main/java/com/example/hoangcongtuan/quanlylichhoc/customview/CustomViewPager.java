@@ -7,9 +7,11 @@ import android.view.MotionEvent;
 
 /**
  * Created by hoangcongtuan on 9/27/17.
+ * disable tinh nang slide
  */
 
 public class CustomViewPager extends ViewPager {
+    //true -> enable tinh nang slide
     private boolean enable;
     public CustomViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);

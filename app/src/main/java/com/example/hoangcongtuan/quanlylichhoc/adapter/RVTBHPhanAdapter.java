@@ -24,18 +24,18 @@ import static android.content.ContentValues.TAG;
  * Adaper cho bang tin thong bao lop hoc phan
  */
 
-public class TBHocPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<ThongBao> lstThongBao;
+    private ArrayList<ThongBao> lstThongBao;
     private OnLoadMoreListener onLoadMoreListener;
     private Context mContext;
     private final static int ITEM_LOADED = 0;
     private final static int ITEM_LOADING = 1;
 
-    public boolean isLoading = false;
+    public boolean isLoading;
     private int lastVisibleItem;     //item cuoi cung
     public final static int LOAD_MORE_DELTA = 5;    //so luong tin moi lan load
-    public int itemLoadCount = 5;       //so ban tin se load
+    public int itemLoadCount;       //so ban tin se load
     public int itemLoaded;              //so ban tin da load
     public boolean allItemLoaded;
 
@@ -61,27 +61,17 @@ public class TBHocPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
-        this.onLoadMoreListener = onLoadMoreListener;
-    }
 
-    public void addThongBao(ThongBao tb) {
-        lstThongBao.add(tb);
-    }
-
-    public void removeLastThongBao() {
-        lstThongBao.remove(lstThongBao.size() - 1);
-    }
-
-
-    public TBHocPhanAdapter(RecyclerView recyclerView, Context context) {
+    public RVTBHPhanAdapter(RecyclerView recyclerView, Context context) {
         lstThongBao = new ArrayList<>();
         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
         this.mContext = context;
+
         isLoading = false;
         allItemLoaded = false;
         itemLoadCount = LOAD_MORE_DELTA;
         itemLoaded = 0;
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -98,19 +88,8 @@ public class TBHocPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                     }
                 }
-
             }
         });
-    }
-
-    public interface OnLoadMoreListener {
-        void onLoadMore();
-    }
-
-    //neu thong bao chua load no se la null
-    @Override
-    public int getItemViewType(int position) {
-        return lstThongBao.get(position) == null ? ITEM_LOADING : ITEM_LOADED;
     }
 
     //tao layout cua ban tin ung voi trang thai da load hay chua
@@ -155,17 +134,41 @@ public class TBHocPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         popupMenu.show();
     }
 
+    //interface dung de callBack
+    public interface OnLoadMoreListener {
+        void onLoadMore();
+    }
+
     @Override
     public int getItemCount() {
         return lstThongBao.size();
+    }
+
+    //neu thong bao chua load no se la null
+    @Override
+    public int getItemViewType(int position) {
+        return lstThongBao.get(position) == null ? ITEM_LOADING : ITEM_LOADED;
     }
 
     public List<ThongBao> getLstThongBao() {
         return lstThongBao;
     }
 
-    public void setLstThongBao(List<ThongBao> lstThongBao) {
+    public void setLstThongBao(ArrayList<ThongBao> lstThongBao) {
         this.lstThongBao = lstThongBao;
+    }
+
+    //set callBack
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        this.onLoadMoreListener = onLoadMoreListener;
+    }
+
+    public void addThongBao(ThongBao tb) {
+        lstThongBao.add(tb);
+    }
+
+    public void removeLastThongBao() {
+        lstThongBao.remove(lstThongBao.size() - 1);
     }
 
 }

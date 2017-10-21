@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.hoangcongtuan.quanlylichhoc.adapter.TBChungAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBChungAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBaoObj;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 public class TBChung extends Fragment {
     private static final String TAG = TBChung.class.getName();
     private RecyclerView recyclerView;
-    private TBChungAdapter tbChungAdapter;
+    private RVTBChungAdapter tbChungAdapter;
     DatabaseReference database;
     DatabaseReference tbChungRef;
     ValueEventListener tbChungEvenListener;
@@ -47,12 +47,12 @@ public class TBChung extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        tbChungAdapter = new TBChungAdapter(recyclerView, getContext());
+        tbChungAdapter = new RVTBChungAdapter(recyclerView, getContext());
         tbChungAdapter.notifyDataSetChanged();
 
         recyclerView.setAdapter(tbChungAdapter);
 
-        tbChungAdapter.setOnLoadMoreListentner(new TBChungAdapter.OnLoadMoreListener() {
+        tbChungAdapter.setOnLoadMoreListentner(new RVTBChungAdapter.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
                 Log.d(TAG, "onLoadMore: ");

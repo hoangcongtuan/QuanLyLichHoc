@@ -37,29 +37,50 @@ public class RecognizeFragment extends Fragment {
     ArrayList<String> lstMaHP;
     Bitmap bitmap;
     ImageView imageView;
+    View rootView;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        init();
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recognize, container, false);
-        lvLopHP = (ListView)rootView.findViewById(R.id.lstHocPhan);
-        lstMaHP = new ArrayList<String>();
-        adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, lstMaHP);
-        lvLopHP.setAdapter(adapter);
-        bitmap = null;
-
-        registerForContextMenu(lvLopHP);
-
-        imageView = (ImageView)rootView.findViewById(R.id.imgHocPhan);
-
+        rootView = inflater.inflate(R.layout.fragment_recognize, container, false);
+        getWidgets();
+        setWidgets();
+        setWidgetsEvent();
         return rootView;
     }
 
-    public void recognize() {
-        recognize(this.bitmap);
+    private void init() {
+        lstMaHP = new ArrayList<String>();
+        adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, lstMaHP);
+        bitmap = null;
     }
 
-    public void recognize(Bitmap bitmap) {
+    private void getWidgets() {
+        lvLopHP = (ListView)rootView.findViewById(R.id.lstHocPhan);
+        imageView = (ImageView)rootView.findViewById(R.id.imgHocPhan);
+    }
+
+    private void setWidgets() {
+        lvLopHP.setAdapter(adapter);
+        registerForContextMenu(lvLopHP);
+    }
+
+    private void setWidgetsEvent() {
+
+    }
+
+    //ham de goi tu SetupActivity
+    public void recognize() {
+        recognizeMaHP(this.bitmap);
+    }
+
+    public void recognizeMaHP(Bitmap bitmap) {
         ArrayList<String> arrayList;
         arrayList = processImage(bitmap);
 
@@ -133,6 +154,7 @@ public class RecognizeFragment extends Fragment {
         return super.onContextItemSelected(item);
     }
 
+    //set bitmap tu SetupActivity
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
         imageView.setImageBitmap(bitmap);
