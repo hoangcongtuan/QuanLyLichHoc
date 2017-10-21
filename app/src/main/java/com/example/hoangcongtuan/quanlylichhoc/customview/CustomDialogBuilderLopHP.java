@@ -52,7 +52,7 @@ public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
         //Log.d(TAG, "init: custome Alert Dialog");
         setTitle("Lop Hoc Phan");
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        rootView = inflater.inflate(R.layout.activity_spinner_demo, null);
+        rootView = inflater.inflate(R.layout.dialog_themhphan, null);
         lstMaHP = DBLopHPHelper.getsInstance().getListMaHP();
         lstTenHP = DBLopHPHelper.getsInstance().getListTenHP();
 

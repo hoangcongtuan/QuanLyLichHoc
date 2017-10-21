@@ -1,4 +1,4 @@
-package com.example.hoangcongtuan.quanlylichhoc;
+package com.example.hoangcongtuan.quanlylichhoc.activity.login;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
+import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;

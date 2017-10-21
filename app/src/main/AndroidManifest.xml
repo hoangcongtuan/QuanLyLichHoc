@@ -33,7 +33,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".SplashActivity">
+        <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,9 +43,9 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".SetupActivity" />
+        <activity android:name=".activity.login.LoginActivity" />
+        <activity android:name=".activity.main.MainActivity" />
+        <activity android:name=".activity.setup.SetupActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -54,14 +54,14 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="orc" />
 
-        <activity android:name=".SpinnerDemo"></activity>
+        <activity android:name=".activity.EditHPActivity"></activity>
     </application>
 
 </manifest>

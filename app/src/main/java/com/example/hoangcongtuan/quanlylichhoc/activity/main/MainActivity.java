@@ -1,4 +1,4 @@
-package com.example.hoangcongtuan.quanlylichhoc;
+package com.example.hoangcongtuan.quanlylichhoc.activity.main;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +22,9 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.EditHPActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.MainPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
@@ -208,6 +211,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 alertDialog.show();
 
                 break;
+            case R.id.item_thay_doi_HP:
+                Intent intent = new Intent(MainActivity.this, EditHPActivity.class);
+                startActivity(intent);
         }
         drawerLayout.closeDrawers();
         return true;

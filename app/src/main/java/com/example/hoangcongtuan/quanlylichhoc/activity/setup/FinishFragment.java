@@ -1,4 +1,4 @@
-package com.example.hoangcongtuan.quanlylichhoc;
+package com.example.hoangcongtuan.quanlylichhoc.activity.setup;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.LVTKBieuAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomDialogBuilderLopHP;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;

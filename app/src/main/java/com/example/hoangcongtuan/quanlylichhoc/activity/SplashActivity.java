@@ -1,10 +1,14 @@
-package com.example.hoangcongtuan.quanlylichhoc;
+package com.example.hoangcongtuan.quanlylichhoc.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
+import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

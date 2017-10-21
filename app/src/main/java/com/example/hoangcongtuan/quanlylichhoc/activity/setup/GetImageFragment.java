@@ -1,4 +1,4 @@
-package com.example.hoangcongtuan.quanlylichhoc;
+package com.example.hoangcongtuan.quanlylichhoc.activity.setup;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;

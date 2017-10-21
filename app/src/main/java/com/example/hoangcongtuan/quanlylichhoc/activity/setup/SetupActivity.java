@@ -1,4 +1,4 @@
-package com.example.hoangcongtuan.quanlylichhoc;
+package com.example.hoangcongtuan.quanlylichhoc.activity.setup;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,6 +24,9 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
+import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.StepPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
