@@ -50,9 +50,15 @@ public class PrepareFragment extends android.support.v4.app.Fragment {
 
             }
         });
-        DBLopHPHelper.getsInstance().checkDB();
         return rootView;
     }
+
+    @Override
+    public void onStart() {
+        DBLopHPHelper.getsInstance().checkDB();
+        super.onStart();
+    }
+
 
     public interface PrepareFinish {
         public void onPrepareFinish();

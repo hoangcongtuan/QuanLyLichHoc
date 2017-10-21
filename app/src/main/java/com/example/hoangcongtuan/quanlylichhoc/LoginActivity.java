@@ -235,6 +235,7 @@ public class LoginActivity extends AppCompatActivity
 
     public void handleFirebaseLoginSuccess(FirebaseUser user) {
         //get local user db
+        final Cursor curAllMaHP = DBLopHPHelper.getsInstance().getAllLopHocPhan();
         firebaseDB = FirebaseDatabase.getInstance().getReference();
         firebaseDBUserMaHP = firebaseDB.child("userInfo").child(firebaseUser.getUid()).child("listMaHocPHan");
         firebaseDBUserMaHP.addListenerForSingleValueEvent(new ValueEventListener() {
