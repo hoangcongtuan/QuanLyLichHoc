@@ -170,15 +170,13 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public boolean insertLopHocPhan(LopHP lopHP) {
-        SQLiteDatabase db = getWritableDatabase();
+    public boolean insertLopHocPhan(SQLiteDatabase db, LopHP lopHP) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(HOCPHAN_COLUMN_MAHP, lopHP.maHP);
         contentValues.put(HOCPHAN_COLUMN_GIANG_VIEN, lopHP.tenGV);
         contentValues.put(HOCPHAN_COLUMN_LOP_HOC_PHAN, lopHP.tenHP);
         contentValues.put(HOCPHAN_COLUMN_TKB, lopHP.tkb);
         db.insert(HOCPHAN_TABLE_NAME, null, contentValues);
-        db.close();
         return true;
     }
 
@@ -294,13 +292,19 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         protected String doInBackground(DataSnapshot... dataSnapshots) {
             String maHP;
             LopHPObj lopHPObj;
+            SQLiteDatabase db = getWritableDatabase();
+            db.beginTransaction();
             for (DataSnapshot snapshot: dataSnapshots[0].getChildren()) {
                 lopHPObj = snapshot.getValue(LopHPObj.class);
                 //onLoadData.onLoad(lopHPObj.getTenHP());
                 maHP = snapshot.getKey();
-                insertLopHocPhan(new LopHP(maHP, lopHPObj));
+                LopHP lopHP = new LopHP(maHP, lopHPObj);
+                insertLopHocPhan(db, lopHP);
                 //Log.d(TAG, "onDataChange: " + maHP);
             }
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
             return null;
         }
 
