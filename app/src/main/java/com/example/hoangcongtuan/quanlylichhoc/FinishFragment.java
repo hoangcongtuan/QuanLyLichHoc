@@ -15,12 +15,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.example.hoangcongtuan.quanlylichhoc.adapter.LVTKBieuAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.TKBAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomDialogBuilderLopHP;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 
@@ -34,9 +34,11 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
     ListView lvTKB;
     Button btnAdd;
 
-    private LVTKBieuAdapter LVTKBieuAdapter;
-    private ArrayList<LopHP> lstLopHP;
+    private TKBAdapter tkbAdapter;
+    private ArrayList<LopHP> listLopHP;
     private ArrayList<String> lstMaHP;
+    private AlertDialog alertDialog;
+    private CustomDialogBuilderLopHP customDialogBuilderLopHP;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_finish, container, false);
 
-        //Log.d(TAG, "onCreateView: " );
+        Log.d(TAG, "onCreateView: " );
         getWidgets(rootView);
         setWidget();
         setWidgetEvent();
@@ -59,23 +61,32 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
 
 
     private void init() {
-        lstLopHP = new ArrayList<>();
-        LVTKBieuAdapter = new LVTKBieuAdapter(getActivity(), android.R.layout.simple_list_item_1, lstLopHP);
+
+        listLopHP = new ArrayList<>();
+        tkbAdapter = new TKBAdapter(getActivity(), android.R.layout.simple_list_item_1, listLopHP);
         lstMaHP = new ArrayList<>();
+
+
     }
 
     private void getWidgets(View rootView) {
+
         lvTKB = (ListView)rootView.findViewById(R.id.lvTKB);
         btnAdd = (Button)rootView.findViewById(R.id.btnAdd);
+
     }
 
     private void setWidget() {
-        lvTKB.setAdapter(LVTKBieuAdapter);
+
+        lvTKB.setAdapter(tkbAdapter);
         registerForContextMenu(lvTKB);
+
     }
 
     private void setWidgetEvent() {
+
         btnAdd.setOnClickListener(this);
+
     }
 
     @Override
@@ -92,9 +103,9 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
         int id = item.getItemId();
         switch (id){
             case R.id.menu_remove:
-                lstLopHP.remove(position);
+                listLopHP.remove(position);
                 lstMaHP.remove(position);
-                LVTKBieuAdapter.notifyDataSetChanged();
+                tkbAdapter.notifyDataSetChanged();
                 break;
             case R.id.menu_edit:
                 break;
@@ -102,33 +113,28 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
         return super.onContextItemSelected(item);
     }
 
-    //tao thoi khoa bieu tu danh sach ma hoc phan da nhan dang duoc
     public void processTKB(ArrayList<String> listMaHP) {
 
-        //Toast.makeText(getContext(), "listMaHP.size() = " + listMaHP.size(), Toast.LENGTH_SHORT).show();
-        //xoa danh sach cu
-        lstLopHP.clear();
-        lstMaHP.clear();
+        Toast.makeText(getContext(), "listMaHP.size() = " + listMaHP.size(), Toast.LENGTH_SHORT).show();
+        listLopHP.clear();
 
         for (String maHP : listMaHP) {
+
             LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(maHP);
             if (lopHP != null){
                 lstMaHP.add(lopHP.getMaHP());
-                lstLopHP.add(lopHP);
+                listLopHP.add(lopHP);
             }
         }
-        //Toast.makeText(getContext(), "lstLopHP.size() = " + lstLopHP.size(), Toast.LENGTH_SHORT).show();
-        LVTKBieuAdapter.notifyDataSetChanged();
+
+        Toast.makeText(getContext(), "listLopHP.size() = " + listLopHP.size(), Toast.LENGTH_SHORT).show();
+        tkbAdapter.notifyDataSetChanged();
     }
 
-    public void writelstMaHPtoUserDB(DatabaseReference dbUserMaHocPhan) {
-        //write to SQLite DB
+    public void writelstMaHPtoUserDB() {
         for (String s : lstMaHP) {
             DBLopHPHelper.getsInstance().insertUserMaHocPhan(s);
         }
-
-        //write to FirebaseDB
-        dbUserMaHocPhan.setValue(lstMaHP);
     }
 
     public void addLopHP(String maHP) {
@@ -138,14 +144,14 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
         }
         int index = getIndexOf(maHP);
         if (index == -1) {
-            lstLopHP.add(lopHP);
+            listLopHP.add(lopHP);
             lstMaHP.add(maHP);
         } else {
-            lstLopHP.set(index, lopHP);
-            lstMaHP.set(index, maHP);
+            listLopHP.set(index, lopHP);
+            lstMaHP.add(maHP);
         }
 
-        LVTKBieuAdapter.notifyDataSetChanged();
+        tkbAdapter.notifyDataSetChanged();
     }
 
     public void removeLopHP(String maHP) {
@@ -153,14 +159,14 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
         if (index == -1) {
             Log.d(TAG, "removeLopHP: don't have " + maHP);
         } else {
-            lstLopHP.remove(index);
+            listLopHP.remove(index);
             lstMaHP.remove(index);
         }
     }
 
     private int getIndexOf(String maHP) {
-        for (int i = 0; i < lstLopHP.size(); i++) {
-            if (lstLopHP.get(i).maHP.equals(maHP)) {
+        for (int i = 0; i < listLopHP.size(); i++) {
+            if (listLopHP.get(i).maHP.equals(maHP)) {
                 return i;
             }
         }
