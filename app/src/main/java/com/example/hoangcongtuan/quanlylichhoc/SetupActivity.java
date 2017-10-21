@@ -19,12 +19,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.StepPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager;
+import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
@@ -34,6 +36,13 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
 
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener,
         NavigationView.OnNavigationItemSelectedListener{
@@ -56,6 +65,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
 
+    private DatabaseReference database;
+    private DatabaseReference dbUserMaHocPhan;
+
     private GoogleApiClient mGoogleApiClient;
 
 
@@ -67,6 +79,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkFireBaseUser();
         setContentView(R.layout.activity_setup);
 
         viewPager = (CustomViewPager) findViewById(R.id.viewPagerSetup);
@@ -190,8 +203,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         currentStep = STEP_PREPARE;
         setStepper(currentStep);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
         final Uri imageUrl = firebaseUser.getPhotoUrl();
         String userName = firebaseUser.getDisplayName();
 
@@ -222,6 +233,38 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
         Utils.VolleyUtils.getsInstance(getApplicationContext()).getRequestQueue().add(imageRequest);
        // DBLopHPHelper.getsInstance(this).checkDB();
+    }
+
+    private void checkFireBaseUser() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance().getReference();
+        /*:TODO bỏ cái chữ "userInfo", "listMaHocPHan" vô chỗ mô đó để lát sử dụng lưu.
+         *  mấy cái chữ khác nữa,
+         */
+        dbUserMaHocPhan = database.child("userInfo").child(firebaseUser.getUid()).child("listMaHocPHan");
+        dbUserMaHocPhan.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        DBLopHPHelper.getsInstance().insertUserMaHocPhan((String) snapshot.getValue());
+                    }
+
+                    //:TODO CÁi này trùng vs bên dưới nên tạo 1 hàm ra
+                    Intent intent = new Intent(SetupActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(SetupActivity.this, "không có dữ liệu", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
@@ -318,7 +361,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.btnFinish:
-                finishFragment.writelstMaHPtoUserDB();
+                finishFragment.writelstMaHPtoUserDB(dbUserMaHocPhan);
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();

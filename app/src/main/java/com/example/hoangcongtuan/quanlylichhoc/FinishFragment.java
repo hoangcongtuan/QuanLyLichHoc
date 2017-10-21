@@ -21,6 +21,7 @@ import com.example.hoangcongtuan.quanlylichhoc.adapter.TKBAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomDialogBuilderLopHP;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 
@@ -131,10 +132,11 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
         tkbAdapter.notifyDataSetChanged();
     }
 
-    public void writelstMaHPtoUserDB() {
+    public void writelstMaHPtoUserDB(DatabaseReference dbUserMaHocPhan) {
         for (String s : lstMaHP) {
             DBLopHPHelper.getsInstance().insertUserMaHocPhan(s);
         }
+        dbUserMaHocPhan.setValue(lstMaHP);
     }
 
     public void addLopHP(String maHP) {
