@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
-import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 /**
  * Kiem tra trang thai dang nhap, neu da dang nhap thi toi man hinh chinh, con ko thi toi man hinh dang nhap
@@ -62,5 +63,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
         }
+
+        Log.d(TAG, "onStart: " + FirebaseInstanceId.getInstance().getToken());
     }
 }

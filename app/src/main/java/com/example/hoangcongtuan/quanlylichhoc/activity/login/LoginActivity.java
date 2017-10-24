@@ -8,6 +8,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -43,6 +44,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
 
@@ -63,6 +65,7 @@ public class LoginActivity extends AppCompatActivity
 
     private DatabaseReference firebaseDB;
     private DatabaseReference firebaseDBUserMaHP;
+    private DatabaseReference firebaseUserToken;
 
     private Button btnLoginFb;
     private Button btnLoginGg;
@@ -241,6 +244,7 @@ public class LoginActivity extends AppCompatActivity
         final Cursor curAllMaHP = DBLopHPHelper.getsInstance().getAllLopHocPhan();
         firebaseDB = FirebaseDatabase.getInstance().getReference();
         firebaseDBUserMaHP = firebaseDB.child("userInfo").child(firebaseUser.getUid()).child("listMaHocPHan");
+        firebaseUserToken = firebaseDB.child("userInfo").child(firebaseUser.getUid()).child("FCMToken");
         firebaseDBUserMaHP.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -318,6 +322,10 @@ public class LoginActivity extends AppCompatActivity
 //            startActivity(intent);
 //            finish();
 //        }
+
+        //write token to firebase user
+        firebaseUserToken.setValue(FirebaseInstanceId.getInstance().getToken());
+        Log.d(TAG, "handleFirebaseLoginSuccess: Token = " + FirebaseInstanceId.getInstance().getToken());
 
     }
 
