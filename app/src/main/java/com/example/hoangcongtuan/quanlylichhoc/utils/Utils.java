@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.ArrayList;
 
 /**
  * Created by hoangcongtuan on 9/15/17.
@@ -23,6 +26,40 @@ public class Utils {
         @Override
         protected Bitmap doInBackground(String... strings) {
             return null;
+        }
+    }
+
+    public static class QLLHUtils {
+        private final static String TAG = QLLHUtils.class.getName();
+        private static QLLHUtils sInstance;
+
+        private QLLHUtils (Context context) {
+
+        }
+
+        public static QLLHUtils getsInstance(Context context) {
+            if (sInstance == null)
+                sInstance = new QLLHUtils(context);
+            return sInstance;
+        }
+
+        public void unSubscribeAllTopics(ArrayList<String> lstTopic) {
+            for (String s : lstTopic) {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(s);
+            }
+        }
+
+        public void subscribeTopic(ArrayList<String> lstTopic) {
+            for (String s: lstTopic)
+                FirebaseMessaging.getInstance().subscribeToTopic(s);
+        }
+
+        public void unSubscribeTopic(String topic) {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
+        }
+
+        public void subscribeTopic(String topic) {
+            FirebaseMessaging.getInstance().subscribeToTopic(topic);
         }
     }
 

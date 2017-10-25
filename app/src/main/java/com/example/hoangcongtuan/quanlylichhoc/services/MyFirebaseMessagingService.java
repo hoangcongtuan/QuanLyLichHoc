@@ -32,6 +32,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
+
     public void sendNotification(String msg) {
         Intent intent = new Intent(this, SplashActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

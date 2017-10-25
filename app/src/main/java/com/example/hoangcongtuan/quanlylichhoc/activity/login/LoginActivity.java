@@ -14,10 +14,11 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -262,6 +263,13 @@ public class LoginActivity extends AppCompatActivity
                             @Override
                             public void onDBAvailable() {
                                 finishAuthWithFirebase();
+                                //subscrible topics
+                                Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic(
+                                        DBLopHPHelper.getsInstance().getListUserMaHP()
+                                );
+
+                                Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic("TBChung");
+
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -270,6 +278,13 @@ public class LoginActivity extends AppCompatActivity
                             @Override
                             public void onDownloadFinish() {
                                 finishAuthWithFirebase();
+                                //subscrible topics
+                                Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic(
+                                        DBLopHPHelper.getsInstance().getListUserMaHP()
+                                );
+
+                                Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic("TBChung");
+
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();

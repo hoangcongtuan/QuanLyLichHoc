@@ -17,6 +17,8 @@
     <string name="menu_remove">Xóa</string>
     <string name="menu_edit">Chỉnh sửa</string>
     <string name="FIREBASE_PATH_ALL_HP">thong_tin_lop_hoc_phan</string>
+    <string name="FCM_TOKEN">dWFV6RJ7bKA:APA91bHXzJEJv9-0i2I2L-9OYf5Eq7bwzxf8Z-Uts-qbyNHhzSUkfvaODcHp8S9_IvMAHneo-hD-qqbx7Ju_J5LGvlB0ZeU060x5PsFJTmPuQV5BeCPV8W1PWlDr4ks8CLfN3XtE8k3L</string>
+    <string name="SERVER_KEY">AAAA2IVeKMQ:APA91bHbqbUIqLiCBbWOeZkyZyvEO0rOetzwTWz8DSHuO1NVsGCnsABTtz6VEHiF8Y91xfqZiwtmsitICCd0gtsc5N6AZP5_RoLQt8mY8nK6jpWnM7P4HfzOKeDoODxjSQETt7BlsWU9</string>
 
 
 </resources>

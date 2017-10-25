@@ -18,6 +18,7 @@ import com.example.hoangcongtuan.quanlylichhoc.adapter.LVTKBieuAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomDialogBuilderLopHP;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +33,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
     LVTKBieuAdapter lvtkBieuAdapter;
     ArrayList<LopHP> lstLopHP;
     ArrayList<String> lstMaHP;
+    ArrayList<String> lstMaHPOld;
     Toolbar toolbar;
 
     DatabaseReference dbUserMaHocPhan;
@@ -59,6 +61,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         dbUserMaHocPhan = database.child("userInfo").child(user.getUid()).child("listMaHocPHan");
         lstLopHP = DBLopHPHelper.getsInstance().getListUserLopHP();
         lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
+        lstMaHPOld = DBLopHPHelper.getsInstance().getListUserMaHP();
         lvtkBieuAdapter = new LVTKBieuAdapter(this, android.R.layout.simple_list_item_1, lstLopHP);
 
     }
@@ -72,13 +75,14 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
     private void setWidgets() {
         lvTKB.setAdapter(lvtkBieuAdapter);
-        btnAdd.setOnClickListener(this);
-        btnCancel.setOnClickListener(this);
-        btnOK.setOnClickListener(this);
+
     }
 
     private void setWidgetsEvent() {
-
+        btnAdd.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
+        btnOK.setOnClickListener(this);
+        registerForContextMenu(lvTKB);
     }
     public void showAddLopHPDialog() {
         final CustomDialogBuilderLopHP customDialogBuilderLopHP = new CustomDialogBuilderLopHP(this);
@@ -137,6 +141,13 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         dbUserMaHocPhan.setValue(lstMaHP);
     }
 
+    private void updateSubscribeTopic() {
+        Utils.QLLHUtils.getsInstance(this).unSubscribeAllTopics(lstMaHPOld);
+        Utils.QLLHUtils.getsInstance(this).subscribeTopic(lstMaHP);
+        Utils.QLLHUtils.getsInstance(this).subscribeTopic("TBChung");
+    }
+
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -163,6 +174,8 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         return true;
     }
 
+
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -174,6 +187,9 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 writelstHPtoLocalDB();
                 //write to firebase DB
                 writelstHPtoFirebaseDB();
+
+                //update subscribe
+                updateSubscribeTopic();
                 finish();
                 break;
             case R.id.btnCancel:

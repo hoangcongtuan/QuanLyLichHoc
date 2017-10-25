@@ -381,6 +381,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.btnFinish:
                 finishFragment.writelstMaHPtoUserDB(dbUserMaHocPhan);
+
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();

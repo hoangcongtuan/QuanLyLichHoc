@@ -21,6 +21,7 @@ import com.example.hoangcongtuan.quanlylichhoc.adapter.LVTKBieuAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomDialogBuilderLopHP;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
@@ -122,6 +123,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
         LVTKBieuAdapter.notifyDataSetChanged();
     }
 
+
     public void writelstMaHPtoUserDB(DatabaseReference dbUserMaHocPhan) {
         //write to SQLite DB
         for (String s : lstMaHP) {
@@ -130,6 +132,11 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
 
         //write to FirebaseDB
         dbUserMaHocPhan.setValue(lstMaHP);
+
+        //subscribe a topics
+        Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic(lstMaHP);
+        Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic("TBChung");
+
     }
 
     public void addLopHP(String maHP) {

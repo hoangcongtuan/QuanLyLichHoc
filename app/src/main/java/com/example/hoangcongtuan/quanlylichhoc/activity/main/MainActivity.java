@@ -19,9 +19,12 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.EditHPActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
@@ -38,6 +41,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -124,9 +133,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         );
 
+
         Utils.VolleyUtils.getsInstance(getApplicationContext()).getRequestQueue().add(avatarRequest);
+    }
 
+    public void getTopicSubcribe(String token, final String key) {
+        JsonObjectRequest jsonRequest;
+        jsonRequest = new JsonObjectRequest(Request.Method.GET, "https://iid.googleapis.com/iid/info/" + token + "?details=true", null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d(TAG, "onResponse: " + response.getJSONObject("rel").getJSONObject("topics").toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
 
+                    }
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> headers = new HashMap<String, String>();
+                headers.put("Authorization","key=" + key);
+                return headers;
+            }
+
+        };
+        Utils.VolleyUtils.getsInstance(this).getRequestQueue().add(jsonRequest);
     }
 
     private void setWidgets() {
@@ -161,6 +200,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void logOut() {
+
+        //unsubscrible all topics
+        Utils.QLLHUtils.getsInstance(this).unSubscribeAllTopics(
+                DBLopHPHelper.getsInstance().getListUserMaHP()
+        );
+        Utils.QLLHUtils.getsInstance(this).unSubscribeTopic("TBChung");
+
         FirebaseAuth.getInstance().signOut();
 
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
@@ -205,8 +251,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
 
-
-
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
 
@@ -214,6 +258,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.item_thay_doi_HP:
                 Intent intent = new Intent(MainActivity.this, EditHPActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.item_showFCMDetails:
+                getTopicSubcribe(
+                        getResources().getString(R.string.FCM_TOKEN),
+                        getResources().getString(R.string.SERVER_KEY)
+                );
+                break;
+            case R.id.item_showSubscribeTopic:
+
         }
         drawerLayout.closeDrawers();
         return true;
