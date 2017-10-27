@@ -11,12 +11,15 @@ public class ThongBao  {
     String tittle;
     String content;
     String strDate;
-    public ThongBao(String date, String tittle, String content) {
-        this.strDate = date;
+    String key;
+
+    public ThongBao(String strDate, String tittle, String content, String key) {
+        this.strDate = strDate;
         this.tittle = tittle;
         this.content = content;
+        this.strDate = strDate;
+        this.key = key;
     }
-
 
     public Date getDate() {
         return date;
@@ -48,5 +51,13 @@ public class ThongBao  {
 
     public void setStrDate(String strDate) {
         this.strDate = strDate;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

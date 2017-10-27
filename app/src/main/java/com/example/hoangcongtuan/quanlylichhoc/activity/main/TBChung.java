@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 /**
  * Created by hoangcongtuan on 9/6/17.
  */
@@ -94,6 +96,51 @@ public class TBChung extends Fragment {
 //        );
     }
 
+
+    public void scrollTo(final String hash) {
+        setPrivCallBack(new RVTBChungAdapter.ICallBack() {
+            @Override
+            public void onLoadMore() {
+
+            }
+
+            @Override
+            public void onLoadMoreFinish() {
+                ArrayList<ThongBao> lstTBChung;
+                lstTBChung = tbChungAdapter.getLstThongBao();
+
+                if (tbChungAdapter.allItemLoaded) {
+                    Toast.makeText(getActivity(), "Khong tim thay thong bao!", Toast.LENGTH_SHORT).show();
+                    setPrivCallBack(null);
+                    return;
+                }
+
+                for(ThongBao tb : lstTBChung) {
+                    if (hash.compareTo(tb.getKey()) == 0) {
+                        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
+                            @Override
+                            protected int getVerticalSnapPreference() {
+                                return SNAP_TO_START;
+                            }
+                        };
+                        int position = lstTBChung.indexOf(tb);
+                        smoothScroller.setTargetPosition(position);
+                        recyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
+                        Toast.makeText(getActivity(), "Da load den " + position, Toast.LENGTH_LONG).show();
+                        setPrivCallBack(null);
+                        return;
+                    }
+                }
+                loadMore();
+            }
+
+            @Override
+            public void onFirstLoadFinish() {
+
+            }
+        });
+    }
+
     public void scrollTo(final int position) {
         setPrivCallBack(new RVTBChungAdapter.ICallBack() {
             @Override
@@ -103,6 +150,14 @@ public class TBChung extends Fragment {
 
             @Override
             public void onLoadMoreFinish() {
+
+                if (tbChungAdapter.allItemLoaded) {
+                    Toast.makeText(getActivity(), "Khong tim thay thong bao!", Toast.LENGTH_SHORT).show();
+                    setPrivCallBack(null);
+                    return;
+                }
+
+
                 if (tbChungAdapter.getLstThongBao().size() - 1 < position)
                     loadMore();
                 else {
@@ -147,7 +202,7 @@ public class TBChung extends Fragment {
                         lstThongBao) {
                     if (count >= tbChungAdapter.itemLoaded) {
                         tbObj = dtSnapShot.getValue(ThongBaoObj.class);
-                        tbChungAdapter.addThongBao(new ThongBao(tbObj.day, tbObj.event, tbObj.context));
+                        tbChungAdapter.addThongBao(new ThongBao(tbObj.day, tbObj.event, tbObj.context, tbObj.key));
                         Log.d(TAG, "onDataChange: ");
                     }
                     count++;

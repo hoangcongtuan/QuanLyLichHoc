@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.d(TAG, "onCreate: thoi_gian = " + intent.getStringExtra("thoi_gian"));
             Log.d(TAG, "onCreate: tieu_de = " + intent.getStringExtra("tieu_de"));
             Log.d(TAG, "onCreate: noi_dung = " + intent.getStringExtra("noi_dung"));
-            tbChung.scrollTo(10);
+            tbChung.scrollTo("sdfghhfgfsfdgf34564354tergfds55");
         }
     }
 

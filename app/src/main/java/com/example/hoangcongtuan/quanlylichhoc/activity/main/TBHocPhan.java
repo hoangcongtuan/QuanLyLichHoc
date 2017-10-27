@@ -105,7 +105,7 @@ public class TBHocPhan extends Fragment {
                     if (count >= hocPhanAdapter.itemLoaded) {
                         //load tin moi
                         tbObj = dtSnapshot.getValue(ThongBaoObj.class);
-                        hocPhanAdapter.addThongBao(new ThongBao(tbObj.day, tbObj.event, tbObj.context));
+                        hocPhanAdapter.addThongBao(new ThongBao(tbObj.day, tbObj.event, tbObj.context, tbObj.key));
                         Log.d(TAG, "onDataChange: load item moi");
                     }
                     count++;

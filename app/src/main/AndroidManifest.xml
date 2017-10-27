@@ -44,7 +44,12 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".activity.login.LoginActivity" />
-        <activity android:name=".activity.main.MainActivity" />
+        <activity android:name=".activity.main.MainActivity">
+            <intent-filter>
+                <action android:name=".activity.main.MainActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.setup.SetupActivity" />
 
         <provider
