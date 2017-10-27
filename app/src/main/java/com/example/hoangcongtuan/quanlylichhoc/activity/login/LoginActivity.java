@@ -14,6 +14,11 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
@@ -47,7 +52,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Man hinh dang nhap
@@ -344,6 +354,37 @@ public class LoginActivity extends AppCompatActivity
 
     }
 
+    public void getTopicSubcribe(String token, final String key) {
+        JsonObjectRequest jsonRequest;
+        jsonRequest = new JsonObjectRequest(Request.Method.GET, "https://iid.googleapis.com/iid/info/" + token + "?details=true", null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d(TAG, "onResponse: " + response.getJSONObject("rel").getJSONObject("topics").toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> headers = new HashMap<String, String>();
+                headers.put("Authorization","key=" + key);
+                return headers;
+            }
+
+        };
+        Utils.VolleyUtils.getsInstance(this).getRequestQueue().add(jsonRequest);
+    }
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -351,6 +392,15 @@ public class LoginActivity extends AppCompatActivity
         //Log.d(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        getTopicSubcribe(
+//                getResources().getString(R.string.FCM_TOKEN),
+//                getResources().getString(R.string.SERVER_KEY)
+//        );
+
+    }
 
     @Override
     public void onClick(View view) {

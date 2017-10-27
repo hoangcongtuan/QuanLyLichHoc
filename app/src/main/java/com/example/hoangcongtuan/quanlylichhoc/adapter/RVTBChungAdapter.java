@@ -26,7 +26,9 @@ public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private ArrayList<ThongBao> lstThongBao;
     private Context mContext;
 
-    private OnLoadMoreListener onLoadMoreListener;
+    LinearLayoutManager linearLayoutManager;
+
+    private ICallBack ICallBack;
 
     private final static int ITEM_LOADED = 0;
     private final static int ITEM_LOADING = 1;
@@ -40,8 +42,9 @@ public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
     public RVTBChungAdapter(RecyclerView recyclerView, Context context) {
+
         lstThongBao = new ArrayList<>();
-        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+        linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
         this.mContext = context;
 
         isLoading = false;
@@ -56,13 +59,13 @@ public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                 if (itemLoadCount == (lastVisibleItem + 1)) {
                     //load cac thong bao tiep theo
-                    if (onLoadMoreListener != null) {
+                    if (ICallBack != null) {
                         if (!allItemLoaded) {
                             //chua load het cac thong bao
                             isLoading = true;
                             //Log.d(TAG, "onScrolled: ");
                             //call back toi
-                            onLoadMoreListener.onLoadMore();
+                            ICallBack.onLoadMore();
                         }
 
                     }
@@ -137,8 +140,8 @@ public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     //ham set callBack
-    public void setOnLoadMoreListentner(OnLoadMoreListener onLoadMoreListener) {
-        this.onLoadMoreListener = onLoadMoreListener;
+    public void setICallBack(ICallBack ICallBack) {
+        this.ICallBack = ICallBack;
     }
 
     @Override
@@ -150,6 +153,10 @@ public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.lstThongBao = lstThongBao;
     }
 
+    public ArrayList<ThongBao> getLstThongBao() {
+        return lstThongBao;
+    }
+
     public void removeLast() {
         lstThongBao.remove(lstThongBao.size() - 1);
     }
@@ -159,8 +166,10 @@ public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     //interface dung de call back moi khi load them thong bao
-    public interface OnLoadMoreListener {
+    public interface ICallBack {
         void onLoadMore();
+        void onLoadMoreFinish();
+        void onFirstLoadFinish();
     }
 
     //tra ve trang thai cua thong bao, tu do xac dinh dung viewholder nao

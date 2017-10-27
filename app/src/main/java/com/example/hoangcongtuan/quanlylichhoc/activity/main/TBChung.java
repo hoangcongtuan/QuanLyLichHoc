@@ -5,11 +5,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBChungAdapter;
@@ -32,6 +34,8 @@ public class TBChung extends Fragment {
     DatabaseReference database;
     DatabaseReference tbChungRef;
     ValueEventListener tbChungEvenListener;
+    RVTBChungAdapter.ICallBack iCallBack;
+    RVTBChungAdapter.ICallBack privCallBack;
 
     @Nullable
     @Override
@@ -53,7 +57,7 @@ public class TBChung extends Fragment {
 
         recyclerView.setAdapter(tbChungAdapter);
 
-        tbChungAdapter.setOnLoadMoreListentner(new RVTBChungAdapter.OnLoadMoreListener() {
+        tbChungAdapter.setICallBack(new RVTBChungAdapter.ICallBack() {
             @Override
             public void onLoadMore() {
                 Log.d(TAG, "onLoadMore: ");
@@ -64,9 +68,64 @@ public class TBChung extends Fragment {
                 tbChungRef.removeEventListener(tbChungEvenListener);
                 tbChungRef.limitToFirst(tbChungAdapter.itemLoadCount).addListenerForSingleValueEvent(tbChungEvenListener);
             }
+
+            @Override
+            public void onLoadMoreFinish() {
+
+            }
+
+            @Override
+            public void onFirstLoadFinish() {
+            }
         });
         loadData();
     }
+
+    public void loadMore() {
+        Log.d(TAG, "loadMore: ");
+        tbChungAdapter.addThongBao(null);
+        tbChungAdapter.addThongBao(null);
+        tbChungAdapter.notifyDataSetChanged();
+        tbChungAdapter.itemLoadCount += tbChungAdapter.LOAD_MORE_DELTA;
+        tbChungRef.removeEventListener(tbChungEvenListener);
+        tbChungRef.limitToFirst(tbChungAdapter.itemLoadCount).addListenerForSingleValueEvent(tbChungEvenListener);
+//        recyclerView.scrollToPosition(
+//                tbChungAdapter.getLstThongBao().size() - 1
+//        );
+    }
+
+    public void scrollTo(final int position) {
+        setPrivCallBack(new RVTBChungAdapter.ICallBack() {
+            @Override
+            public void onLoadMore() {
+
+            }
+
+            @Override
+            public void onLoadMoreFinish() {
+                if (tbChungAdapter.getLstThongBao().size() - 1 < position)
+                    loadMore();
+                else {
+                    RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
+                        @Override
+                        protected int getVerticalSnapPreference() {
+                            return SNAP_TO_START;
+                        }
+                    };
+                    smoothScroller.setTargetPosition(position);
+                    recyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
+                    Toast.makeText(getActivity(), "Da load den " + position, Toast.LENGTH_LONG).show();
+                    setPrivCallBack(null);
+                }
+            }
+
+            @Override
+            public void onFirstLoadFinish() {
+
+            }
+        });
+    }
+
 
     public void loadData() {
         database = FirebaseDatabase.getInstance().getReference();
@@ -100,6 +159,11 @@ public class TBChung extends Fragment {
                 tbChungAdapter.itemLoadCount = count;
                 tbChungAdapter.notifyDataSetChanged();
                 tbChungAdapter.isLoading = false;
+                //recyclerView.scrollToPosition(tbChungAdapter.itemLoadCount);
+                if (privCallBack != null)
+                    privCallBack.onLoadMoreFinish();
+                if (iCallBack != null)
+                    iCallBack.onLoadMoreFinish();
             }
 
             @Override
@@ -110,4 +174,11 @@ public class TBChung extends Fragment {
         tbChungRef.limitToFirst(tbChungAdapter.itemLoadCount).addListenerForSingleValueEvent(tbChungEvenListener);
     }
 
+    private void setPrivCallBack(RVTBChungAdapter.ICallBack privCallBack) {
+        this.privCallBack = privCallBack;
+    }
+
+    public void setiCallBack(RVTBChungAdapter.ICallBack iCallBack) {
+        this.iCallBack = iCallBack;
+    }
 }

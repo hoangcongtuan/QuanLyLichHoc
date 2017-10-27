@@ -33,7 +33,7 @@ public class Utils {
         private final static String TAG = QLLHUtils.class.getName();
         private static QLLHUtils sInstance;
 
-        private QLLHUtils (Context context) {
+        private QLLHUtils(Context context) {
 
         }
 
@@ -50,7 +50,7 @@ public class Utils {
         }
 
         public void subscribeTopic(ArrayList<String> lstTopic) {
-            for (String s: lstTopic)
+            for (String s : lstTopic)
                 FirebaseMessaging.getInstance().subscribeToTopic(s);
         }
 

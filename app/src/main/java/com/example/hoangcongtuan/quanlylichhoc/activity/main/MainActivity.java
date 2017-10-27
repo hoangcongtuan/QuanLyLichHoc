@@ -65,6 +65,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FirebaseUser user;
     Uri avatarUrl;
     TextView tvUserName;
+    TBChung tbChung;
+    TBHocPhan tbHPhan;
+    LichHocFragment lichHocFragment;
+
     private DatabaseReference database;
     private DatabaseReference firebaseDBUserMaHP;
 
@@ -75,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //kiem tra trong intent co extras hay ko, neu co -> xu ly payload notification gui toi
 
         init();
         getWidgets();
@@ -186,14 +192,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setWidgetsEvent() {
-
+        Intent intent = getIntent();
+        Log.d(TAG, "onCreate: Intent = " + intent.toString());
+        if (intent.getExtras() != null) {
+            Log.d(TAG, "onCreate: thoi_gian = " + intent.getStringExtra("thoi_gian"));
+            Log.d(TAG, "onCreate: tieu_de = " + intent.getStringExtra("tieu_de"));
+            Log.d(TAG, "onCreate: noi_dung = " + intent.getStringExtra("noi_dung"));
+            tbChung.scrollTo(10);
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        tbChung = new TBChung();
+        tbHPhan = new TBHocPhan();
+        lichHocFragment = new LichHocFragment();
+
         pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(new TBHocPhan(), strTabs[0]);
-        pagerAdapter.addFragment(new TBChung(), strTabs[1]);
-        pagerAdapter.addFragment(new LichHocFragment(), strTabs[2]);
+        pagerAdapter.addFragment(tbChung, strTabs[0]);
+        pagerAdapter.addFragment(tbHPhan, strTabs[1]);
+        pagerAdapter.addFragment(lichHocFragment, strTabs[2]);
 
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(3);
@@ -270,5 +287,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         drawerLayout.closeDrawers();
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 }

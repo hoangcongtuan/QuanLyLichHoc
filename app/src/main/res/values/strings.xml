@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">QuanLyLichHoc</string>
     <string-array name="tab_name">
-        <item>TB Học </item>
-        <item>TB Chung</item>
+        <item>TB Chung </item>
+        <item>TB Hoc Phan</item>
         <item>Lịch học</item>
     </string-array>
     <string name="title_activity_login">LoginActivity</string>

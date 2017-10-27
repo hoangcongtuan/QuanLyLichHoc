@@ -10,7 +10,7 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.activity.SplashActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -26,28 +26,38 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         Log.d(TAG, "onMessageReceived: From " + remoteMessage.getFrom());
-        if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "onMessageReceived: " + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getBody());
+        //check if contain data payload
+        if (remoteMessage.getData().size() > 0) {
+            Log.d(TAG, "onMessageReceived: Data Payload = " + remoteMessage.getData());
         }
+        //check if containt notification
+        if (remoteMessage.getNotification() != null) {
+            Log.d(TAG, "onMessageReceived: Body = " + remoteMessage.getNotification().getBody());
+        }
+        sendNotification(remoteMessage);
+
     }
 
 
-    public void sendNotification(String msg) {
-        Intent intent = new Intent(this, SplashActivity.class);
+    public void sendNotification(RemoteMessage msg) {
+        Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("tieu_de", msg.getData().get("tieu_de"));
+        intent.putExtra("thoi_gian", msg.getData().get("thoi_gian"));
+        intent.putExtra("noi_dung", msg.getData().get("noi_dung"));
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.com_facebook_button_icon)
-                .setContentTitle("Message From Firebase")
-                .setContentText(msg)
+                .setContentTitle(msg.getNotification().getTitle())
+                .setContentText(msg.getNotification().getBody())
                 .setAutoCancel(true)
                 .setSound(notificationSound)
                 .setContentIntent(pendingIntent);
         NotificationManager notifcationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notifcationManager.notify(0, builder.build());
+        Log.d(TAG, "sendNotification: send notification");
     }
 
     @Override

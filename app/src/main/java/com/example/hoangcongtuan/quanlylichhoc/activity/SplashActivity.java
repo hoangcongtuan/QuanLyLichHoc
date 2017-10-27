@@ -30,6 +30,17 @@ public class SplashActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         DBLopHPHelper.init(getApplicationContext());
 
+//        Intent intent = getIntent();
+//        Log.d(TAG, "onCreate: Intent = " + intent.toString());
+//        if (intent.getExtras() != null) {
+//            Log.d(TAG, "onCreate: thoi_gian = " + intent.getStringExtra("thoi_gian"));
+//            Log.d(TAG, "onCreate: tieu_de = " + intent.getStringExtra("tieu_de"));
+//            Log.d(TAG, "onCreate: noi_dung = " + intent.getStringExtra("noi_dung"));
+//        }
+
+
+
+
     }
 
     @Override
