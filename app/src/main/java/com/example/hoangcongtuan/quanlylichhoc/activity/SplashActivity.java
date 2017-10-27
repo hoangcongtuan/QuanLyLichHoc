@@ -58,6 +58,18 @@ public class SplashActivity extends AppCompatActivity {
             //chuyen den mang hinh chinh
             if(DBLopHPHelper.getsInstance().isUserLocalDBAvailable()) {
                 Intent intent = new Intent(this, MainActivity.class);
+                //kiem tra co payload tu notification gui toi hay ko
+                Intent splashIntent = getIntent();
+                Log.d(TAG, "onCreate: Intent = " + splashIntent.toString());
+                if (splashIntent.getExtras() != null) {
+                    Log.d(TAG, "onCreate: thoi_gian = " + splashIntent.getStringExtra("thoi_gian"));
+                    Log.d(TAG, "onCreate: tieu_de = " + splashIntent.getStringExtra("tieu_de"));
+                    Log.d(TAG, "onCreate: noi_dung = " + splashIntent.getStringExtra("noi_dung"));
+                    intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
+                    intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
+                    intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
+                    intent.putExtra("id", splashIntent.getStringExtra("id"));
+                }
                 startActivity(intent);
                 finish();
             }
