@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,6 @@ import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by hoangcongtuan on 9/7/17.
@@ -27,7 +23,6 @@ import static android.content.ContentValues.TAG;
 public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<ThongBao> lstThongBao;
-    private OnLoadMoreListener onLoadMoreListener;
     private Context mContext;
     private final static int ITEM_LOADED = 0;
     private final static int ITEM_LOADING = 1;
@@ -38,6 +33,8 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public int itemLoadCount;       //so ban tin se load
     public int itemLoaded;              //so ban tin da load
     public boolean allItemLoaded;
+
+    private RVTBChungAdapter.ICallBack iCallBack;
 
     //hold noi dung cua moi ban tin
     public class ThongBaoHolder extends RecyclerView.ViewHolder {
@@ -79,11 +76,11 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                 //Log.d(TAG, "onScrolled: last visible item: " + lastVisibleItem);
                 if (itemLoadCount == (lastVisibleItem + 1)) {   //da keo xuong item cuoi cua ban tin
-                    if (onLoadMoreListener != null) {           //load ban tin tiep theo
+                    if (iCallBack != null) {           //load ban tin tiep theo
                         if (!allItemLoaded) {
                             isLoading = true;
-                            Log.d(TAG, "onScrolled: load more");
-                            onLoadMoreListener.onLoadMore();
+                            //Log.d(TAG, "onScrolled: load more");
+                            iCallBack.onLoadMore();
                         }
 
                     }
@@ -134,10 +131,6 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         popupMenu.show();
     }
 
-    //interface dung de callBack
-    public interface OnLoadMoreListener {
-        void onLoadMore();
-    }
 
     @Override
     public int getItemCount() {
@@ -150,7 +143,7 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return lstThongBao.get(position) == null ? ITEM_LOADING : ITEM_LOADED;
     }
 
-    public List<ThongBao> getLstThongBao() {
+    public ArrayList<ThongBao> getLstThongBao() {
         return lstThongBao;
     }
 
@@ -158,10 +151,6 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.lstThongBao = lstThongBao;
     }
 
-    //set callBack
-    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
-        this.onLoadMoreListener = onLoadMoreListener;
-    }
 
     public void addThongBao(ThongBao tb) {
         lstThongBao.add(tb);
@@ -169,6 +158,10 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void removeLastThongBao() {
         lstThongBao.remove(lstThongBao.size() - 1);
+    }
+
+    public void setiCallBack(RVTBChungAdapter.ICallBack iCallBack) {
+        this.iCallBack = iCallBack;
     }
 
 }

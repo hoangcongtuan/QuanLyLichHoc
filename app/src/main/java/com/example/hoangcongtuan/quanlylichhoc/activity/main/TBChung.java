@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by hoangcongtuan on 9/6/17.
@@ -68,7 +69,7 @@ public class TBChung extends Fragment {
                 tbChungAdapter.notifyDataSetChanged();
                 tbChungAdapter.itemLoadCount += tbChungAdapter.LOAD_MORE_DELTA;
                 tbChungRef.removeEventListener(tbChungEvenListener);
-                tbChungRef.limitToFirst(tbChungAdapter.itemLoadCount).addListenerForSingleValueEvent(tbChungEvenListener);
+                tbChungRef.limitToLast(tbChungAdapter.itemLoadCount).addListenerForSingleValueEvent(tbChungEvenListener);
             }
 
             @Override
@@ -90,7 +91,7 @@ public class TBChung extends Fragment {
         tbChungAdapter.notifyDataSetChanged();
         tbChungAdapter.itemLoadCount += tbChungAdapter.LOAD_MORE_DELTA;
         tbChungRef.removeEventListener(tbChungEvenListener);
-        tbChungRef.limitToFirst(tbChungAdapter.itemLoadCount).addListenerForSingleValueEvent(tbChungEvenListener);
+        tbChungRef.limitToLast(tbChungAdapter.itemLoadCount).addListenerForSingleValueEvent(tbChungEvenListener);
 //        recyclerView.scrollToPosition(
 //                tbChungAdapter.getLstThongBao().size() - 1
 //        );
@@ -194,18 +195,22 @@ public class TBChung extends Fragment {
                 ThongBaoObj tbObj;
                 Iterable<DataSnapshot> lstThongBao;
                 lstThongBao = dataSnapshot.getChildren();
+                ArrayList<ThongBao> lstTmp = new ArrayList<>();
 
                 tbChungAdapter.removeLast();
                 tbChungAdapter.removeLast();
                 int count = 0;
                 for (DataSnapshot dtSnapShot :
                         lstThongBao) {
-                    if (count >= tbChungAdapter.itemLoaded) {
+                    if (count < dataSnapshot.getChildrenCount() - tbChungAdapter.itemLoaded) {
                         tbObj = dtSnapShot.getValue(ThongBaoObj.class);
-                        tbChungAdapter.addThongBao(new ThongBao(tbObj.day, tbObj.event, tbObj.context, tbObj.key));
-                        Log.d(TAG, "onDataChange: ");
+                        lstTmp.add(new ThongBao(tbObj.day, tbObj.event, tbObj.context, tbObj.key));
                     }
                     count++;
+                }
+                Collections.reverse(lstTmp);
+                for(ThongBao tb : lstTmp) {
+                    tbChungAdapter.addThongBao(tb);
                 }
 
                 if (count == tbChungAdapter.itemLoaded)
@@ -226,7 +231,7 @@ public class TBChung extends Fragment {
 
             }
         };
-        tbChungRef.limitToFirst(tbChungAdapter.itemLoadCount).addListenerForSingleValueEvent(tbChungEvenListener);
+        tbChungRef.limitToLast(tbChungAdapter.itemLoadCount).addListenerForSingleValueEvent(tbChungEvenListener);
     }
 
     private void setPrivCallBack(RVTBChungAdapter.ICallBack privCallBack) {

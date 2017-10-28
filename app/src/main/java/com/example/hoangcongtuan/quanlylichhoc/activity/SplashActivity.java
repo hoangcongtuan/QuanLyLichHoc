@@ -12,7 +12,6 @@ import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 /**
  * Kiem tra trang thai dang nhap, neu da dang nhap thi toi man hinh chinh, con ko thi toi man hinh dang nhap
@@ -29,18 +28,6 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         mAuth = FirebaseAuth.getInstance();
         DBLopHPHelper.init(getApplicationContext());
-
-//        Intent intent = getIntent();
-//        Log.d(TAG, "onCreate: Intent = " + intent.toString());
-//        if (intent.getExtras() != null) {
-//            Log.d(TAG, "onCreate: thoi_gian = " + intent.getStringExtra("thoi_gian"));
-//            Log.d(TAG, "onCreate: tieu_de = " + intent.getStringExtra("tieu_de"));
-//            Log.d(TAG, "onCreate: noi_dung = " + intent.getStringExtra("noi_dung"));
-//        }
-
-
-
-
     }
 
     @Override
@@ -61,14 +48,40 @@ public class SplashActivity extends AppCompatActivity {
                 //kiem tra co payload tu notification gui toi hay ko
                 Intent splashIntent = getIntent();
                 Log.d(TAG, "onCreate: Intent = " + splashIntent.toString());
-                if (splashIntent.getExtras() != null) {
-                    Log.d(TAG, "onCreate: thoi_gian = " + splashIntent.getStringExtra("thoi_gian"));
-                    Log.d(TAG, "onCreate: tieu_de = " + splashIntent.getStringExtra("tieu_de"));
-                    Log.d(TAG, "onCreate: noi_dung = " + splashIntent.getStringExtra("noi_dung"));
-                    intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
-                    intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
-                    intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
-                    intent.putExtra("id", splashIntent.getStringExtra("id"));
+                if (splashIntent.getExtras() != null && splashIntent.hasExtra("tieu_de")) {
+//                    Log.d(TAG, "onCreate: thoi_gian = " + splashIntent.getStringExtra("thoi_gian"));
+//                    Log.d(TAG, "onCreate: tieu_de = " + splashIntent.getStringExtra("tieu_de"));
+//                    Log.d(TAG, "onCreate: noi_dung = " + splashIntent.getStringExtra("noi_dung"));
+                    String strExtras;
+                    if (splashIntent.hasExtra("tieu_de"))
+                        intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
+                    else
+                        intent.putExtra("tieu_de", "Null");
+
+                    if (splashIntent.hasExtra("thoi_gian"))
+                        intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
+                    else
+                        intent.putExtra("thoi_gian", "Null");
+
+                    if (splashIntent.hasExtra("noi_dung"))
+                        intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
+                    else
+                        intent.putExtra("noi_dung", "Null");
+
+                    if (splashIntent.hasExtra("id"))
+                        intent.putExtra("id", splashIntent.getStringExtra("id"));
+                    else
+                        intent.putExtra("id", "Null");
+
+                    if (splashIntent.hasExtra("type"))
+                        intent.putExtra("type", splashIntent.getStringExtra("type"));
+                    else
+                        intent.putExtra("type", "Null");
+
+//                    intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
+//                    intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
+//                    intent.putExtra("id", splashIntent.getStringExtra("id"));
+//                    intent.putExtra("type", splashIntent.getStringExtra("type"));
                 }
                 startActivity(intent);
                 finish();
@@ -76,7 +89,7 @@ public class SplashActivity extends AppCompatActivity {
             else {
                 Intent intent = new Intent(this, SetupActivity.class);
                 //Intent intent = new Intent(this, SQLiteDB.class);
-                Log.d(TAG, "onStart: Photo url = " + user.getPhotoUrl());
+                //Log.d(TAG, "onStart: Photo url = " + user.getPhotoUrl());
                 startActivity(intent);
                 finish();
             }
@@ -87,6 +100,6 @@ public class SplashActivity extends AppCompatActivity {
 
         }
 
-        Log.d(TAG, "onStart: " + FirebaseInstanceId.getInstance().getToken());
+        //Log.d(TAG, "onStart: " + FirebaseInstanceId.getInstance().getToken());
     }
 }

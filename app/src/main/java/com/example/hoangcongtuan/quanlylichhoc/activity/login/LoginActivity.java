@@ -119,19 +119,16 @@ public class LoginActivity extends AppCompatActivity
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                //Log.d(TAG, "onSuccess: ");
                 startAuthWithFirebase();
                 handleFbLoginResult(loginResult.getAccessToken());
             }
 
             @Override
             public void onCancel() {
-                //Log.d(TAG, "onCancel: ");
             }
 
             @Override
             public void onError(FacebookException error) {
-                //Log.d(TAG, "onError: ");
                 Snackbar snackbar = Snackbar.make(coordinatorLayout, "Đăng nhập Facebook thất bại!!", Snackbar.LENGTH_INDEFINITE);
                 snackbar.show();
             }
@@ -171,8 +168,6 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void handleGgSignInResult(GoogleSignInResult result) {
-        //Log.d(TAG, "handleSignInResult: " + result.isSuccess());
-        //Log.d(TAG, "handleGgSignInResult: " + result.getStatus().getStatusMessage());
         if (result.isSuccess()) {
             GoogleSignInAccount signInAccount = result.getSignInAccount();
             startAuthWithFirebase();
@@ -193,12 +188,10 @@ public class LoginActivity extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            //Log.d(TAG, "onComplete: Success");
                             firebaseUser = firebaseAuth.getCurrentUser();
                             handleFirebaseLoginSuccess(firebaseUser);
                         }
                         else {
-                            //Log.d(TAG, "onComplete: Failed");
                             Snackbar snackbar = Snackbar.make(coordinatorLayout, "Thất bại, có vẻ email của bạn đã được sử dụng!!", Snackbar.LENGTH_INDEFINITE);
                             snackbar.show();
                             finishAuthWithFirebase();
@@ -228,20 +221,16 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        //Log.d(TAG, "firebaseAuthWithGoogle: " + account.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            //Log.d(TAG, "onComplete: Success");
                             firebaseUser = firebaseAuth.getCurrentUser();
-                            //Log.d(TAG, "onComplete: User UId = " + user.getUid());
                             handleFirebaseLoginSuccess(firebaseUser);
                         }
                         else {
-                            //Log.d(TAG, "onComplete: failure");
                             Snackbar snackbar = Snackbar.make(coordinatorLayout, "Đăng nhập Google thất bại!!", Snackbar.LENGTH_INDEFINITE);
                             snackbar.show();
 
@@ -336,21 +325,9 @@ public class LoginActivity extends AppCompatActivity
             }
         });
 
-//        if (DBLopHPHelper.getsInstance().isUserLocalDBAvailable()) {
-//            Intent intent = new Intent(this, MainActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
-//
-//        else {
-//            Intent intent = new Intent(this, SetupActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
-
         //write token to firebase user
         firebaseUserToken.setValue(FirebaseInstanceId.getInstance().getToken());
-        Log.d(TAG, "handleFirebaseLoginSuccess: Token = " + FirebaseInstanceId.getInstance().getToken());
+        //Log.d(TAG, "handleFirebaseLoginSuccess: Token = " + FirebaseInstanceId.getInstance().getToken());
 
     }
 
@@ -389,7 +366,6 @@ public class LoginActivity extends AppCompatActivity
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(this, connectionResult.getErrorMessage(), Toast.LENGTH_LONG).show();
-        //Log.d(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
     }
 
     @Override

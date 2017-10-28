@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap response) {
-                        Log.d(TAG, "onResponse: bit map get");
                         ImageView imageView = (ImageView)navigationView.getHeaderView(0).findViewById(R.id.imgAvatar);
                         imageView.setImageBitmap(response);
                     }
@@ -194,11 +193,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setWidgetsEvent() {
         Intent intent = getIntent();
         Log.d(TAG, "onCreate: Intent = " + intent.toString());
-        if (intent.getExtras() != null) {
-            Log.d(TAG, "onCreate: thoi_gian = " + intent.getStringExtra("thoi_gian"));
-            Log.d(TAG, "onCreate: tieu_de = " + intent.getStringExtra("tieu_de"));
-            Log.d(TAG, "onCreate: noi_dung = " + intent.getStringExtra("noi_dung"));
-            tbChung.scrollTo("sdfghhfgfsfdgf34564354tergfds55");
+        if (intent.getExtras() != null && intent.hasExtra("tieu_de")) {
+//            Log.d(TAG, "onCreate: thoi_gian = " + intent.getStringExtra("thoi_gian"));
+//            Log.d(TAG, "onCreate: tieu_de = " + intent.getStringExtra("tieu_de"));
+//            Log.d(TAG, "onCreate: noi_dung = " + intent.getStringExtra("noi_dung"));
+            Log.d(TAG, "setWidgetsEvent: key = " + intent.getStringExtra("id"));
+            String tbType = intent.getStringExtra("type");
+            if (tbType.compareTo("tbc") == 0) {
+                viewPager.setCurrentItem(0);
+                tbChung.scrollTo(intent.getStringExtra("id"));
+            }
+
+            else {
+                viewPager.setCurrentItem(1);
+                tbHPhan.scrollTo(intent.getStringExtra("id"));
+            }
+
         }
     }
 

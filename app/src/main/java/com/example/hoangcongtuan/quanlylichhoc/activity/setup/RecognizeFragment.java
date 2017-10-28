@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -106,7 +105,7 @@ public class RecognizeFragment extends Fragment {
     public ArrayList<String> processImage(Bitmap bitmap) throws NullPointerException{
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity()).build();
         if(!textRecognizer.isOperational()) {
-            Log.e(TAG, "processImage: ");
+            //Log.e(TAG, "processImage: ");
             return null;
         }
 
@@ -164,12 +163,12 @@ public class RecognizeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart: ");
+        //Log.d(TAG, "onStart: ");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: ");
+        //Log.d(TAG, "onResume: ");
     }
 }
