@@ -28,6 +28,8 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         mAuth = FirebaseAuth.getInstance();
         DBLopHPHelper.init(getApplicationContext());
+//        ReminderDatabase.init(getApplicationContext());
+//        ReminderManager.init(getApplicationContext());
     }
 
     @Override

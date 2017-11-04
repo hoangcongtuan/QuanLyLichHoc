@@ -12,4 +12,9 @@
     <dimen name="textNormal">15sp</dimen>
     <dimen name="stepperSize">30dp</dimen>
     <dimen name="layoutPadding">10dp</dimen>
+    <dimen name="viewMargin">5dp</dimen>
+    <dimen name="textSizeNormal">20sp</dimen>
+    <dimen name="textSizeLarge">30sp</dimen>
+    <dimen name="textSizeSmall">15sp</dimen>
+    <dimen name="viewLargeMargin">15dp</dimen>
 </resources>

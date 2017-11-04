@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:text="01/01/2018"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:text="12:00"
+        android:layout_below="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"/>
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:text="Title"
+        android:gravity="left"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tvContent"
+        android:layout_below="@+id/tvTitle"
+        android:gravity="left"
+        android:layout_alignParentRight="true"
+        android:text="Content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp" />
+
+</RelativeLayout>

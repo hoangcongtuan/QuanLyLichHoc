@@ -174,8 +174,6 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         return true;
     }
 
-
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -190,9 +188,11 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
                 //update subscribe
                 updateSubscribeTopic();
+                setResult(RESULT_OK);
                 finish();
                 break;
             case R.id.btnCancel:
+                setResult(RESULT_CANCELED);
                 finish();
                 break;
         }

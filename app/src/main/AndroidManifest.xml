@@ -36,6 +36,7 @@
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -46,6 +47,7 @@
         <activity android:name=".activity.main.MainActivity">
             <intent-filter>
                 <action android:name=".activity.main.MainActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -65,34 +67,46 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="orc" />
 
-        <activity android:name=".activity.EditHPActivity"></activity>
-        <!-- FirebaseInstanceIdService performs security checks at runtime,
-        no need for explicit permissions despite exported="true"             -->
-        <service android:name=".services.MyFirebaseInstanceIdService" android:exported="true">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
-
+        <activity android:name=".activity.EditHPActivity" />
+        <!--
+        FirebaseInstanceIdService performs security checks at runtime,
+        no need for explicit permissions despite exported="true"
+        -->
         <service
-            android:name=".services.MyFirebaseMessagingService">
+            android:name=".services.MyFirebaseInstanceIdService"
+            android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".services.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
-     See README(https://goo.gl/l4GJaQ) for more. -->
+        <!--
+     Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/icn_thongbao" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <!--
+             Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-
+        <activity android:name=".activity.SettingsActivity" />
+        <activity android:name=".activity.AlarmActivity" />
+        <activity android:name=".activity.AddAlarmActivity" />
+        <activity android:name=".activity.AlamrDetailsActivity"></activity>
+        <service android:name=".services.ReminderService"
+            android:enabled="true"/>
+        <receiver android:name=".services.OnAlarmReceiver"/>
     </application>
 
 </manifest>

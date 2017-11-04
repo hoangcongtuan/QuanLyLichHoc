@@ -26,7 +26,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.AlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.EditHPActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.SettingsActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.MainPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
@@ -41,6 +43,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,6 +55,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private final static String TAG = MainActivity.class.getName();
+    public final static int RC_EDITHPACT = 1;
 
     MainPagerAdapter pagerAdapter;
     ViewPager viewPager;
@@ -85,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         init();
         getWidgets();
         setWidgets();
+        setWidgetsEvent();
         setWidgetsEvent();
     }
 
@@ -151,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         try {
                             Log.d(TAG, "onResponse: " + response.getJSONObject("rel").getJSONObject("topics").toString());
                         } catch (JSONException e) {
+                            Log.d(TAG, "onResponse: Topic list null");
                             e.printStackTrace();
                         }
                     }
@@ -158,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "onErrorResponse: ");
 
                     }
                 }) {
@@ -284,19 +291,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.item_thay_doi_HP:
                 Intent intent = new Intent(MainActivity.this, EditHPActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, RC_EDITHPACT);
                 break;
             case R.id.item_showFCMDetails:
                 getTopicSubcribe(
-                        getResources().getString(R.string.FCM_TOKEN),
+                        FirebaseInstanceId.getInstance().getToken(),
                         getResources().getString(R.string.SERVER_KEY)
                 );
                 break;
             case R.id.item_showSubscribeTopic:
+                break;
+            case R.id.item_cat_dat:
+                Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intentSettings);
+                break;
+            case R.id.item_nhac_nho:
+                Intent intentAlarm = new Intent(MainActivity.this, AlarmActivity.class);
+                startActivity(intentAlarm);
+                break;
 
         }
         drawerLayout.closeDrawers();
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RC_EDITHPACT) {
+            if (resultCode == RESULT_OK) {
+                lichHocFragment.updateUI();
+            }
+        }
     }
 
     @Override

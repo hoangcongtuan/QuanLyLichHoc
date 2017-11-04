@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <include
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            layout="@layout/toolbar_layout"
+            />
+    </android.support.design.widget.AppBarLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+            <ImageView
+                android:paddingTop="10dp"
+                android:src="@drawable/img_alarm_clock"
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_title" />
+
+                <EditText
+                    android:id="@+id/edtReminderTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:hint="Tiêu đề" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_content"
+                    android:layout_marginLeft="10dp" />
+
+                <EditText
+                    android:id="@+id/edtReminderContent"
+                    android:hint="Nội dung"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_date"
+                    android:layout_marginLeft="10dp"/>
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:text="01/01/2018"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"/>
+                <Button
+                    android:id="@+id/btnSetDate"
+                    android:text="Set date"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.AppCompat.Button.Colored"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_time"
+                    android:layout_marginLeft="10dp"/>
+
+                <TextView
+                    android:id="@+id/tvTime"
+                    android:text="12:00"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"/>
+                <Button
+                    android:id="@+id/btnSetTime"
+                    android:text="Set time"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.AppCompat.Button.Colored"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnSave"
+                    android:text="Save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    style="@style/Widget.AppCompat.Button.Colored"/>
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:text="Cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    style="@style/Widget.AppCompat.Button.Colored" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

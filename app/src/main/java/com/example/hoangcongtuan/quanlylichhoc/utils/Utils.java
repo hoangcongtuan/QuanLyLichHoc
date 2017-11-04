@@ -29,6 +29,16 @@ public class Utils {
         }
     }
 
+
+//    public static class PreferenceUtils {
+//        private final static String TAG = PreferenceUtils.class.getName();
+//        private static PreferenceUtils sInstance;
+//
+//        private PreferenceUtils(Context context) {
+//
+//        }
+//    }
+
     public static class QLLHUtils {
         private final static String TAG = QLLHUtils.class.getName();
         private static QLLHUtils sInstance;

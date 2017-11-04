@@ -61,4 +61,13 @@ public class LichHocFragment extends Fragment {
     private void setWidgetsEvent() {
 
     }
+
+    public void updateUI() {
+        lstLopHP.clear();
+        ArrayList<LopHP> lst = DBLopHPHelper.getsInstance().getListUserLopHP();
+        for(LopHP hp : lst) {
+            lstLopHP.add(hp);
+        }
+        LVTKBieuAdapter.notifyDataSetChanged();
+    }
 }

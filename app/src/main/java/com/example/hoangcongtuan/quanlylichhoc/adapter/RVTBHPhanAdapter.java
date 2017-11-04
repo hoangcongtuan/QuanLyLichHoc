@@ -1,16 +1,20 @@
 package com.example.hoangcongtuan.quanlylichhoc.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.AddAlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
 
 import java.util.ArrayList;
@@ -105,7 +109,7 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     //set cac thuoc tinh cho bang tin
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof ThongBaoHolder) {
 
             final ThongBaoHolder thongBaoHolder = (ThongBaoHolder)holder;
@@ -117,7 +121,7 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             thongBaoHolder.btnDots.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopupNewFeed(thongBaoHolder.btnDots);
+                    showPopupNewFeed(thongBaoHolder.btnDots, position);
                 }
             });
 
@@ -125,9 +129,25 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     //show popup menu khi nhan vao bieu tuong 3 cham
-    public void showPopupNewFeed(View view) {
+    public void showPopupNewFeed(View view, final int position) {
         PopupMenu popupMenu = new PopupMenu(mContext, view);
         popupMenu.inflate(R.menu.menu_new_feed);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.item_nhac_toi:
+                        Toast.makeText(mContext, lstThongBao.get(position).getTittle(), Toast.LENGTH_SHORT).show();
+                        Intent addAlarmIntent = new Intent(mContext, AddAlarmActivity.class);
+                        addAlarmIntent.putExtra("tieu_de", lstThongBao.get(position).getTittle());
+                        addAlarmIntent.putExtra("noi_dung", lstThongBao.get(position).getContent());
+                        mContext.startActivity(addAlarmIntent);
+                        break;
+
+                }
+                return true;
+            }
+        });
         popupMenu.show();
     }
 
