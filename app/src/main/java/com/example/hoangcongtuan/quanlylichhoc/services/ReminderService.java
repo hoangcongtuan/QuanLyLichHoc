@@ -13,7 +13,7 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.activity.AlamrDetailsActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AlamrDetailsActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDatabase;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
@@ -32,7 +32,7 @@ public class ReminderService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         Log.d(TAG, "onHandleIntent: push notification");
 
-        int idReceived = Integer.parseInt(intent.getStringExtra(ReminderManager.KEY_REMINDER_ID));
+        int idReceived = intent.getIntExtra(ReminderManager.KEY_REMINDER_ID, -1);
 
         Intent detailIntent = new Intent(this, AlamrDetailsActivity.class);
         detailIntent.putExtra(ReminderManager.KEY_REMINDER_ID, idReceived);

@@ -15,6 +15,8 @@ import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 
 import java.util.ArrayList;
 
+import static com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper.getsInstance;
+
 /**
  * Created by hoangcongtuan on 9/6/17.
  */
@@ -46,7 +48,7 @@ public class LichHocFragment extends Fragment {
 
 
     private void init() {
-        lstLopHP = new ArrayList<>(DBLopHPHelper.getsInstance().getListUserLopHP());
+        lstLopHP = new ArrayList<>(getsInstance().getListUserLopHP());
         LVTKBieuAdapter = new LVTKBieuAdapter(getActivity(), android.R.layout.simple_list_item_1, lstLopHP);
     }
 

@@ -101,12 +101,17 @@
             android:resource="@color/colorAccent" />
 
         <activity android:name=".activity.SettingsActivity" />
-        <activity android:name=".activity.AlarmActivity" />
-        <activity android:name=".activity.AddAlarmActivity" />
-        <activity android:name=".activity.AlamrDetailsActivity"></activity>
-        <service android:name=".services.ReminderService"
-            android:enabled="true"/>
-        <receiver android:name=".services.OnAlarmReceiver"/>
+        <activity android:name=".activity.Alarm.AlarmActivity" />
+        <activity android:name=".activity.Alarm.AddAlarmActivity" />
+        <activity android:name=".activity.Alarm.AlamrDetailsActivity" />
+
+        <service
+            android:name=".services.ReminderService"
+            android:enabled="true" />
+
+        <receiver android:name=".services.OnAlarmReceiver" />
+
+        <activity android:name=".activity.Alarm.EditAlarmActivity"></activity>
     </application>
 
 </manifest>

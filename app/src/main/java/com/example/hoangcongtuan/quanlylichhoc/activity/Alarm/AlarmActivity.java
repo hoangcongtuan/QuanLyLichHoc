@@ -1,4 +1,4 @@
-package com.example.hoangcongtuan.quanlylichhoc.activity;
+package com.example.hoangcongtuan.quanlylichhoc.activity.Alarm;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.ItemClickListener {
 
     private final static int RC_DETAIL = 0;
+    private final static int RC_ADD = 1;
+    private static final String TAG = AlarmActivity.class.getName();
     private ArrayList<Reminder> mReminders;
     private RecyclerView mRecyclerView;
     private ReminderAdapter mAdapter;
@@ -55,7 +58,8 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(AlarmActivity.this, AddAlarmActivity.class);
-                startActivity(i);
+
+                startActivityForResult(i, RC_ADD);
             }
         });
     }
@@ -78,9 +82,25 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
         } else {
             Intent i = new Intent(AlarmActivity.this, AlamrDetailsActivity.class);
             i.putExtra(ReminderManager.KEY_REMINDER_ID, reminder.getId());
-            //startActivityForResult(i, RC_DETAIL);
-            startActivity(i);
+            startActivityForResult(i, RC_DETAIL);
+            //startActivity(i);
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: Result");
+        if (requestCode == RC_DETAIL || requestCode == RC_ADD) {
+            Log.d(TAG, "onActivityResult: RC_DETAIL");
+            //update alarm list
+            mReminders.clear();
+            ArrayList<Reminder> lstReminder = ReminderDatabase.getsInstance(getApplicationContext()).getAllReminders();
+            for(Reminder r : lstReminder)
+                mReminders.add(r);
+            mAdapter.notifyDataSetChanged();
+
+        }
     }
 }

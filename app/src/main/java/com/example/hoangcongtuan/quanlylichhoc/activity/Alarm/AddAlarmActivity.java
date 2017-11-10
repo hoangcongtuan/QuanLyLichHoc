@@ -1,4 +1,4 @@
-package com.example.hoangcongtuan.quanlylichhoc.activity;
+package com.example.hoangcongtuan.quanlylichhoc.activity.Alarm;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -35,6 +35,8 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
     private EditText edtTitle, edtContent;
     private TextView tvDate, tvTime;
     private Toolbar toolbar;
+    private Reminder reminder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,20 +55,6 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
         addWidgetsListener();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Intent intent = getIntent();
-        if (intent.hasExtra("tieu_de")) {
-            edtTitle.setText(
-                    intent.getStringExtra("tieu_de")
-            );
-
-            edtContent.setText(
-                    intent.getStringExtra("noi_dung")
-            );
-        }
-    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -99,9 +87,9 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
         } else {
             mTime = mHour + ":" + mMinute;
         }
-
         tvDate.setText(mDate);
         tvTime.setText(mTime);
+
     }
 
     private void addWidgetsListener() {
@@ -122,10 +110,26 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.btnSave:
                 saveReminder();
+                Intent intent = new Intent();
+                intent.putExtra(ReminderManager.KEY_REMINDER_ID, reminder.getId());
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
             case R.id.btnCancel:
                 finish();
                 break;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = getIntent();
+        if (intent.hasExtra("tieu_de")) {
+            String title = intent.getStringExtra("tieu_de");
+            String content = intent.getStringExtra("noi_dung");
+            edtTitle.setText(title);
+            edtContent.setText(content);
         }
     }
 
@@ -135,11 +139,12 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
         mCalendar.set(Calendar.DAY_OF_MONTH, mDay);
         mCalendar.set(Calendar.HOUR_OF_DAY, mHour);
         mCalendar.set(Calendar.MINUTE, mMinute);
+        mCalendar.set(Calendar.SECOND, 0);
 
         mTitle = edtTitle.getText().toString();
         mContent = edtContent.getText().toString();
 
-        Reminder reminder = new Reminder(mTitle, mContent, mDate, mTime, mRepeat, mType);
+        reminder = new Reminder(mTitle, mContent, mDate, mTime, mRepeat, mType);
         ReminderDatabase.getsInstance(getApplicationContext()).addReminder(reminder);
 
 
@@ -148,14 +153,11 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
         String s = mDay + "/" + (mMonth +1)+ "/" + mYear + " " + mHour + ":" + mMinute;
         Toast.makeText(this, "Đã thêm nhắc nhở vào lúc " + s, Toast.LENGTH_SHORT).show();
 
-        //Test Alarm detail
-        Intent i = new Intent(AddAlarmActivity.this, AlarmActivity.class);
-        i.putExtra(ReminderManager.KEY_REMINDER_ID, reminder.getId());
-        startActivity(i);
     }
 
     private void showTimePickerDialog() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar;
+        calendar = Calendar.getInstance();
         mHour = calendar.get(Calendar.HOUR_OF_DAY);
         mMinute = calendar.get(Calendar.MINUTE);
 
@@ -177,7 +179,8 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void showDatePickerDialog() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar;
+        calendar = Calendar.getInstance();
         mYear = calendar.get(Calendar.YEAR);
         mMonth = calendar.get(Calendar.MONTH);
         mDay = calendar.get(Calendar.DATE);

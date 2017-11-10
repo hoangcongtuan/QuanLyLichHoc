@@ -101,6 +101,7 @@ public class ReminderDatabase extends SQLiteOpenHelper{
     public int updateReminder(Reminder reminder){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(KEY_ID, reminder.getId());
         values.put(KEY_TITLE , reminder.getTitle());
         values.put(KEY_CONTENT , reminder.getContent());
         values.put(KEY_DATE , reminder.getDate());

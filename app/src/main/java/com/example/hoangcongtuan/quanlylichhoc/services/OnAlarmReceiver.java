@@ -20,7 +20,7 @@ public class OnAlarmReceiver extends BroadcastReceiver{
 
         //nhận dữ liệu từ intent gửi tới và put dữ liệu qua cho ReminderService
         Intent i = new Intent(context, ReminderService.class);
-        i.putExtra(ReminderManager.KEY_REMINDER_ID, intent.getStringExtra(ReminderManager.KEY_REMINDER_ID));
+        i.putExtra(ReminderManager.KEY_REMINDER_ID, intent.getIntExtra(ReminderManager.KEY_REMINDER_ID, -1));
         context.startService(i);
     }
 }

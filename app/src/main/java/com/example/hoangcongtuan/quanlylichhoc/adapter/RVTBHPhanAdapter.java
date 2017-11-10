@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.activity.AddAlarmActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AddAlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
 
 import java.util.ArrayList;
