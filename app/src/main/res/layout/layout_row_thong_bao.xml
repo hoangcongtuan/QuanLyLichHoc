@@ -13,7 +13,7 @@
         android:layout_marginBottom="@dimen/card_margin"
         android:layout_marginLeft="@dimen/card_margin_left_right"
         android:layout_marginRight="@dimen/card_margin_left_right"
-        android:elevation="2dp"
+        card_view:cardElevation="2dp"
         card_view:cardCornerRadius="@dimen/card_album_radius">
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -77,7 +77,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thông báo đến lớp: [14.Nh25] Tuốc bin"
                     android:id="@+id/tvTBTieude"
                     android:layout_margin="@dimen/text_margin"
                     android:textColor="@color/colorTBTieuDe"
@@ -85,7 +84,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thầy/Cô nhắn: Lớp NGHỈ HỌC (Tiết:7-8) ngày: 07/09/2017"
                     android:id="@+id/tvTBNoiDung"
                     android:layout_margin="@dimen/text_margin"
                     android:layout_below="@+id/tvTBTieude"

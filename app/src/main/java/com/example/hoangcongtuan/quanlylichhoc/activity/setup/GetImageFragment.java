@@ -69,7 +69,7 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
         LayoutInflater inflater1 = getActivity().getLayoutInflater();
         View dialogView = inflater1.inflate(R.layout.crop_guide_dialog_layout, null);
         alertBuilder.setView(dialogView);
-        alertBuilder.setPositiveButton("Da hieu", new DialogInterface.OnClickListener() {
+        alertBuilder.setPositiveButton("Đã hiểu", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 cropImage(imageUri);

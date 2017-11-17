@@ -50,7 +50,7 @@ public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
 
     private void init() {
         //Log.d(TAG, "init: custome Alert Dialog");
-        setTitle("Lop Hoc Phan");
+        setTitle("Lớp Học Phần");
         LayoutInflater inflater = LayoutInflater.from(getContext());
         rootView = inflater.inflate(R.layout.dialog_themhphan, null);
         lstMaHP = DBLopHPHelper.getsInstance().getListMaHP();

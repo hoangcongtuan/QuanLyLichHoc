@@ -31,12 +31,12 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btnBack"
                 android:layout_alignParentLeft="true"
-                android:text="Back"/>
+                android:text="@string/back"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnFinish"
-                android:text="Finish"
+                android:text="@string/finish"
                 android:visibility="invisible"
                 android:layout_alignParentRight="true"/>
             <Button
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btnNext"
                 android:layout_alignParentRight="true"
-                android:text="Next"/>
+                android:text="@string/next"/>
         </RelativeLayout>
     </LinearLayout>
 

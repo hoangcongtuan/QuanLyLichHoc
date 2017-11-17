@@ -177,14 +177,14 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
 
     public void showAddLopHPDialog() {
         final CustomDialogBuilderLopHP customDialogBuilderLopHP = new CustomDialogBuilderLopHP(getContext());
-        customDialogBuilderLopHP.setNegativeButton("Huy", new DialogInterface.OnClickListener() {
+        customDialogBuilderLopHP.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
         });
 
-        customDialogBuilderLopHP.setPositiveButton("Them", new DialogInterface.OnClickListener() {
+        customDialogBuilderLopHP.setPositiveButton("Thêm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 addLopHP(customDialogBuilderLopHP.getCurrentLopHP().getMaHP());

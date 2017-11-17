@@ -3,6 +3,6 @@
 
     <item
         android:id="@+id/item_dang_xuat"
-        android:title="Đăng xuất"
+        android:title="@string/log_out"
         android:icon="@android:drawable/ic_lock_power_off"/>
 </menu>

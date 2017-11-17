@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:padding="10dp"
@@ -48,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:hint="Tiêu đề" />
+                    android:hint="@string/title" />
             </LinearLayout>
 
             <LinearLayout
@@ -65,7 +65,7 @@
 
                 <EditText
                     android:id="@+id/edtReminderContent"
-                    android:hint="Nội dung"
+                    android:hint="@string/content"
                     android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -85,9 +85,8 @@
 
                 <TextView
                     android:id="@+id/tvDate"
-                    android:text="01/01/2018"
                     android:textSize="18sp"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:layout_marginLeft="10dp"
@@ -95,7 +94,7 @@
                     android:layout_weight="1"/>
                 <Button
                     android:id="@+id/btnSetDate"
-                    android:text="Set date"
+                    android:text="@string/set_date"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     style="@style/Widget.AppCompat.Button.Colored"/>
@@ -116,16 +115,15 @@
 
                 <TextView
                     android:id="@+id/tvTime"
-                    android:text="12:00"
                     android:textSize="18sp"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"/>
                 <Button
                     android:id="@+id/btnSetTime"
-                    android:text="Set time"
+                    android:text="@string/set_time"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     style="@style/Widget.AppCompat.Button.Colored"/>

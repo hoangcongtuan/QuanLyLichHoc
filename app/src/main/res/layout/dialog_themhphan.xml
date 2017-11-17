@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Ma Hoc Phan:"
+            android:text="@string/ma_hoc_phan"
             android:layout_weight="3"
             android:layout_margin="5dp"
             android:layout_gravity="center_vertical"/>
@@ -40,7 +40,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Ten lop Hoc phan:"
+            android:text="@string/ten_lop_hoc_phan"
             android:layout_weight="3"
             android:layout_margin="5dp"
             android:layout_gravity="center_vertical"/>
@@ -65,14 +65,13 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Giang Vien:"
+            android:text="@string/giang_vien"
             android:layout_weight="3"
             android:layout_margin="5dp"
             android:layout_gravity="center_vertical"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Giang vien"
             android:id="@+id/tvGV"
             android:layout_weight="6"
             android:layout_margin="5dp"
@@ -88,7 +87,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Thoi gian: "
+            android:text="@string/time"
             android:layout_weight="3"
             android:layout_margin="5dp"
             android:layout_gravity="center_vertical"/>
@@ -97,7 +96,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/tvTKB"
-            android:text="Thoi Gian"
             android:layout_weight="6"
             android:layout_margin="5dp"
             android:layout_gravity="center_vertical"/>

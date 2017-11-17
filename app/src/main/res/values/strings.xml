@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">QuanLyLichHoc</string>
+    <string name="app_name">Quản Lý Lịch Học</string>
     <string-array name="tab_name">
         <item>TB Chung </item>
         <item>TB Hoc Phan</item>
@@ -19,6 +19,46 @@
     <string name="FIREBASE_PATH_ALL_HP">thong_tin_lop_hoc_phan</string>
     <string name="FCM_TOKEN">dWFV6RJ7bKA:APA91bHXzJEJv9-0i2I2L-9OYf5Eq7bwzxf8Z-Uts-qbyNHhzSUkfvaODcHp8S9_IvMAHneo-hD-qqbx7Ju_J5LGvlB0ZeU060x5PsFJTmPuQV5BeCPV8W1PWlDr4ks8CLfN3XtE8k3L</string>
     <string name="SERVER_KEY">AAAA2IVeKMQ:APA91bHbqbUIqLiCBbWOeZkyZyvEO0rOetzwTWz8DSHuO1NVsGCnsABTtz6VEHiF8Y91xfqZiwtmsitICCd0gtsc5N6AZP5_RoLQt8mY8nK6jpWnM7P4HfzOKeDoODxjSQETt7BlsWU9</string>
-
+    <string name="set_up">Thiết lập</string>
+    <string name="settings">Cài đặt</string>
+    <string name="functions">Chức năng</string>
+    <string name="alarm">Nhắc nhở</string>
+    <string name="change_hp">Thay đổi Học phần</string>
+    <string name="delete_hp">Xoá dữ liệu lớp học phần</string>
+    <string name="log_out">Đăng xuất</string>
+    <string name="others">Khác</string>
+    <string name="show_fcm_details">Show FCM Details</string>
+    <string name="show_fcm_subscribe_topic">Show FCM subscribe Topic</string>
+    <string name="remind_me">Nhắc tôi</string>
+    <string name="tab_1_text">1</string>
+    <string name="tab_2_text">2</string>
+    <string name="tab_3_text">3</string>
+    <string name="choose_img">Chọn ảnh</string>
+    <string name="completed">Hoàn tất</string>
+    <string name="identification">Nhận dạng</string>
+    <string name="navigation_header">Navigation header</string>
+    <string name="loading_data">Đang tải dữ liệu</string>
+    <string name="your_tkb">Thời khóa biểu của bạn</string>
+    <string name="add">+</string>
+    <string name="ma_hoc_phan">Mã Học Phần:</string>
+    <string name="ten_lop_hoc_phan">Tên lớp Học phần:</string>
+    <string name="giang_vien">Giảng Viên:</string>
+    <string name="time">Thời gian:</string>
+    <string name="please_hp">Hãy chọn đúng lớp học phần củaa bạn nhé!</string>
+    <string name="finish">Kết thúc</string>
+    <string name="back">Trước</string>
+    <string name="next">Tiếp</string>
+    <string name="notification">Thông báo</string>
+    <string name="login_fb">Login with Facebook</string>
+    <string name="login_google">Login with Google</string>
+    <string name="or">or</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="title">Tiêu đề</string>
+    <string name="content">Nội dung</string>
+    <string name="set_date">Set date</string>
+    <string name="add_alarm">Thêm nhắc nhở</string>
+    <string name="set_time">Set time</string>
+    <string name="save">Lưu</string>
 
 </resources>

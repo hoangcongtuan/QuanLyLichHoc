@@ -85,7 +85,7 @@ public class RecognizeFragment extends Fragment {
         arrayList = processImage(bitmap);
 
         if(arrayList == null) {
-            Toast.makeText(getActivity(), "Khong co du lieu nao!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Không có dữ liệu nào!", Toast.LENGTH_SHORT).show();
             lstMaHP.clear();
             adapter.notifyDataSetChanged();
             return;

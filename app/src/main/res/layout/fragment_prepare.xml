@@ -8,12 +8,11 @@
         style="?android:progressBarStyleHorizontal"
         android:max="100"
         android:indeterminate="true"
-        android:backgroundTint="@android:color/white"
         android:layout_margin="5dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Đang tải dữ liệu"
+        android:text="@string/loading_data"
         android:textAppearance="?android:textAppearanceLarge"
         android:layout_gravity="center_horizontal"
         android:layout_margin="5dp"/>

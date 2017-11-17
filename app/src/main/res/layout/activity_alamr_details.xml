@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:textSize="18dp"
-                android:text="Tiêu đề" />
+                android:text="@string/title" />
         </LinearLayout>
 
         <LinearLayout
@@ -62,8 +62,8 @@
 
             <TextView
                 android:id="@+id/tvReminderContent"
-                android:text="Nội dung"
-                android:textSize="18dp"
+                android:text="@string/content"
+                android:textSize="18sp"
                 android:layout_marginLeft="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -83,7 +83,6 @@
 
             <TextView
                 android:id="@+id/tvDate"
-                android:text="01/01/2018"
                 android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -107,7 +106,6 @@
 
             <TextView
                 android:id="@+id/tvTime"
-                android:text="12:00"
                 android:textSize="18sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

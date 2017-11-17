@@ -28,7 +28,7 @@
 
         <Button
             android:id="@+id/btnAddAlarm"
-            android:text="Add alarm"
+            android:text="@string/add_alarm"
             android:layout_gravity="center"
             android:layout_width="200dp"
             android:layout_height="wrap_content"

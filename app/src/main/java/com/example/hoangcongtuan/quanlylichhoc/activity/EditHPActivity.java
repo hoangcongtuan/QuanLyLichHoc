@@ -86,14 +86,14 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
     }
     public void showAddLopHPDialog() {
         final CustomDialogBuilderLopHP customDialogBuilderLopHP = new CustomDialogBuilderLopHP(this);
-        customDialogBuilderLopHP.setNegativeButton("Huy", new DialogInterface.OnClickListener() {
+        customDialogBuilderLopHP.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
         });
 
-        customDialogBuilderLopHP.setPositiveButton("Them", new DialogInterface.OnClickListener() {
+        customDialogBuilderLopHP.setPositiveButton("Thêm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 addLopHP(customDialogBuilderLopHP.getCurrentLopHP().getMaHP());

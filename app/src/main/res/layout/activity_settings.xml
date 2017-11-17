@@ -19,7 +19,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thông báo"
+            android:text="@string/notification"
             android:layout_marginLeft="@dimen/viewMargin"
             android:layout_marginRight="@dimen/viewMargin"
             android:layout_marginTop="@dimen/viewMargin"
@@ -43,7 +43,7 @@
             <Switch
                 android:layout_width="0dp"
                 android:layout_height="27dp"
-                android:text="Thông báo"
+                android:text="@string/notification"
                 android:textSize="@dimen/textSizeNormal"
                 android:id="@+id/swNotification"
                 android:checked="true"

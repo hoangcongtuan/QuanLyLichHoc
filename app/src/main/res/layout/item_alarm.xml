@@ -7,14 +7,12 @@
 
     <TextView
         android:id="@+id/tvDate"
-        android:text="01/01/2018"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"/>
 
     <TextView
         android:id="@+id/tvTime"
-        android:text="12:00"
         android:layout_below="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +20,6 @@
 
     <TextView
         android:id="@+id/tvTitle"
-        android:text="Title"
         android:gravity="left"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
@@ -34,7 +31,6 @@
         android:layout_below="@+id/tvTitle"
         android:gravity="left"
         android:layout_alignParentRight="true"
-        android:text="Content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp" />
