@@ -13,7 +13,7 @@
         android:layout_marginBottom="@dimen/card_margin"
         android:layout_marginLeft="@dimen/card_margin_left_right"
         android:layout_marginRight="@dimen/card_margin_left_right"
-        card_view:cardElevation="2dp"
+        android:elevation="2dp"
         card_view:cardCornerRadius="@dimen/card_album_radius">
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -37,11 +37,11 @@
                         android:id="@+id/imgIcnThongBao_loading"
                         android:layout_margin="@dimen/text_margin"
                         android:layout_gravity="center_vertical"
-                        android:text=""/>
+                        android:text="     "/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text="                    "
                         android:layout_margin="@dimen/text_margin"
                         android:id="@+id/tvTBThoiGian_loading"
                         android:layout_gravity="center_vertical"
@@ -70,14 +70,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text="                                     "
                     android:id="@+id/tvTBTieude_loading"
                     android:background="@color/colorNewFeedLoading"
                     android:layout_margin="@dimen/text_margin"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text="                                                                          "
                     android:id="@+id/tvTBNoiDung_loading"
                     android:background="@color/colorNewFeedLoading"
                     android:layout_margin="@dimen/text_margin"
