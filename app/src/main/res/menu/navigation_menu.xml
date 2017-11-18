@@ -1,39 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:title="Chức năng">
-        <menu>
-            <item
-                android:id="@+id/item_nhac_nho"
-                android:title="Nhắc nhỡ"
-                android:icon="@android:drawable/ic_lock_idle_alarm"/>
-            <item
-                android:id="@+id/item_thay_doi_HP"
-                android:title="Thay đổi Học phần"
-                android:icon="@android:drawable/ic_input_get"/>
-            <item
-                android:id="@+id/item_xoa_du_lieu"
-                android:title="Xoa du lieu lop hoc phan"
-                android:icon="@android:drawable/ic_menu_delete"/>
-        </menu>
-    </item>
+        android:id="@+id/item_nhac_nho"
+        android:title="@string/remind"
+        android:icon="@drawable/ic_alarm_black_24dp" />
     <item
-        android:title="Thiết lập">
+        android:id="@+id/item_thay_doi_HP"
+        android:title="@string/edit_hoc_phan"
+        android:icon="@drawable/ic_border_color_black_24dp"/>
+    <item
+        android:id="@+id/item_xoa_du_lieu"
+        android:title="@string/remove_du_lieu"
+        android:icon="@drawable/ic_delete_black_24dp"/>
+    <item
+        android:id="@+id/item_cat_dat"
+        android:title="@string/settings"
+        android:icon="@drawable/ic_settings_black_24dp"/>
+    <item
+        android:title="Other">
         <menu>
-            <item
-                android:id="@+id/item_cat_dat"
-                android:title="Cài đặt"
-                android:icon="@android:drawable/ic_menu_manage"/>
             <item
                 android:id="@+id/item_dang_xuat"
                 android:title="Đăng xuất"
-                android:icon="@android:drawable/ic_lock_power_off"/>
-        </menu>
-
-    </item>
-    <item
-        android:title="Khac">
-        <menu>
+                android:icon="@drawable/ic_power_settings_new_black_24dp"/>
             <item
                 android:id="@+id/item_showFCMDetails"
                 android:title="Show FCM Details"/>

@@ -174,7 +174,7 @@ public class LoginActivity extends AppCompatActivity
             firebaseAuthWithGoogle(signInAccount);
         }
         else {
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Đăng nhập  thất bại!!", Snackbar.LENGTH_INDEFINITE);
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Đăng nhập thất bại!!", Snackbar.LENGTH_INDEFINITE);
             snackbar.show();
             finishAuthWithFirebase();
         }
@@ -267,7 +267,7 @@ public class LoginActivity extends AppCompatActivity
                                         DBLopHPHelper.getsInstance().getListUserMaHP()
                                 );
 
-                                Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic("TBChung");
+                                Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic("TBChungFragment");
 
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
@@ -282,7 +282,7 @@ public class LoginActivity extends AppCompatActivity
                                         DBLopHPHelper.getsInstance().getListUserMaHP()
                                 );
 
-                                Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic("TBChung");
+                                Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic("TBChungFragment");
 
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);

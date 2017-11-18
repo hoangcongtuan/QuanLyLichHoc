@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AddAlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
@@ -46,45 +47,63 @@ public class SplashActivity extends AppCompatActivity {
         else {
             //chuyen den mang hinh chinh
             if(DBLopHPHelper.getsInstance().isUserLocalDBAvailable()) {
-                Intent intent = new Intent(this, MainActivity.class);
                 //kiem tra co payload tu notification gui toi hay ko
+                Intent intent = null;
                 Intent splashIntent = getIntent();
                 Log.d(TAG, "onCreate: Intent = " + splashIntent.toString());
-                if (splashIntent.getExtras() != null && splashIntent.hasExtra("tieu_de")) {
+                if (splashIntent.getExtras() != null && splashIntent.hasExtra("screen")) {
 //                    Log.d(TAG, "onCreate: thoi_gian = " + splashIntent.getStringExtra("thoi_gian"));
 //                    Log.d(TAG, "onCreate: tieu_de = " + splashIntent.getStringExtra("tieu_de"));
 //                    Log.d(TAG, "onCreate: noi_dung = " + splashIntent.getStringExtra("noi_dung"));
-                    String strExtras;
-                    if (splashIntent.hasExtra("tieu_de"))
-                        intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
-                    else
-                        intent.putExtra("tieu_de", "Null");
+                    String screen = splashIntent.getStringExtra("screen");
+                    if (screen.equals("main")) {
+                        String strExtras;
+                        intent = new Intent(this, MainActivity.class);
+                        if (splashIntent.hasExtra("tieu_de"))
+                            intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
+                        else
+                            intent.putExtra("tieu_de", "Null");
 
-                    if (splashIntent.hasExtra("thoi_gian"))
-                        intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
-                    else
-                        intent.putExtra("thoi_gian", "Null");
+                        if (splashIntent.hasExtra("thoi_gian"))
+                            intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
+                        else
+                            intent.putExtra("thoi_gian", "Null");
 
-                    if (splashIntent.hasExtra("noi_dung"))
-                        intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
-                    else
-                        intent.putExtra("noi_dung", "Null");
+                        if (splashIntent.hasExtra("noi_dung"))
+                            intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
+                        else
+                            intent.putExtra("noi_dung", "Null");
 
-                    if (splashIntent.hasExtra("id"))
-                        intent.putExtra("id", splashIntent.getStringExtra("id"));
-                    else
-                        intent.putExtra("id", "Null");
+                        if (splashIntent.hasExtra("id"))
+                            intent.putExtra("id", splashIntent.getStringExtra("id"));
+                        else
+                            intent.putExtra("id", "Null");
 
-                    if (splashIntent.hasExtra("type"))
-                        intent.putExtra("type", splashIntent.getStringExtra("type"));
-                    else
-                        intent.putExtra("type", "Null");
+                        if (splashIntent.hasExtra("type"))
+                            intent.putExtra("type", splashIntent.getStringExtra("type"));
+                        else
+                            intent.putExtra("type", "Null");
 
-//                    intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
-//                    intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
-//                    intent.putExtra("id", splashIntent.getStringExtra("id"));
-//                    intent.putExtra("type", splashIntent.getStringExtra("type"));
+                    }
+                    else if (screen.equals("add_alarm")) {
+                        String strExtras;
+                        intent = new Intent(this, AddAlarmActivity.class);
+                        if (splashIntent.hasExtra("tieu_de"))
+                            intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
+                        else
+                            intent.putExtra("tieu_de", "Null");
+
+                        if (splashIntent.hasExtra("noi_dung"))
+                            intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
+                        else
+                            intent.putExtra("noi_dung", "Null");
+                    }
+                    else
+                        intent = new Intent(this, MainActivity.class);
+
                 }
+                else
+                    intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }

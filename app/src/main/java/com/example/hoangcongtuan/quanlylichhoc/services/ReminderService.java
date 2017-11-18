@@ -9,11 +9,12 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AlamrDetailsActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AlarmDetailsActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDatabase;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
@@ -34,7 +35,7 @@ public class ReminderService extends IntentService {
 
         int idReceived = intent.getIntExtra(ReminderManager.KEY_REMINDER_ID, -1);
 
-        Intent detailIntent = new Intent(this, AlamrDetailsActivity.class);
+        Intent detailIntent = new Intent(this, AlarmDetailsActivity.class);
         detailIntent.putExtra(ReminderManager.KEY_REMINDER_ID, idReceived);
         detailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                 Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -48,12 +49,13 @@ public class ReminderService extends IntentService {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_alarm_white_24dp)
                 .setContentTitle(reminder.getTitle())
                 .setContentText(reminder.getContent())
                 .setLights(Color.BLUE, 1000, 1000)
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                .setSound(notification);
+                .setSound(notification)
+                .setColor(ContextCompat.getColor(this, R.color.colorGreen));
 
         mBuilder.setContentIntent(pi);
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);

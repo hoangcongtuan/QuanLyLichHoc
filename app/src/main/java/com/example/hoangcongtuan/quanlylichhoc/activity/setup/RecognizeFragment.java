@@ -148,8 +148,6 @@ public class RecognizeFragment extends Fragment {
                 lstMaHP.remove(position);
                 adapter.notifyDataSetChanged();
                 break;
-            case R.id.menu_edit:
-                break;
         }
         return super.onContextItemSelected(item);
     }

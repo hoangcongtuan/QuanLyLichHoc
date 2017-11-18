@@ -42,20 +42,22 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         holder.tvTitle.setText(reduceString(
                 reminder.getTitle())
         );
-        holder.tvContent.setText(reduceString(
-                reminder.getContent())
+        holder.tvContent.setText(
+                reminder.getContent()
         );
         holder.tvDate.setText(reduceString(
                 reminder.getDate())
         );
-        holder.tvTime.setText(reduceString(
-                reminder.getTime())
+        holder.tvTime.setText(
+                reminder.getTime()
         );
     }
 
     private String reduceString(String str) {
-        if (str.length() > 30)
-            return str.substring(0, 30) + "...";
+        if (str == null)
+            return "";
+        if (str.length() > 15)
+            return str.substring(0, 15) + "...";
         return str;
     }
 

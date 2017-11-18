@@ -25,26 +25,29 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorBackNextBackgroud">
+            android:background="@color/colorBackNextBackground">
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnBack"
                 android:layout_alignParentLeft="true"
-                android:text="Back"/>
+                android:text="@string/back"
+                style="@style/Widget.AppCompat.Button.Colored"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnFinish"
                 android:text="Finish"
                 android:visibility="invisible"
-                android:layout_alignParentRight="true"/>
+                android:layout_alignParentRight="true"
+                style="@style/Widget.AppCompat.Button.Colored"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnNext"
                 android:layout_alignParentRight="true"
-                android:text="Next"/>
+                android:text="@string/next"
+                style="@style/Widget.AppCompat.Button.Colored"/>
         </RelativeLayout>
     </LinearLayout>
 

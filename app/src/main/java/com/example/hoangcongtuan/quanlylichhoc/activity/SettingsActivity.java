@@ -25,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.settings_act_title));
 
         init();
         getWidgets();
@@ -59,12 +60,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     private void unSubscribe() {
         Utils.QLLHUtils.getsInstance(this).unSubscribeAllTopics(DBLopHPHelper.getsInstance().getListUserMaHP());
-        Utils.QLLHUtils.getsInstance(this).unSubscribeTopic("TBChung");
+        Utils.QLLHUtils.getsInstance(this).unSubscribeTopic("TBChungFragment");
     }
 
     private void subscribe() {
         Utils.QLLHUtils.getsInstance(this).subscribeTopic(DBLopHPHelper.getsInstance().getListUserMaHP());
-        Utils.QLLHUtils.getsInstance(this).subscribeTopic("TBChung");
+        Utils.QLLHUtils.getsInstance(this).subscribeTopic("TBChungFragment");
     }
 
     @Override

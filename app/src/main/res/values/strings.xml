@@ -1,24 +1,70 @@
 <resources>
-    <string name="app_name">QuanLyLichHoc</string>
+    <string name="app_name">Quản lý lịch học</string>
     <string-array name="tab_name">
-        <item>TB Chung </item>
-        <item>TB Hoc Phan</item>
+        <item>TB chung</item>
+        <item>TB học phần</item>
         <item>Lịch học</item>
     </string-array>
-    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="alarm_act_title">Nhắc nhở</string>
+    <string name="alarm_detail_act_title">Chi tiết nhắc nhở</string>
+    <string name="alarm_add_act_title">Thêm nhắc nhở</string>
+    <string name="alarm_edit_act_title">Chinh sửa</string>
+    <string name="hoc_phan_act_title">Học phần</string>
+    <string name="settings_act_title">Cài đặt</string>
+
+    <string name="crop_dialog_title">Chọn lớp học phần</string>
+    <string name="crop_dialog_message">Kéo chọn đúng danh sách mã học phần của bạn rồi nhấn CROP nhé</string>
+    
 
     <string name="facebook_app_id">1183042115172735</string>
     <string name="fb_login_protocol_scheme">fb1183042115172735</string>
 
-    <string name="welcome_title">Welcome</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_remove">Xóa</string>
     <string name="menu_edit">Chỉnh sửa</string>
     <string name="FIREBASE_PATH_ALL_HP">thong_tin_lop_hoc_phan</string>
-    <string name="FCM_TOKEN">dWFV6RJ7bKA:APA91bHXzJEJv9-0i2I2L-9OYf5Eq7bwzxf8Z-Uts-qbyNHhzSUkfvaODcHp8S9_IvMAHneo-hD-qqbx7Ju_J5LGvlB0ZeU060x5PsFJTmPuQV5BeCPV8W1PWlDr4ks8CLfN3XtE8k3L</string>
     <string name="SERVER_KEY">AAAA2IVeKMQ:APA91bHbqbUIqLiCBbWOeZkyZyvEO0rOetzwTWz8DSHuO1NVsGCnsABTtz6VEHiF8Y91xfqZiwtmsitICCd0gtsc5N6AZP5_RoLQt8mY8nK6jpWnM7P4HfzOKeDoODxjSQETt7BlsWU9</string>
 
 
+    <string name="remind">Nhắc nhở</string>
+    <string name="edit_hoc_phan">Thay đổi học phần</string>
+    <string name="remove_du_lieu">Xóa dữ liệu học phần</string>
+    <string name="settings">Cài đặt</string>
+    <string name="logout">Đăng xuất</string>
+    <string name="add">ADD</string>
+    <string name="title">Tiêu đề</string>
+    <string name="content">Nội dung</string>
+    <string name="date">Ngày</string>
+    <string name="time">Giờ</string>
+    <string name="create">Create</string>
+    <string name="cancel">cancel</string>
+    <string name="huy">Hủy</string>
+
+    <string name="remind_me">Nhắc tôi</string>
+    <string name="notification">Thông báo</string>
+    <string name="are_you_sure_to_delete">Bạn có chắc muốn xóa không?</string>
+    <string name="OK">OK</string>
+    <string name="CANCEL">CANCEL</string>
+    <string name="login_with_facebook">Login with Facebook</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="get_image">Lấy ảnh</string>
+    <string name="detect">Nhận dạng</string>
+    <string name="finish">Hoàn tất</string>
+    <string name="back">Trở lại</string>
+    <string name="next">Tiếp tục</string>
+    <string name="please_choose_your_class">Chọn đúng lớp học phần của bạn nhé</string>
+    <string name="ma_hoc_phan">Mã học phần</string>
+    <string name="ten_hoc_phan">Tên học phần</string>
+    <string name="giao_vien">Giáo viên</string>
+    <string name="thoi_gian_phong_hoc">Thời gian - Phòng học</string>
+    <string name="your_time_table">Thời khóa biểu của bạn</string>
+    <string name="data_loading">Đang tải dữ liệu</string>
+    <string name="lop_hoc_phan">Lớp học phần</string>
+    <string name="understand">Đã hiểu</string>
+    <string name="delete_data">Xóa dữ liệu lớp học phần</string>
+    <string name="delete_data_detail">Dữ liệu về các lớp học phần của bạn sẽ bị xóa khỏi thiết bị và trên đám mây</string>
+    <string name="delete">DELETE</string>
+    
+    <string name="xoa_nhac_nho">Xóa nhắc nhở</string>
+    <string name="xoa_nhac_nho_detail">Nhắc nhở này sẽ bị xóa khỏi thiết bị của bạn</string>
 </resources>

@@ -6,8 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -31,7 +32,6 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
     private int mRepeat;
     private String mType;
     private int mYear, mMonth, mDay, mHour, mMinute;
-    private Button btnSetTime, btnSetDate, btnSave, btnCancel;
     private EditText edtTitle, edtContent;
     private TextView tvDate, tvTime;
     private Toolbar toolbar;
@@ -44,7 +44,7 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Alarm");
+        getSupportActionBar().setTitle(getResources().getString(R.string.alarm_edit_act_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -55,20 +55,11 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
         addWidgetsListener();
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
 
     private void init() {
         mCalendar = Calendar.getInstance();
     }
     private void getWidgets() {
-        btnSetTime = (Button) findViewById(R.id.btnSetTime);
-        btnSetDate = (Button) findViewById(R.id.btnSetDate);
-        btnSave = (Button) findViewById(R.id.btnSave);
-        btnCancel = (Button) findViewById(R.id.btnCancel);
         edtTitle = (EditText) findViewById(R.id.edtReminderTitle);
         edtContent = (EditText) findViewById(R.id.edtReminderContent);
         tvDate = (TextView) findViewById(R.id.tvDate);
@@ -115,6 +106,29 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_edit_add_alarm, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_save:
+                updateRemider();
+                Intent intent = new Intent();
+                intent.putExtra(ReminderManager.KEY_REMINDER_ID, reminder.getId());
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
+    }
+
     public void errorOccurReturn() {
         Intent intent = new Intent();
         setResult(RESULT_CANCELED, intent);
@@ -122,30 +136,18 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void addWidgetsListener() {
-        btnSetDate.setOnClickListener(this);
-        btnSetTime.setOnClickListener(this);
-        btnSave.setOnClickListener(this);
-        btnCancel.setOnClickListener(this);
+        tvDate.setOnClickListener(this);
+        tvTime.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnSetDate:
+            case R.id.tvDate:
                 showDatePickerDialog();
                 break;
-            case R.id.btnSetTime:
+            case R.id.tvTime:
                 showTimePickerDialog();
-                break;
-            case R.id.btnSave:
-                updateRemider();
-                Intent intent = new Intent();
-                intent.putExtra(ReminderManager.KEY_REMINDER_ID, reminder.getId());
-                setResult(RESULT_OK, intent);
-                finish();
-                break;
-            case R.id.btnCancel:
-                finish();
                 break;
         }
     }
@@ -157,6 +159,13 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
         mCalendar.set(Calendar.HOUR_OF_DAY, mHour);
         mCalendar.set(Calendar.MINUTE, mMinute);
         mCalendar.set(Calendar.SECOND, 0);
+
+        mDate = mDay + "/" + (mMonth + 1)+ "/" + mYear;
+        if (mMinute < 10) {
+            mTime = mHour + ":" + "0" + mMinute;
+        } else {
+            mTime = mHour + ":" + mMinute;
+        }
 
         mTitle = edtTitle.getText().toString();
         mContent = edtContent.getText().toString();

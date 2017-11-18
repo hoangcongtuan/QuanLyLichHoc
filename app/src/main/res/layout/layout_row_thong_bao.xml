@@ -36,7 +36,8 @@
                         android:src="@drawable/icn_thongbao"
                         android:id="@+id/imgIcnThongBao"
                         android:layout_margin="@dimen/text_margin"
-                        android:layout_gravity="center_vertical"/>
+                        android:layout_gravity="center_vertical"
+                        android:fontFamily="sans-serif-light"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -75,13 +76,15 @@
                 android:layout_margin="5dp"
                 android:layout_below="@+id/layout_contain">
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Thông báo đến lớp: [14.Nh25] Tuốc bin"
                     android:id="@+id/tvTBTieude"
                     android:layout_margin="@dimen/text_margin"
                     android:textColor="@color/colorTBTieuDe"
-                    android:textSize="@dimen/tittle_size"/>
+                    android:textSize="@dimen/tittle_size"
+                    android:textStyle="bold"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -90,7 +93,8 @@
                     android:layout_margin="@dimen/text_margin"
                     android:layout_below="@+id/tvTBTieude"
                     android:textSize="@dimen/content_size"
-                    android:textColor="@color/colorTBNoiDung"/>
+                    android:textColor="@color/colorTBNoiDung"
+                    android:fontFamily="sans-serif-light"/>
             </RelativeLayout>
 
 

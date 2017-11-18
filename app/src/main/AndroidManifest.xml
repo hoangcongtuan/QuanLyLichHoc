@@ -91,19 +91,19 @@
         -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/icn_thongbao" />
+            android:resource="@drawable/ic_message_white_24dp" />
         <!--
              Set color used with incoming notification messages. This is used when no color is set for the incoming
              notification message. See README(https://goo.gl/6BKBk7) for more.
         -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
+            android:resource="@color/colorGreen" />
 
         <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.Alarm.AlarmActivity" />
         <activity android:name=".activity.Alarm.AddAlarmActivity" />
-        <activity android:name=".activity.Alarm.AlamrDetailsActivity" />
+        <activity android:name=".activity.Alarm.AlarmDetailsActivity" />
 
         <service
             android:name=".services.ReminderService"
@@ -111,7 +111,7 @@
 
         <receiver android:name=".services.OnAlarmReceiver" />
 
-        <activity android:name=".activity.Alarm.EditAlarmActivity"></activity>
+        <activity android:name=".activity.Alarm.EditAlarmActivity" />
     </application>
 
 </manifest>

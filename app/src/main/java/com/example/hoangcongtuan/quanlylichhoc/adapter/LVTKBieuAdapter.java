@@ -30,6 +30,7 @@ public class LVTKBieuAdapter extends ArrayAdapter<LopHP> {
             viewHolder.tenGV = convertView.findViewById(R.id.tenGV);
             viewHolder.maHP = convertView.findViewById(R.id.maHP);
             viewHolder.tkb = convertView.findViewById(R.id.tkb);
+            viewHolder.tvIndex = convertView.findViewById(R.id.tvIndex);
 
             convertView.setTag(viewHolder);
         } else {
@@ -41,11 +42,12 @@ public class LVTKBieuAdapter extends ArrayAdapter<LopHP> {
             viewHolder.tenGV.setText(lopHP.tenGV);
             viewHolder.maHP.setText(lopHP.maHP);
             viewHolder.tkb.setText(lopHP.tkb);
+            viewHolder.tvIndex.setText((position + 1) + "");
         }
         return convertView;
     }
 
     private class ViewHolder {
-        TextView maHP, tenHP, tenGV, tkb;
+        TextView maHP, tenHP, tenGV, tkb, tvIndex;
     }
 }

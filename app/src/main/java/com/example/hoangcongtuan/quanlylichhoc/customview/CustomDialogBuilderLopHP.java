@@ -50,14 +50,14 @@ public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
 
     private void init() {
         //Log.d(TAG, "init: custome Alert Dialog");
-        setTitle("Lop Hoc Phan");
+        setTitle(getContext().getResources().getString(R.string.lop_hoc_phan));
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        rootView = inflater.inflate(R.layout.dialog_themhphan, null);
+        rootView = inflater.inflate(R.layout.dialog_them_hphan, null);
         lstMaHP = DBLopHPHelper.getsInstance().getListMaHP();
         lstTenHP = DBLopHPHelper.getsInstance().getListTenHP();
 
-        adapterMaHP = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, lstMaHP);
-        adapterTenHP = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, lstTenHP);
+        adapterMaHP = new ArrayAdapter<String>(getContext(), R.layout.layout_dropdown_custome, lstMaHP);
+        adapterTenHP = new ArrayAdapter<String>(getContext(), R.layout.layout_dropdown_custome, lstTenHP);
 
     }
 

@@ -7,16 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.SplashActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.UUID;
 
 /**
  * Created by hoangcongtuan on 10/24/17.
@@ -44,28 +43,39 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     public void sendNotification(RemoteMessage msg) {
-        Intent intent = new Intent(this, MainActivity.class);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent intent = new Intent(this, SplashActivity.class);
+        intent.putExtra("screen", "main");
         intent.putExtra("tieu_de", msg.getData().get("tieu_de"));
         intent.putExtra("thoi_gian", msg.getData().get("thoi_gian"));
         intent.putExtra("noi_dung", msg.getData().get("noi_dung"));
         intent.putExtra("id", msg.getData().get("id"));
         intent.putExtra("type", msg.getData().get("type"));
-        //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-
         NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.com_facebook_button_icon)
+                .setSmallIcon(R.drawable.ic_message_white_24dp)
                 .setContentTitle(msg.getNotification().getTitle())
                 .setAutoCancel(true)
                 .setContentText(msg.getNotification().getBody())
-                .setSound(notificationSound);
+                .setSound(notificationSound)
+                .setColor(ContextCompat.getColor(this, R.color.colorGreen));
+
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
-        taskStackBuilder.addParentStack(MainActivity.class);
+        taskStackBuilder.addParentStack(SplashActivity.class);
         taskStackBuilder.addNextIntent(intent);
-        PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(createID(), PendingIntent.FLAG_UPDATE_CURRENT);
+
         builder.setContentIntent(pendingIntent);
+        Intent intentAlarm = new Intent(this, SplashActivity.class);
+        intentAlarm.putExtra("screen", "add_alarm");
+        intentAlarm.putExtra("tieu_de", msg.getData().get("tieu_de"));
+        intentAlarm.putExtra("noi_dung", msg.getData().get("noi_dung"));
+
+        PendingIntent pIAlarm = PendingIntent.getActivity(this, createID(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.addAction(R.drawable.ic_alarm_black_24dp, "Nhắc tôi", pIAlarm);
+
 
         NotificationManager notifcationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notifcationManager.notify(createID(), builder.build());
@@ -73,9 +83,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     public int createID(){
-        Date now = new Date();
-        int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss",  Locale.US).format(now));
-        return id;
+//        Date now = new Date();
+//        int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss",  Locale.US).format(now));
+        return UUID.randomUUID().hashCode();
     }
 
     @Override

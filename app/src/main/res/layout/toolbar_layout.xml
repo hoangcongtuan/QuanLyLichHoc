@@ -3,6 +3,7 @@
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
     tools:layout_scrollFlags="scroll|enterAlways"
+    android:title="@string/app_name"
     tools:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     xmlns:android="http://schemas.android.com/apk/res/android"

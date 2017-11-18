@@ -2,15 +2,16 @@ package com.example.hoangcongtuan.quanlylichhoc.activity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 
 public class EditHPActivity extends AppCompatActivity implements View.OnClickListener{
 
-    Button btnAdd, btnOK, btnCancel;
+    FloatingActionButton fabAdd;
     ListView lvTKB;
     LVTKBieuAdapter lvtkBieuAdapter;
     ArrayList<LopHP> lstLopHP;
@@ -47,6 +48,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.hoc_phan_act_title));
 
         init();
         getWidgets();
@@ -67,10 +69,8 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void getWidgets() {
-        btnAdd = (Button) findViewById(R.id.btnAdd);
         lvTKB = (ListView) findViewById(R.id.lvTKB);
-        btnCancel = (Button) findViewById(R.id.btnCancel);
-        btnOK = (Button) findViewById(R.id.btnOk);
+        fabAdd = (FloatingActionButton)findViewById(R.id.fabAdds);
     }
 
     private void setWidgets() {
@@ -79,21 +79,19 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setWidgetsEvent() {
-        btnAdd.setOnClickListener(this);
-        btnCancel.setOnClickListener(this);
-        btnOK.setOnClickListener(this);
         registerForContextMenu(lvTKB);
+        fabAdd.setOnClickListener(this);
     }
     public void showAddLopHPDialog() {
         final CustomDialogBuilderLopHP customDialogBuilderLopHP = new CustomDialogBuilderLopHP(this);
-        customDialogBuilderLopHP.setNegativeButton("Huy", new DialogInterface.OnClickListener() {
+        customDialogBuilderLopHP.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
         });
 
-        customDialogBuilderLopHP.setPositiveButton("Them", new DialogInterface.OnClickListener() {
+        customDialogBuilderLopHP.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 addLopHP(customDialogBuilderLopHP.getCurrentLopHP().getMaHP());
@@ -144,9 +142,36 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
     private void updateSubscribeTopic() {
         Utils.QLLHUtils.getsInstance(this).unSubscribeAllTopics(lstMaHPOld);
         Utils.QLLHUtils.getsInstance(this).subscribeTopic(lstMaHP);
-        Utils.QLLHUtils.getsInstance(this).subscribeTopic("TBChung");
+        Utils.QLLHUtils.getsInstance(this).subscribeTopic("TBChungFragment");
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_edit_hp, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_save:
+                writelstHPtoLocalDB();
+                //write to firebase DB
+                writelstHPtoFirebaseDB();
+
+                //update subscribe
+                updateSubscribeTopic();
+                setResult(RESULT_OK);
+                finish();
+                break;
+            case android.R.id.home:
+                setResult(RESULT_CANCELED);
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -168,32 +193,12 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         return super.onContextItemSelected(item);
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnAdd:
+            case R.id.fabAdds:
                 showAddLopHPDialog();
-                break;
-            case R.id.btnOk:
-                //write to local DB
-                writelstHPtoLocalDB();
-                //write to firebase DB
-                writelstHPtoFirebaseDB();
-
-                //update subscribe
-                updateSubscribeTopic();
-                setResult(RESULT_OK);
-                finish();
-                break;
-            case R.id.btnCancel:
-                setResult(RESULT_CANCELED);
-                finish();
                 break;
         }
     }

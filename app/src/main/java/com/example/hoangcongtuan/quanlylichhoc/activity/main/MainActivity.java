@@ -1,18 +1,25 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.main;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,6 +36,7 @@ import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.EditHPActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.SettingsActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.SplashActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.MainPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
@@ -69,8 +77,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FirebaseUser user;
     Uri avatarUrl;
     TextView tvUserName;
-    TBChung tbChung;
-    TBHocPhan tbHPhan;
+    TextView tvEmail;
+    TBChungFragment tbChungFragment;
+    TBHocPhanFragment tbHPhan;
     LichHocFragment lichHocFragment;
 
     private DatabaseReference database;
@@ -122,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         navigationView = (NavigationView)findViewById(R.id.navigaionView);
         tvUserName = (TextView)navigationView.getHeaderView(0).findViewById(R.id.tvUserName);
+        tvEmail = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tvEmail);
 
         ImageRequest avatarRequest = new ImageRequest(avatarUrl.toString(),
                 new Response.Listener<Bitmap>() {
@@ -184,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //setWidgets
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
 
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
         drawerLayout.addDrawerListener(toggle);
@@ -194,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.setupWithViewPager(viewPager);
         navigationView.setNavigationItemSelectedListener(this);
         tvUserName.setText(user.getDisplayName());
+        tvEmail.setText(user.getEmail());
 
     }
 
@@ -208,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String tbType = intent.getStringExtra("type");
             if (tbType.compareTo("tbc") == 0) {
                 viewPager.setCurrentItem(0);
-                tbChung.scrollTo(intent.getStringExtra("id"));
+                tbChungFragment.scrollTo(intent.getStringExtra("id"));
             }
 
             else {
@@ -220,12 +232,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        tbChung = new TBChung();
-        tbHPhan = new TBHocPhan();
+        tbChungFragment = new TBChungFragment();
+        tbHPhan = new TBHocPhanFragment();
         lichHocFragment = new LichHocFragment();
 
         pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(tbChung, strTabs[0]);
+        pagerAdapter.addFragment(tbChungFragment, strTabs[0]);
         pagerAdapter.addFragment(tbHPhan, strTabs[1]);
         pagerAdapter.addFragment(lichHocFragment, strTabs[2]);
 
@@ -239,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Utils.QLLHUtils.getsInstance(this).unSubscribeAllTopics(
                 DBLopHPHelper.getsInstance().getListUserMaHP()
         );
-        Utils.QLLHUtils.getsInstance(this).unSubscribeTopic("TBChung");
+        Utils.QLLHUtils.getsInstance(this).unSubscribeTopic("TBChungFragment");
 
         FirebaseAuth.getInstance().signOut();
 
@@ -265,8 +277,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.item_xoa_du_lieu:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Ban co chac muon xoa khong?");
-                builder.setPositiveButton("Xoa", new DialogInterface.OnClickListener() {
+                builder.setTitle(getResources().getString(R.string.delete_data));
+                builder.setMessage(getResources().getString(R.string.delete_data_detail));
+                builder.setPositiveButton(getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //xoa du lieu local
@@ -278,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
 
-                builder.setNegativeButton("Huy", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -327,6 +340,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
+        //sendNotification();
 
     }
+
+    public void sendNotification() {
+        Intent intent = new Intent(this, SplashActivity.class);
+        Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+
+        NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_message_white_24dp)
+                .setContentTitle("tieu de")
+                .setAutoCancel(true)
+                .setContentText("noi dung")
+                .setSound(notificationSound)
+                .setColor(ContextCompat.getColor(this, R.color.colorGreen));
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
+        taskStackBuilder.addParentStack(SplashActivity.class);
+        taskStackBuilder.addNextIntent(intent);
+        PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+        Intent intentAlarm = new Intent(this, SplashActivity.class);
+
+        PendingIntent pIAlarm = PendingIntent.getActivity(this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.addAction(R.drawable.ic_alarm_black_24dp, "Nhắc tôi", pIAlarm);
+
+
+        NotificationManager notifcationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notifcationManager.notify(0, builder.build());
+        //Log.d(TAG, "sendNotification: send notification");
+    }
+
 }

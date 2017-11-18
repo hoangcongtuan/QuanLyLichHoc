@@ -98,8 +98,6 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
                 lstMaHP.remove(position);
                 LVTKBieuAdapter.notifyDataSetChanged();
                 break;
-            case R.id.menu_edit:
-                break;
         }
         return super.onContextItemSelected(item);
     }
@@ -135,7 +133,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
 
         //subscribe a topics
         Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic(lstMaHP);
-        Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic("TBChung");
+        Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic("TBChungFragment");
 
     }
 
