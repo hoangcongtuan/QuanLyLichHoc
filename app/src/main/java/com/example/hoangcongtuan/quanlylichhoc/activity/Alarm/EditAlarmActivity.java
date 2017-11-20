@@ -176,8 +176,6 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
 
         ReminderManager.getsInstance(getApplicationContext()).setReminder(reminder.getId(), mCalendar);
 
-        String s = mDay + "/" + (mMonth +1)+ "/" + mYear + " " + mHour + ":" + mMinute;
-        Toast.makeText(this, "Đã cap nhat nhắc nhở vào lúc " + s, Toast.LENGTH_SHORT).show();
 
     }
 

@@ -3,7 +3,9 @@ package com.example.hoangcongtuan.quanlylichhoc.activity.Alarm;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.ReminderAdapter;
@@ -34,6 +35,7 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
 
     private FloatingActionButton btnAddAlarm;
     private Toolbar toolbar;
+    private CoordinatorLayout alarm_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
         getSupportActionBar().setTitle(getResources().getString(R.string.alarm_act_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        alarm_layout = (CoordinatorLayout)findViewById(R.id.alarm_layout);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rvAlarms);
 
@@ -91,7 +95,7 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
                 ReminderManager.getsInstance(getApplicationContext()).deleteReminder(reminder.getId());
                 mReminders.remove(position);
                 mAdapter.notifyDataSetChanged();
-                Toast.makeText(AlarmActivity.this, "Đã xoá nhắc nhở", Toast.LENGTH_SHORT).show();
+                Snackbar.make(alarm_layout, getResources().getString(R.string.remove_alarm_success), Snackbar.LENGTH_LONG).show();
 
             }
         });
@@ -132,6 +136,9 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
             for(Reminder r : lstReminder)
                 mReminders.add(r);
             mAdapter.notifyDataSetChanged();
+            if (requestCode == RC_ADD && resultCode == RESULT_OK)
+                Snackbar.make(alarm_layout, getResources().getString(R.string.add_alarm_success), Snackbar.LENGTH_LONG).show();
+
 
         }
     }

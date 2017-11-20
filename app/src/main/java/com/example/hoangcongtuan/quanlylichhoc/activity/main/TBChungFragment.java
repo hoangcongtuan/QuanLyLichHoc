@@ -127,7 +127,6 @@ public class TBChungFragment extends Fragment {
                         int position = lstTBChung.indexOf(tb);
                         smoothScroller.setTargetPosition(position);
                         recyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
-                        Toast.makeText(getActivity(), "Da load den " + position, Toast.LENGTH_LONG).show();
                         setPrivCallBack(null);
                         return;
                     }
@@ -170,7 +169,6 @@ public class TBChungFragment extends Fragment {
                     };
                     smoothScroller.setTargetPosition(position);
                     recyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
-                    Toast.makeText(getActivity(), "Da load den " + position, Toast.LENGTH_LONG).show();
                     setPrivCallBack(null);
                 }
             }

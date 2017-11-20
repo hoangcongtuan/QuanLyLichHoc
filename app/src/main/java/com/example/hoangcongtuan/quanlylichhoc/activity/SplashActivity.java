@@ -114,13 +114,6 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-
-//            Intent intent = new Intent(SplashActivity.this, SpinnerDemo.class);
-//            startActivity(intent);
-
-
         }
-
-        //Log.d(TAG, "onStart: " + FirebaseInstanceId.getInstance().getToken());
     }
 }

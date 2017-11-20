@@ -26,6 +26,10 @@
     <string name="SERVER_KEY">AAAA2IVeKMQ:APA91bHbqbUIqLiCBbWOeZkyZyvEO0rOetzwTWz8DSHuO1NVsGCnsABTtz6VEHiF8Y91xfqZiwtmsitICCd0gtsc5N6AZP5_RoLQt8mY8nK6jpWnM7P4HfzOKeDoODxjSQETt7BlsWU9</string>
 
 
+    <string name="fb_login_failed">Đăng nhập Facebook thất bại!!</string>
+    <string name="gg_login_failed">Đăng Nhập Google Thất bại!!</string>
+    <string name="email_already_login">Đăng nhập thất bại, có vẻ email của bạn đã được dùng</string>
+
     <string name="remind">Nhắc nhở</string>
     <string name="edit_hoc_phan">Thay đổi học phần</string>
     <string name="remove_du_lieu">Xóa dữ liệu học phần</string>
@@ -39,6 +43,7 @@
     <string name="create">Create</string>
     <string name="cancel">cancel</string>
     <string name="huy">Hủy</string>
+    <string name="ok">OK</string>
 
     <string name="remind_me">Nhắc tôi</string>
     <string name="notification">Thông báo</string>
@@ -67,4 +72,20 @@
     
     <string name="xoa_nhac_nho">Xóa nhắc nhở</string>
     <string name="xoa_nhac_nho_detail">Nhắc nhở này sẽ bị xóa khỏi thiết bị của bạn</string>
+    <string name="incorrect_ma_hp">Nhập sai mã học phần</string>
+
+    <string name="key_firebase_user_info">userInfo</string>
+    <string name="key_firebase_list_mahp">listMaHocPHan</string>
+    <string name="key_firebase_fcmtoken">FCMToken</string>
+
+    <string name="topic_tb_chung">TBChung</string>
+    <string name="error">Error: </string>
+    <string name="details">Details</string>
+    <string name="remove_hp_success">Đã xóa lớp học phần</string>
+    <string name="remove_alarm_success">Đã xoá nhắc nhở</string>
+    <string name="add_alarm_success">Đã thêm nhắc nhở</string>
+    <string name="remove_hp_failed">Thất bại</string>
+    <string name="add_hp_success">Đã thêm lớp học phần</string>
+    <string name="add_hp_failed">Thêm lớp học phần thất bại</string>
+
 </resources>

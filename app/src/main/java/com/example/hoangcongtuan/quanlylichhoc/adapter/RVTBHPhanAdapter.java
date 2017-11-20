@@ -1,5 +1,6 @@
 package com.example.hoangcongtuan.quanlylichhoc.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AddAlarmActivity;
@@ -137,11 +137,10 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.item_nhac_toi:
-                        Toast.makeText(mContext, lstThongBao.get(position).getTittle(), Toast.LENGTH_SHORT).show();
                         Intent addAlarmIntent = new Intent(mContext, AddAlarmActivity.class);
                         addAlarmIntent.putExtra("tieu_de", lstThongBao.get(position).getTittle());
                         addAlarmIntent.putExtra("noi_dung", lstThongBao.get(position).getContent());
-                        mContext.startActivity(addAlarmIntent);
+                        ((Activity)mContext).startActivityForResult(addAlarmIntent, RVTBChungAdapter.RC_FAST_ADD_ALARM);
                         break;
 
                 }

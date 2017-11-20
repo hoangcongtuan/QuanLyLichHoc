@@ -105,7 +105,7 @@ public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
     }
 
     public LopHP getCurrentLopHP() {
-        return this.currentLopHP;
+        return DBLopHPHelper.getsInstance().getLopHocPhan(autoMaHP.getText().toString());
     }
 
 }

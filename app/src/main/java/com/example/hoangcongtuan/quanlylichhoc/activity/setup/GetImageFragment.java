@@ -174,6 +174,7 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
                 try {
                     isLoadImage = true;
                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                    //bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.mahocphan);
                     ivImage.setImageBitmap(bitmap);
                     welcomeFragInterface.onBitmapAvailable();
                 } catch (IOException e) {

@@ -133,7 +133,9 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
 
         //subscribe a topics
         Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic(lstMaHP);
-        Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic("TBChungFragment");
+        Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic(
+                getResources().getString(R.string.topic_tb_chung)
+        );
 
     }
 

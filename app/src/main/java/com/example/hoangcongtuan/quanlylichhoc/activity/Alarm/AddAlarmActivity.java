@@ -14,7 +14,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
@@ -161,8 +160,6 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
 
         ReminderManager.getsInstance(getApplicationContext()).setReminder(reminder.getId(), mCalendar);
 
-        String s = mDay + "/" + (mMonth +1)+ "/" + mYear + " " + mHour + ":" + mMinute;
-        Toast.makeText(this, "Đã thêm nhắc nhở vào lúc " + s, Toast.LENGTH_SHORT).show();
 
     }
 

@@ -92,8 +92,8 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         long rc;
 
         SQLiteDatabase db = getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + USER_TABLE_NAME + " WHERE " +
-                USER_COMLUMN_MAHP + "=?", new String[]{maHP});
+//        Cursor cursor = db.rawQuery("SELECT * FROM " + USER_TABLE_NAME + " WHERE " +
+//                USER_COMLUMN_MAHP + "=?", new String[]{maHP});
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(USER_COMLUMN_MAHP, maHP);

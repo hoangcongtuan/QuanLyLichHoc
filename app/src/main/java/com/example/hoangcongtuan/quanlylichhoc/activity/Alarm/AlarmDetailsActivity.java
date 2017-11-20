@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
@@ -136,7 +135,6 @@ public class AlarmDetailsActivity extends AppCompatActivity {
     private void deleteAlarm() {
         ReminderManager.getsInstance(getApplicationContext()).deleteReminder(mReminderId);
         ReminderDatabase.getsInstance(getApplicationContext()).deleteReminder(mReminderId);
-        Toast.makeText(this, "Đã huỷ nhắc nhở", Toast.LENGTH_SHORT).show();
     }
 
     @Override

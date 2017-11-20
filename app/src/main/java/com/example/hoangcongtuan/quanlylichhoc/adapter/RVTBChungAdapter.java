@@ -1,17 +1,19 @@
 package com.example.hoangcongtuan.quanlylichhoc.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AddAlarmActivity;
@@ -37,6 +39,7 @@ public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final static int ITEM_LOADED = 0;
     private final static int ITEM_LOADING = 1;
     public final static int LOAD_MORE_DELTA = 5;
+    public final static int RC_FAST_ADD_ALARM = 2;
 
     public boolean isLoading;
     private int lastVisibleItem;
@@ -89,6 +92,9 @@ public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             tvTBTieuDe = (TextView)itemView.findViewById(R.id.tvTBTieude);
             tvThongBaoNoiDung = (TextView)itemView.findViewById(R.id.tvTBNoiDung);
             btnDots = (ImageView)itemView.findViewById(R.id.btnDots);
+
+            tvThongBaoNoiDung.setClickable(true);
+            tvThongBaoNoiDung.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 
@@ -126,7 +132,7 @@ public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             final ThongBaoHolder tbHolder = (ThongBaoHolder) holder;
             tbHolder.tvTBTieuDe.setText(lstThongBao.get(position).getTittle());
             tbHolder.tvTBThoiGian.setText(lstThongBao.get(position).getStrDate());
-            tbHolder.tvThongBaoNoiDung.setText(lstThongBao.get(position).getContent());
+            tbHolder.tvThongBaoNoiDung.setText(Html.fromHtml(lstThongBao.get(position).getContent()));
             tbHolder.btnDots.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -145,11 +151,10 @@ public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.item_nhac_toi:
-                        Toast.makeText(mContext, lstThongBao.get(position).getTittle(), Toast.LENGTH_SHORT).show();
                         Intent addAlarmIntent = new Intent(mContext, AddAlarmActivity.class);
                         addAlarmIntent.putExtra("tieu_de", lstThongBao.get(position).getTittle());
                         addAlarmIntent.putExtra("noi_dung", lstThongBao.get(position).getContent());
-                        mContext.startActivity(addAlarmIntent);
+                        ((Activity)mContext).startActivityForResult(addAlarmIntent, RC_FAST_ADD_ALARM);
                         break;
 
                 }

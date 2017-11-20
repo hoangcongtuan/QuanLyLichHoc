@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/editHPLayout"
     tools:context="com.example.hoangcongtuan.quanlylichhoc.activity.EditHPActivity">
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

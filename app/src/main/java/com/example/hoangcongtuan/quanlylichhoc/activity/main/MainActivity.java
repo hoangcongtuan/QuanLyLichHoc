@@ -11,7 +11,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -23,6 +25,7 @@ import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,6 +42,7 @@ import com.example.hoangcongtuan.quanlylichhoc.activity.SettingsActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.SplashActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.MainPagerAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBChungAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.login.LoginManager;
@@ -47,6 +51,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -81,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TBChungFragment tbChungFragment;
     TBHocPhanFragment tbHPhan;
     LichHocFragment lichHocFragment;
+    CoordinatorLayout main_content_layout;
 
     private DatabaseReference database;
     private DatabaseReference firebaseDBUserMaHP;
@@ -127,6 +134,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         viewPager = (ViewPager)findViewById(R.id.viewPager);
+
+        main_content_layout = (CoordinatorLayout) findViewById(R.id.main_content_layout);
 
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         navigationView = (NavigationView)findViewById(R.id.navigaionView);
@@ -251,7 +260,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Utils.QLLHUtils.getsInstance(this).unSubscribeAllTopics(
                 DBLopHPHelper.getsInstance().getListUserMaHP()
         );
-        Utils.QLLHUtils.getsInstance(this).unSubscribeTopic("TBChungFragment");
+        Utils.QLLHUtils.getsInstance(this).unSubscribeTopic(
+                getResources().getString(R.string.topic_tb_chung)
+        );
 
         FirebaseAuth.getInstance().signOut();
 
@@ -282,12 +293,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 builder.setPositiveButton(getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //xoa du lieu local
-                        DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
                         //xoa du lieu tren firebase
-                        firebaseDBUserMaHP.setValue(null);
-                        logOut();
-                        //Log.d(TAG, "onNavigationItemSelected: " + );
+                        firebaseDBUserMaHP.setValue(null).addOnSuccessListener(MainActivity.this,
+                                new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        //xoa du lieu local
+                                        DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
+
+                                        logOut();
+                                        //Log.d(TAG, "onNavigationItemSelected: " + );
+                                    }
+                                }).addOnFailureListener(MainActivity.this,
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull final Exception e) {
+                                        Snackbar.make(main_content_layout, getResources().getString(R.string.error), Snackbar.LENGTH_LONG)
+                                                .setAction(getResources().getString(R.string.details), new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        AlertDialog.Builder alerBulder = new AlertDialog.Builder(MainActivity.this);
+                                                        alerBulder.setTitle(getResources().getString(R.string.error));
+                                                        alerBulder.setMessage(e.getMessage());
+                                                        alerBulder.create().show();
+                                                    }
+                                                });
+                                    }
+                                });
+
                     }
                 });
 
@@ -330,10 +363,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RC_EDITHPACT) {
-            if (resultCode == RESULT_OK) {
-                lichHocFragment.updateUI();
-            }
+        switch (requestCode) {
+            case RC_EDITHPACT:
+                if (resultCode == RESULT_OK) {
+                    lichHocFragment.updateUI();
+                }
+                break;
+            case RVTBChungAdapter.RC_FAST_ADD_ALARM:
+                if (resultCode == RESULT_OK) {
+                    Snackbar.make(main_content_layout,
+                            getResources().getString(R.string.add_alarm_success),
+                            Snackbar.LENGTH_LONG).show();
+                }
+                break;
+
         }
     }
 
