@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +53,9 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             tvTBTieuDe = (TextView)itemView.findViewById(R.id.tvTBTieude);
             tvThongBaoNoiDung = (TextView)itemView.findViewById(R.id.tvTBNoiDung);
             btnDots = (ImageView)itemView.findViewById(R.id.btnDots);
+
+            tvThongBaoNoiDung.setClickable(true);
+            tvThongBaoNoiDung.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 
@@ -117,7 +122,7 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ThongBao tb = lstThongBao.get(position);
             thongBaoHolder.tvTBThoiGian.setText(tb.getStrDate());
             thongBaoHolder.tvTBTieuDe.setText(tb.getTittle());
-            thongBaoHolder.tvThongBaoNoiDung.setText(tb.getContent());
+            thongBaoHolder.tvThongBaoNoiDung.setText(Html.fromHtml(tb.getContent()));
             thongBaoHolder.btnDots.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
