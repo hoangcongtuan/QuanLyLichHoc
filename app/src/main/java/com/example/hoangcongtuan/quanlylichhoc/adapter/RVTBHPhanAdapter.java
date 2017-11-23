@@ -144,7 +144,7 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     case R.id.item_nhac_toi:
                         Intent addAlarmIntent = new Intent(mContext, AddAlarmActivity.class);
                         addAlarmIntent.putExtra("tieu_de", lstThongBao.get(position).getTittle());
-                        addAlarmIntent.putExtra("noi_dung", lstThongBao.get(position).getContent());
+                        addAlarmIntent.putExtra("noi_dung", Html.fromHtml(lstThongBao.get(position).getContent()).toString());
                         ((Activity)mContext).startActivityForResult(addAlarmIntent, RVTBChungAdapter.RC_FAST_ADD_ALARM);
                         break;
 

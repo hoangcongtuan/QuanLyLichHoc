@@ -1,21 +1,29 @@
-<android.support.design.widget.AppBarLayout
-    android:elevation="4dp"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content_layout">
+
+    <android.support.design.widget.AppBarLayout
+        android:elevation="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <include
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            layout="@layout/toolbar_layout"
+            />
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:tabMode="fixed"
+            tools:tabTextAppearance="@style/myTabTextAppearance"
+            tools:tabGravity="fill"/>
+    </android.support.design.widget.AppBarLayout>
 
     <include
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        layout="@layout/toolbar_layout"
-        />
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:tabMode="fixed"
-        tools:tabTextAppearance="@style/myTabTextAppearance"
-        tools:tabGravity="fill"/>
-</android.support.design.widget.AppBarLayout>
+        layout="@layout/main_content_layout"/>
+</android.support.design.widget.CoordinatorLayout>

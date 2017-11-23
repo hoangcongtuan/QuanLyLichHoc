@@ -65,7 +65,7 @@
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="orc" />
+            android:value="ocr" />
 
         <activity android:name=".activity.EditHPActivity" />
         <!--

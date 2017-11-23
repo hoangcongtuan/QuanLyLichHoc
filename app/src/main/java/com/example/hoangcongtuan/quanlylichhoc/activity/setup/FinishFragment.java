@@ -3,6 +3,7 @@ package com.example.hoangcongtuan.quanlylichhoc.activity.setup;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -13,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
@@ -26,6 +26,8 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 
+import static com.example.hoangcongtuan.quanlylichhoc.R.id.btnAdd;
+
 /**
  * Created by hoangcongtuan on 10/13/17.
  */
@@ -34,7 +36,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
     private final static String TAG = FinishFragment.class.getName();
 
     ListView lvTKB;
-    Button btnAdd;
+    FloatingActionButton fabAdd;
 
     private LVTKBieuAdapter LVTKBieuAdapter;
     private ArrayList<LopHP> lstLopHP;
@@ -68,7 +70,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
 
     private void getWidgets(View rootView) {
         lvTKB = (ListView)rootView.findViewById(R.id.lvTKB);
-        btnAdd = (Button)rootView.findViewById(R.id.btnAdd);
+        fabAdd = (FloatingActionButton)rootView.findViewById(R.id.fabAdd);
     }
 
     private void setWidget() {
@@ -77,7 +79,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setWidgetEvent() {
-        btnAdd.setOnClickListener(this);
+        fabAdd.setOnClickListener(this);
     }
 
     @Override
@@ -103,15 +105,15 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
     }
 
     //tao thoi khoa bieu tu danh sach ma hoc phan da nhan dang duoc
-    public void processTKB(ArrayList<String> listMaHP) {
+    public void processTKB(ArrayList<LopHP> listLopHP) {
 
         //Toast.makeText(getContext(), "listMaHP.size() = " + listMaHP.size(), Toast.LENGTH_SHORT).show();
         //xoa danh sach cu
         lstLopHP.clear();
         lstMaHP.clear();
 
-        for (String maHP : listMaHP) {
-            LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(maHP);
+        for (LopHP i : listLopHP) {
+            LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(i.getMaHP());
             if (lopHP != null){
                 lstMaHP.add(lopHP.getMaHP());
                 lstLopHP.add(lopHP);
@@ -199,7 +201,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnAdd:
+            case btnAdd:
                 showAddLopHPDialog();
                 break;
         }

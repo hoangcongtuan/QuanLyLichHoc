@@ -32,6 +32,8 @@
 
     <string name="remind">Nhắc nhở</string>
     <string name="edit_hoc_phan">Thay đổi học phần</string>
+    <string name="edit_ma_hp">Chỉnh sửa mã học phần</string>
+
     <string name="remove_du_lieu">Xóa dữ liệu học phần</string>
     <string name="settings">Cài đặt</string>
     <string name="logout">Đăng xuất</string>
@@ -80,6 +82,8 @@
 
     <string name="topic_tb_chung">TBChung</string>
     <string name="error">Error: </string>
+    <string name="unknown">Không rõ</string>
+    <string name="unknown_symbol">###########</string>
     <string name="details">Details</string>
     <string name="remove_hp_success">Đã xóa lớp học phần</string>
     <string name="remove_alarm_success">Đã xoá nhắc nhở</string>

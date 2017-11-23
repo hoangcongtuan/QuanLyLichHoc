@@ -1,30 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:openDrawer="start"
+    android:fitsSystemWindows="true"
+    android:layout_gravity="start"
+    android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <include
         layout="@layout/app_bar_main"/>
-    <android.support.v4.widget.DrawerLayout
-        android:layout_width="match_parent"
+
+    <android.support.design.widget.NavigationView
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        tools:openDrawer="start"
         android:layout_gravity="start"
-        android:id="@+id/drawer_layout">
-        <include
-            layout="@layout/main_content_layout"/>
-        <android.support.design.widget.NavigationView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:id="@+id/navigaionView"
-            app:headerLayout="@layout/navigation_header"
-            app:menu="@menu/navigation_menu">
+        android:id="@+id/navigaionView"
+        app:headerLayout="@layout/navigation_header"
+        app:menu="@menu/navigation_menu">
 
-        </android.support.design.widget.NavigationView>
-    </android.support.v4.widget.DrawerLayout>
-
-
-</LinearLayout>
+    </android.support.design.widget.NavigationView>
+</android.support.v4.widget.DrawerLayout>
