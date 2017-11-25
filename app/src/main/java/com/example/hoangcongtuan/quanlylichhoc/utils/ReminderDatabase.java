@@ -33,11 +33,6 @@ public class ReminderDatabase extends SQLiteOpenHelper{
 
     private static ReminderDatabase sInstance;
 
-
-//    public static void init(Context context) {
-//        if (sInstance == null)
-//            sInstance = new ReminderDatabase(context);
-//    }
     public static ReminderDatabase getsInstance(Context context) {
         if (sInstance == null)
             sInstance = new ReminderDatabase(context);
@@ -95,6 +90,8 @@ public class ReminderDatabase extends SQLiteOpenHelper{
             cursor.moveToFirst();
 
         Reminder reminder = new Reminder(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), Integer.parseInt(cursor.getString(5)), cursor.getString(6));
+        cursor.close();
+        db.close();
         return reminder;
     }
 
@@ -141,6 +138,7 @@ public class ReminderDatabase extends SQLiteOpenHelper{
                 reminders.add(reminder);
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return reminders;
     }
 

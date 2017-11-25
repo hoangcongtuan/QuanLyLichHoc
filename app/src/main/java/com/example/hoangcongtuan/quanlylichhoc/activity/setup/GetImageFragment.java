@@ -15,7 +15,6 @@ import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -38,16 +37,15 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_IMAGE_PICK = 0;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_IMAGE_CROP = 2;
-    ImageButton btnPickCamera;
-    ImageButton btnPickGallery;
+    private ImageButton btnPickCamera;
+    private ImageButton btnPickGallery;
     public ImageView ivImage;
     public Boolean isLoadImage;
     public Bitmap bitmap;
     private WelcomeFragInterface welcomeFragInterface;
     private Activity activity;
-    AlertDialog.Builder alertBuilder;
-    AlertDialog alertDialog;
-    Button btnOk;
+    private AlertDialog.Builder alertBuilder;
+    private AlertDialog alertDialog;
     private Uri imageUri;
 
     private String mCurrentPhotoPath;
@@ -174,7 +172,6 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
                 try {
                     isLoadImage = true;
                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                    //bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.mahocphan);
                     ivImage.setImageBitmap(bitmap);
                     welcomeFragInterface.onBitmapAvailable();
                 } catch (IOException e) {
@@ -191,7 +188,6 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
 
     private void cropImage(final Uri uri) {
         CropImage.activity(uri).start(getActivity(), this);
-        //CropImage.activity(uri).start(getActivity());
     }
 
     public interface WelcomeFragInterface {
@@ -205,6 +201,5 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        //Log.d(TAG, "onStart: ");
     }
 }

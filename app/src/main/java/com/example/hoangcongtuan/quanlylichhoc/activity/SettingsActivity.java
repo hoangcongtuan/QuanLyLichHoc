@@ -13,9 +13,9 @@ import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener{
-    Toolbar toolbar;
-    Switch swNotification;
-    SharedPreferences sharedPreferences;
+    private Toolbar toolbar;
+    private Switch swNotification;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

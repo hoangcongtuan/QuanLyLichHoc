@@ -17,7 +17,7 @@ public class CustomDialogBuilderEditMaHP extends AlertDialog.Builder {
 
     private final static String TAG = CustomDialogBuilderEditMaHP.class.getName();
 
-    View rootView;
+    private View rootView;
     private EditText edtMaHP;
 
     public CustomDialogBuilderEditMaHP(@NonNull Context context) {

@@ -92,8 +92,6 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         long rc;
 
         SQLiteDatabase db = getWritableDatabase();
-//        Cursor cursor = db.rawQuery("SELECT * FROM " + USER_TABLE_NAME + " WHERE " +
-//                USER_COMLUMN_MAHP + "=?", new String[]{maHP});
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(USER_COMLUMN_MAHP, maHP);
@@ -180,7 +178,6 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
 
     public long insertLopHocPhan(SQLiteDatabase db, LopHP lopHP) {
         long rc;
-        //SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(ALL_HOCPHAN_COLUMN_MAHP, lopHP.maHP);
         contentValues.put(ALL_HOCPHAN_COLUMN_GIANG_VIEN, lopHP.tenGV);
@@ -278,13 +275,9 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
     public void checkDB() {
         int count = getAllLopHocPhan().getCount();
         if (count <= 0) {
-            //Toast.makeText(mContext, "Loading data", Toast.LENGTH_LONG).show();
             onCheckDB.onStartDownload();
-            //Log.d(TAG, "checkDB: start download");
             getAllMaHPFromFirebase();
         } else {
-            //Toast.makeText(mContext, "ok", Toast.LENGTH_SHORT).show();
-            //Log.d(TAG, "checkDB: db available");
             onCheckDB.onDBAvailable();
         }
     }
@@ -297,7 +290,6 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //Toast.makeText(mContext, "Start Load", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -308,10 +300,8 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
             db.beginTransaction();
             for (DataSnapshot snapshot: dataSnapshots[0].getChildren()) {
                 lopHPObj = snapshot.getValue(LopHPObj.class);
-                //onLoadData.onLoad(lopHPObj.getTenHP());
                 maHP = snapshot.getKey();
                 insertLopHocPhan(db, new LopHP(maHP, lopHPObj));
-                //Log.d(TAG, "onDataChange: " + maHP);
             }
             db.setTransactionSuccessful();
             db.endTransaction();
@@ -322,7 +312,6 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         @Override
         protected void onPostExecute(String dataSnapshot) {
             super.onPostExecute(dataSnapshot);
-            //Toast.makeText(mContext, "Finish Load", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "onPostExecute: finish download");
             onCheckDB.onDownloadFinish();
         }

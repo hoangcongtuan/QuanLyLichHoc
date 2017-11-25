@@ -1,13 +1,8 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.main;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,13 +10,11 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -39,7 +32,6 @@ import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.EditHPActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.SettingsActivity;
-import com.example.hoangcongtuan.quanlylichhoc.activity.SplashActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.MainPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBChungAdapter;
@@ -57,7 +49,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,23 +62,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private final static String TAG = MainActivity.class.getName();
     public final static int RC_EDITHPACT = 1;
 
-    MainPagerAdapter pagerAdapter;
-    ViewPager viewPager;
-    TabLayout tabLayout;
-    String[] strTabs;
-    Toolbar toolbar;
-    ActionBarDrawerToggle toggle;
-    DrawerLayout drawerLayout;
-    NavigationView navigationView;
-    FirebaseAuth firebaseAuth;
-    FirebaseUser user;
-    Uri avatarUrl;
-    TextView tvUserName;
-    TextView tvEmail;
-    TBChungFragment tbChungFragment;
-    TBHocPhanFragment tbHPhan;
-    LichHocFragment lichHocFragment;
-    CoordinatorLayout main_content_layout;
+    private MainPagerAdapter pagerAdapter;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+    private String[] strTabs;
+    private Toolbar toolbar;
+    private ActionBarDrawerToggle toggle;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
+    private Uri avatarUrl;
+    private TextView tvUserName;
+    private TextView tvEmail;
+    private TBChungFragment tbChungFragment;
+    private TBHocPhanFragment tbHPhan;
+    private LichHocFragment lichHocFragment;
+    private CoordinatorLayout main_content_layout;
 
     private DatabaseReference database;
     private DatabaseReference firebaseDBUserMaHP;
@@ -101,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         //kiem tra trong intent co extras hay ko, neu co -> xu ly payload notification gui toi
-
         init();
         getWidgets();
         setWidgets();
@@ -166,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Utils.VolleyUtils.getsInstance(getApplicationContext()).getRequestQueue().add(avatarRequest);
     }
 
-    public void getTopicSubcribe(String token, final String key) {
+    private void getTopicSubcribe(String token, final String key) {
         JsonObjectRequest jsonRequest;
         jsonRequest = new JsonObjectRequest(Request.Method.GET, "https://iid.googleapis.com/iid/info/" + token + "?details=true", null,
                 new Response.Listener<JSONObject>() {
@@ -222,9 +212,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = getIntent();
         Log.d(TAG, "onCreate: Intent = " + intent.toString());
         if (intent.getExtras() != null && intent.hasExtra("tieu_de")) {
-//            Log.d(TAG, "onCreate: thoi_gian = " + intent.getStringExtra("thoi_gian"));
-//            Log.d(TAG, "onCreate: tieu_de = " + intent.getStringExtra("tieu_de"));
-//            Log.d(TAG, "onCreate: noi_dung = " + intent.getStringExtra("noi_dung"));
             Log.d(TAG, "setWidgetsEvent: key = " + intent.getStringExtra("id"));
             String tbType = intent.getStringExtra("type");
             if (tbType.compareTo("tbc") == 0) {
@@ -254,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewPager.setOffscreenPageLimit(3);
     }
 
-    public void logOut() {
+    private void logOut() {
 
         //unsubscrible all topics
         Utils.QLLHUtils.getsInstance(this).unSubscribeAllTopics(
@@ -269,7 +256,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
-                //Log.d(TAG, "onResult: ");
             }
         });
 
@@ -302,7 +288,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
 
                                         logOut();
-                                        //Log.d(TAG, "onNavigationItemSelected: " + );
                                     }
                                 }).addOnFailureListener(MainActivity.this,
                                 new OnFailureListener() {
@@ -339,14 +324,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent(MainActivity.this, EditHPActivity.class);
                 startActivityForResult(intent, RC_EDITHPACT);
                 break;
-            case R.id.item_showFCMDetails:
-                getTopicSubcribe(
-                        FirebaseInstanceId.getInstance().getToken(),
-                        getResources().getString(R.string.SERVER_KEY)
-                );
-                break;
-            case R.id.item_showSubscribeTopic:
-                break;
+//            case R.id.item_showFCMDetails:
+//                getTopicSubcribe(
+//                        FirebaseInstanceId.getInstance().getToken(),
+//                        getResources().getString(R.string.SERVER_KEY)
+//                );
+//                break;
+//            case R.id.item_showSubscribeTopic:
+//                break;
             case R.id.item_cat_dat:
                 Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intentSettings);
@@ -379,41 +364,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //sendNotification();
-
-    }
-
-    public void sendNotification() {
-        Intent intent = new Intent(this, SplashActivity.class);
-        Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-
-        NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_message_white_24dp)
-                .setContentTitle("tieu de")
-                .setAutoCancel(true)
-                .setContentText("noi dung")
-                .setSound(notificationSound)
-                .setColor(ContextCompat.getColor(this, R.color.colorGreen));
-        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
-        taskStackBuilder.addParentStack(SplashActivity.class);
-        taskStackBuilder.addNextIntent(intent);
-        PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(pendingIntent);
-        Intent intentAlarm = new Intent(this, SplashActivity.class);
-
-        PendingIntent pIAlarm = PendingIntent.getActivity(this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        builder.addAction(R.drawable.ic_alarm_black_24dp, "Nhắc tôi", pIAlarm);
-
-
-        NotificationManager notifcationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        notifcationManager.notify(0, builder.build());
-        //Log.d(TAG, "sendNotification: send notification");
-    }
-
 }

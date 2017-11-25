@@ -35,8 +35,8 @@ import static com.example.hoangcongtuan.quanlylichhoc.R.id.btnAdd;
 public class FinishFragment extends Fragment implements View.OnClickListener {
     private final static String TAG = FinishFragment.class.getName();
 
-    ListView lvTKB;
-    FloatingActionButton fabAdd;
+    private ListView lvTKB;
+    private FloatingActionButton fabAdd;
 
     private LVTKBieuAdapter LVTKBieuAdapter;
     private ArrayList<LopHP> lstLopHP;
@@ -53,7 +53,6 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_finish, container, false);
 
-        //Log.d(TAG, "onCreateView: " );
         getWidgets(rootView);
         setWidget();
         setWidgetEvent();
@@ -107,7 +106,6 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
     //tao thoi khoa bieu tu danh sach ma hoc phan da nhan dang duoc
     public void processTKB(ArrayList<LopHP> listLopHP) {
 
-        //Toast.makeText(getContext(), "listMaHP.size() = " + listMaHP.size(), Toast.LENGTH_SHORT).show();
         //xoa danh sach cu
         lstLopHP.clear();
         lstMaHP.clear();
@@ -119,7 +117,6 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
                 lstLopHP.add(lopHP);
             }
         }
-        //Toast.makeText(getContext(), "lstLopHP.size() = " + lstLopHP.size(), Toast.LENGTH_SHORT).show();
         LVTKBieuAdapter.notifyDataSetChanged();
     }
 

@@ -32,7 +32,7 @@ public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private ArrayList<ThongBao> lstThongBao;
     private Context mContext;
 
-    LinearLayoutManager linearLayoutManager;
+    private LinearLayoutManager linearLayoutManager;
 
     private ICallBack ICallBack;
 
@@ -70,7 +70,6 @@ public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         if (!allItemLoaded) {
                             //chua load het cac thong bao
                             isLoading = true;
-                            //Log.d(TAG, "onScrolled: ");
                             //call back toi
                             ICallBack.onLoadMore();
                         }

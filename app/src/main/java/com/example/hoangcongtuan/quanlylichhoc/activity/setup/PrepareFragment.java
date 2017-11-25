@@ -31,23 +31,17 @@ public class PrepareFragment extends android.support.v4.app.Fragment {
         DBLopHPHelper.getsInstance().setOnCheckDB(new DBLopHPHelper.OnCheckDB() {
             @Override
             public void onDBAvailable() {
-                //Toast.makeText(getActivity(), "DB Available!", Toast.LENGTH_SHORT).show();
-                //LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan("4130403_1710_15_11");
-                //Toast.makeText(getActivity(), lopHP.getTenHP(), Toast.LENGTH_SHORT).show();
                 prepareFinish.onPrepareFinish();
             }
 
             @Override
             public void onDownloadFinish() {
-                //Toast.makeText(getActivity(), "Download finish!", Toast.LENGTH_SHORT).show();
                 prepareFinish.onPrepareFinish();
 
             }
 
             @Override
             public void onStartDownload() {
-                //Toast.makeText(getActivity(), "Start Download!", Toast.LENGTH_SHORT).show();
-                //prepareFinish.onPrepareFinish();
 
             }
         });

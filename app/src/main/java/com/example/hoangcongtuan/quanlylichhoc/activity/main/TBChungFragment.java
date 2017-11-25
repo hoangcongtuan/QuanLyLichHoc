@@ -34,16 +34,17 @@ public class TBChungFragment extends Fragment {
     private static final String TAG = TBChungFragment.class.getName();
     private RecyclerView recyclerView;
     private RVTBChungAdapter tbChungAdapter;
-    DatabaseReference database;
-    DatabaseReference tbChungRef;
-    ValueEventListener tbChungEvenListener;
-    RVTBChungAdapter.ICallBack iCallBack;
-    RVTBChungAdapter.ICallBack privCallBack;
+    private DatabaseReference database;
+    private DatabaseReference tbChungRef;
+    private ValueEventListener tbChungEvenListener;
+    private RVTBChungAdapter.ICallBack iCallBack;
+    private RVTBChungAdapter.ICallBack privCallBack;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup viewGroup = (ViewGroup)inflater.inflate(R.layout.fragment_tb_chung, container, false);
+        ViewGroup viewGroup;
+        viewGroup = (ViewGroup)inflater.inflate(R.layout.fragment_tb_chung, container, false);
         return  viewGroup;
     }
 
@@ -84,7 +85,7 @@ public class TBChungFragment extends Fragment {
         loadData();
     }
 
-    public void loadMore() {
+    private void loadMore() {
         Log.d(TAG, "loadMore: ");
         tbChungAdapter.addThongBao(null);
         tbChungAdapter.addThongBao(null);
@@ -92,9 +93,6 @@ public class TBChungFragment extends Fragment {
         tbChungAdapter.itemLoadCount += tbChungAdapter.LOAD_MORE_DELTA;
         tbChungRef.removeEventListener(tbChungEvenListener);
         tbChungRef.limitToLast(tbChungAdapter.itemLoadCount).addListenerForSingleValueEvent(tbChungEvenListener);
-//        recyclerView.scrollToPosition(
-//                tbChungAdapter.getLstThongBao().size() - 1
-//        );
     }
 
 
@@ -141,7 +139,7 @@ public class TBChungFragment extends Fragment {
         });
     }
 
-    public void scrollTo(final int position) {
+    private void scrollTo(final int position) {
         setPrivCallBack(new RVTBChungAdapter.ICallBack() {
             @Override
             public void onLoadMore() {
@@ -181,7 +179,7 @@ public class TBChungFragment extends Fragment {
     }
 
 
-    public void loadData() {
+    private void loadData() {
         database = FirebaseDatabase.getInstance().getReference();
         tbChungAdapter.addThongBao(null);
         tbChungAdapter.addThongBao(null);
@@ -217,7 +215,6 @@ public class TBChungFragment extends Fragment {
                 tbChungAdapter.itemLoadCount = count;
                 tbChungAdapter.notifyDataSetChanged();
                 tbChungAdapter.isLoading = false;
-                //recyclerView.scrollToPosition(tbChungAdapter.itemLoadCount);
                 if (privCallBack != null)
                     privCallBack.onLoadMoreFinish();
                 if (iCallBack != null)

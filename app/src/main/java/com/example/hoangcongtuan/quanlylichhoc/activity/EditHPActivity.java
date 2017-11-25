@@ -33,17 +33,17 @@ import java.util.ArrayList;
 
 public class EditHPActivity extends AppCompatActivity implements View.OnClickListener{
 
-    FloatingActionButton fabAdd;
-    ListView lvTKB;
-    LVTKBieuAdapter lvtkBieuAdapter;
-    ArrayList<LopHP> lstLopHP;
-    ArrayList<String> lstMaHP;
-    ArrayList<String> lstMaHPOld;
-    Toolbar toolbar;
-    Boolean modified;
-    CoordinatorLayout editHPLayout;
+    private FloatingActionButton fabAdd;
+    private ListView lvTKB;
+    private LVTKBieuAdapter lvtkBieuAdapter;
+    private ArrayList<LopHP> lstLopHP;
+    private ArrayList<String> lstMaHP;
+    private ArrayList<String> lstMaHPOld;
+    private Toolbar toolbar;
+    private Boolean modified;
+    private CoordinatorLayout editHPLayout;
 
-    DatabaseReference dbUserMaHocPhan;
+    private DatabaseReference dbUserMaHocPhan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,8 +193,6 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void removeUserHP(final int position) {
-        String id;
-        id = lstMaHP.get(position);
         ArrayList<String> tmp = new ArrayList<>();
         tmp.addAll(lstMaHP);
         tmp.remove(position);

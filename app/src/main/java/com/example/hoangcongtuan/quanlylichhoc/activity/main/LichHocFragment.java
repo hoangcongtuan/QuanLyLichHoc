@@ -24,8 +24,8 @@ import static com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper.getsIn
 
 public class LichHocFragment extends Fragment {
 
-    View rootView;
-    ListView lvTKB;
+    private View rootView;
+    private ListView lvTKB;
     private LVTKBieuAdapter LVTKBieuAdapter;
     private ArrayList<LopHP> lstLopHP;
 

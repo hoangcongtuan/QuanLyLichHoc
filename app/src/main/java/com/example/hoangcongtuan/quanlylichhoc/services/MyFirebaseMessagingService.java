@@ -28,14 +28,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        //Log.d(TAG, "onMessageReceived: From " + remoteMessage.getFrom());
         //check if contain data payload
         if (remoteMessage.getData().size() > 0) {
-            //Log.d(TAG, "onMessageReceived: Data Payload = " + remoteMessage.getData());
         }
         //check if containt notification
         if (remoteMessage.getNotification() != null) {
-            //Log.d(TAG, "onMessageReceived: Body = " + remoteMessage.getNotification().getBody());
         }
         sendNotification(remoteMessage);
 
@@ -79,12 +76,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationManager notifcationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notifcationManager.notify(createID(), builder.build());
-        //Log.d(TAG, "sendNotification: send notification");
     }
 
     public int createID(){
-//        Date now = new Date();
-//        int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss",  Locale.US).format(now));
         return UUID.randomUUID().hashCode();
     }
 

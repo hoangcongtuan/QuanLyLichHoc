@@ -83,12 +83,10 @@ public class RVTBHPhanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                //Log.d(TAG, "onScrolled: last visible item: " + lastVisibleItem);
                 if (itemLoadCount == (lastVisibleItem + 1)) {   //da keo xuong item cuoi cua ban tin
                     if (iCallBack != null) {           //load ban tin tiep theo
                         if (!allItemLoaded) {
                             isLoading = true;
-                            //Log.d(TAG, "onScrolled: load more");
                             iCallBack.onLoadMore();
                         }
 

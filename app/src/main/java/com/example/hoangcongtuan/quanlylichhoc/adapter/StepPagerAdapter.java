@@ -11,8 +11,8 @@ import java.util.ArrayList;
  */
 
 public class StepPagerAdapter extends FragmentStatePagerAdapter {
-    ArrayList<Fragment> lstFragment = new ArrayList<>();
-    ArrayList<String> lstFragmentTitle = new ArrayList<>();
+    private ArrayList<Fragment> lstFragment = new ArrayList<>();
+    private ArrayList<String> lstFragmentTitle = new ArrayList<>();
 
     public StepPagerAdapter(FragmentManager fm) {
         super(fm);

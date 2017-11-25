@@ -242,7 +242,7 @@ public class LoginActivity extends AppCompatActivity
                 });
     }
 
-    public void handleFirebaseLoginSuccess(FirebaseUser user) {
+    private void handleFirebaseLoginSuccess(FirebaseUser user) {
         //get local user db
         firebaseDB = FirebaseDatabase.getInstance().getReference();
         firebaseDBUserMaHP = firebaseDB.child(getResources().getString(R.string.key_firebase_user_info))
@@ -349,7 +349,7 @@ public class LoginActivity extends AppCompatActivity
         firebaseUserToken.setValue(FirebaseInstanceId.getInstance().getToken());
     }
 
-    public void getTopicSubcribe(String token, final String key) {
+    private void getTopicSubcribe(String token, final String key) {
         JsonObjectRequest jsonRequest;
         jsonRequest = new JsonObjectRequest(Request.Method.GET, "https://iid.googleapis.com/iid/info/" + token + "?details=true", null,
                 new Response.Listener<JSONObject>() {

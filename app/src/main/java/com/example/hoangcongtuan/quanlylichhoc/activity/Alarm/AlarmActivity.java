@@ -119,7 +119,6 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
             Intent i = new Intent(AlarmActivity.this, AlarmDetailsActivity.class);
             i.putExtra(ReminderManager.KEY_REMINDER_ID, reminder.getId());
             startActivityForResult(i, RC_DETAIL);
-            //startActivity(i);
         }
 
     }

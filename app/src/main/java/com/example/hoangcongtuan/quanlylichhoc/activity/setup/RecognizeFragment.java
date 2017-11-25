@@ -42,14 +42,13 @@ public class RecognizeFragment extends Fragment {
 
     private final static String TAG = RecognizeFragment.class.getName();
     private LVTKBieuAdapter adapter;
-    CoordinatorLayout recognizeLayout;
-    ListView lvLopHP;
-    FloatingActionButton fabAdd;
-    //ArrayAdapter<String> adapter;
-    ArrayList<LopHP> lstMaHP;
-    Bitmap bitmap;
-    ImageView imageView;
-    View rootView;
+    private CoordinatorLayout recognizeLayout;
+    private ListView lvLopHP;
+    private FloatingActionButton fabAdd;
+    public ArrayList<LopHP> lstMaHP;
+    private Bitmap bitmap;
+    private ImageView imageView;
+    private View rootView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -157,7 +156,6 @@ public class RecognizeFragment extends Fragment {
             );
 
         }
-        //Log.d(TAG, "recognize: " + lstMaHP.toString());
         adapter.notifyDataSetChanged();
     }
 
@@ -178,7 +176,6 @@ public class RecognizeFragment extends Fragment {
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity()).build();
         if(!textRecognizer.isOperational()) {
             Toast.makeText(getActivity(), "Vision Err", Toast.LENGTH_LONG).show();
-            //Log.e(TAG, "processImage: ");
             return null;
         }
 
@@ -193,14 +190,9 @@ public class RecognizeFragment extends Fragment {
                     arrayList.add(tBlock.getComponents().get(i).getValue());
                     Log.d(TAG, "processImage: " + tBlock.getComponents().get(i).getValue());
                 }
-//                for (Text line : tBlock.getComponents()) {
-//                    arrayList.add(line.getValue());
-//                }
             }
             if (textBlocks.size() == 0) {
-                //Toast.makeText(getActivity(), "Scan Failed: Found nothing to scan", Toast.LENGTH_LONG).show();
                 return null;
-                //scanResults.setText("Scan Failed: Found nothing to scan");
             } else {
                 return arrayList;
             }
@@ -268,12 +260,10 @@ public class RecognizeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        //Log.d(TAG, "onStart: ");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //Log.d(TAG, "onResume: ");
     }
 }

@@ -129,7 +129,7 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
         return true;
     }
 
-    public void errorOccurReturn() {
+    private void errorOccurReturn() {
         Intent intent = new Intent();
         setResult(RESULT_CANCELED, intent);
         finish();

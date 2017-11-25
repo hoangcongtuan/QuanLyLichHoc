@@ -69,11 +69,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private DatabaseReference database;
     private DatabaseReference dbUserMaHocPhan;
 
-    Uri avatarUrl;
-    String userName;
+    private Uri avatarUrl;
+    private String userName;
 
-    TextView tvUserName;
-    ImageView imgAvatar;
+    private TextView tvUserName;
+    private ImageView imgAvatar;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -190,7 +190,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onPageSelected(int position) {
-                //Log.d(TAG, "onPageSelected: " + position);
                 switch (position) {
                     case STEP_PREPARE:
                         btnNext.setEnabled(false);
@@ -361,7 +360,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 finishFragment.processTKB(recognizeFragment.lstMaHP);
                 break;
         }
-        //Log.d(TAG, "setStepper: " + stepId);
         viewPager.setCurrentItem(stepId);
     }
 
@@ -393,13 +391,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_dang_xuat:
-                //Log.d(TAG, "onNavigationItemSelected: ");
                 FirebaseAuth.getInstance().signOut();
 
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
                     @Override
                     public void onResult(@NonNull Status status) {
-                        //Log.d(TAG, "onResult: ");
                     }
                 });
 

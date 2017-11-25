@@ -7,7 +7,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,18 +36,17 @@ public class TBHocPhanFragment extends Fragment {
     private final static String TAG = TBHocPhanFragment.class.getName();
 
     private RVTBHPhanAdapter hocPhanAdapter;
-    RecyclerView recyclerView;
-    DatabaseReference database;
-    DatabaseReference tbHocPhanRef;
-    ValueEventListener tbHocPhanEvenListener;
-    RVTBChungAdapter.ICallBack iCallBack;
-    RVTBChungAdapter.ICallBack privCallBack;
+    private RecyclerView recyclerView;
+    private DatabaseReference database;
+    private DatabaseReference tbHocPhanRef;
+    private ValueEventListener tbHocPhanEvenListener;
+    private RVTBChungAdapter.ICallBack iCallBack;
+    private RVTBChungAdapter.ICallBack privCallBack;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Log.d(TAG, "onCreate: ");
 
     }
 
@@ -56,7 +54,6 @@ public class TBHocPhanFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View rootView = (ViewGroup)inflater.inflate(R.layout.fragment_tb_hocphan, container, false);
-        //Log.d(TAG, "onCreateView: ");
 
         recyclerView = (RecyclerView)rootView.findViewById(R.id.rvTBHocPhan);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -70,11 +67,10 @@ public class TBHocPhanFragment extends Fragment {
         hocPhanAdapter.setiCallBack(new RVTBChungAdapter.ICallBack() {
             @Override
             public void onLoadMore() {
-                //Log.d(TAG, "onLoadMore: ");
                 hocPhanAdapter.addThongBao(null);
                 hocPhanAdapter.addThongBao(null);
                 hocPhanAdapter.notifyDataSetChanged();
-                hocPhanAdapter.itemLoadCount += hocPhanAdapter.LOAD_MORE_DELTA;
+                hocPhanAdapter.itemLoadCount += RVTBHPhanAdapter.LOAD_MORE_DELTA;
                 tbHocPhanRef.removeEventListener(tbHocPhanEvenListener);
                 tbHocPhanRef.limitToLast(hocPhanAdapter.itemLoadCount).addListenerForSingleValueEvent(tbHocPhanEvenListener);
             }
@@ -98,20 +94,15 @@ public class TBHocPhanFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //Log.d(TAG, "onViewCreated: ");
     }
 
-    public void loadMore() {
-        Log.d(TAG, "loadMore: ");
+    private void loadMore() {
         hocPhanAdapter.addThongBao(null);
         hocPhanAdapter.addThongBao(null);
         hocPhanAdapter.notifyDataSetChanged();
         hocPhanAdapter.itemLoadCount += hocPhanAdapter.LOAD_MORE_DELTA;
         tbHocPhanRef.removeEventListener(tbHocPhanEvenListener);
         tbHocPhanRef.limitToLast(hocPhanAdapter.itemLoadCount).addListenerForSingleValueEvent(tbHocPhanEvenListener);
-//        recyclerView.scrollToPosition(
-//                tbChungAdapter.getLstThongBao().size() - 1
-//        );
     }
 
     public void scrollTo(final String hash) {
@@ -157,7 +148,7 @@ public class TBHocPhanFragment extends Fragment {
         });
     }
 
-    public void scrollTo(final int position) {
+    private void scrollTo(final int position) {
         setPrivCallBack(new RVTBChungAdapter.ICallBack() {
             @Override
             public void onLoadMore() {
@@ -197,7 +188,7 @@ public class TBHocPhanFragment extends Fragment {
     }
 
 
-    public void loadData() {
+    private void loadData() {
         database = FirebaseDatabase.getInstance().getReference();
         //them loading item
         hocPhanAdapter.addThongBao(null);
@@ -228,7 +219,6 @@ public class TBHocPhanFragment extends Fragment {
                     hocPhanAdapter.addThongBao(tb);
                 }
                 if (count == hocPhanAdapter.itemLoaded) {
-                    //Log.d(TAG, "onDataChange: all item loaded");
                     hocPhanAdapter.allItemLoaded = true;
                 }
 

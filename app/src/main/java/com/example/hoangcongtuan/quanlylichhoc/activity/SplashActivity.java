@@ -29,8 +29,6 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         mAuth = FirebaseAuth.getInstance();
         DBLopHPHelper.init(getApplicationContext());
-//        ReminderDatabase.init(getApplicationContext());
-//        ReminderManager.init(getApplicationContext());
     }
 
     @Override
@@ -52,9 +50,6 @@ public class SplashActivity extends AppCompatActivity {
                 Intent splashIntent = getIntent();
                 Log.d(TAG, "onCreate: Intent = " + splashIntent.toString());
                 if (splashIntent.getExtras() != null && splashIntent.hasExtra("screen")) {
-//                    Log.d(TAG, "onCreate: thoi_gian = " + splashIntent.getStringExtra("thoi_gian"));
-//                    Log.d(TAG, "onCreate: tieu_de = " + splashIntent.getStringExtra("tieu_de"));
-//                    Log.d(TAG, "onCreate: noi_dung = " + splashIntent.getStringExtra("noi_dung"));
                     String screen = splashIntent.getStringExtra("screen");
                     if (screen.equals("main")) {
                         String strExtras;
@@ -109,8 +104,6 @@ public class SplashActivity extends AppCompatActivity {
             }
             else {
                 Intent intent = new Intent(this, SetupActivity.class);
-                //Intent intent = new Intent(this, SQLiteDB.class);
-                //Log.d(TAG, "onStart: Photo url = " + user.getPhotoUrl());
                 startActivity(intent);
                 finish();
             }

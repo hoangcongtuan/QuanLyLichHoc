@@ -23,12 +23,12 @@
                 android:id="@+id/item_dang_xuat"
                 android:title="Đăng xuất"
                 android:icon="@drawable/ic_power_settings_new_black_24dp"/>
-            <item
-                android:id="@+id/item_showFCMDetails"
-                android:title="Show FCM Details"/>
-            <item
-                android:id="@+id/item_showSubscribeTopic"
-                android:title="Show FCM subscribe Topic"/>
+            <!--<item-->
+                <!--android:id="@+id/item_showFCMDetails"-->
+                <!--android:title="Show FCM Details"/>-->
+            <!--<item-->
+                <!--android:id="@+id/item_showSubscribeTopic"-->
+                <!--android:title="Show FCM subscribe Topic"/>-->
         </menu>
     </item>
 </menu>

@@ -119,13 +119,10 @@ public class AlarmDetailsActivity extends AppCompatActivity {
                 Log.d(TAG, "onOptionsItemSelected: Edit");
 
                 startActivityForResult(editIntent, RC_EDIT);
-                //startActivity(editIntent);
                 break;
             case R.id.delete:
-//                deleteAlarm();
                 showDeleteDialog();
                 Log.d(TAG, "onOptionsItemSelected: Delete");
-                //finish();
                 break;
         }
 
@@ -139,7 +136,6 @@ public class AlarmDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_EDIT && resultCode == RESULT_OK) {
             if (data.hasExtra(ReminderManager.KEY_REMINDER_ID)) {
                 //Update UI proper to new Alarm

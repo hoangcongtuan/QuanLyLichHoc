@@ -24,18 +24,18 @@ public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
 
     private final static String TAG = CustomDialogBuilderLopHP.class.getName();
 
-    View rootView;
+    private View rootView;
     private AutoCompleteTextView autoMaHP;
     private AutoCompleteTextView autoTenHP;
     private TextView tvTKB;
     private TextView tvGV;
     //danh sach ma hoc phan, tenHP
-    ArrayList<String> lstMaHP;
-    ArrayList<String> lstTenHP;
-    ArrayAdapter<String> adapterMaHP;
-    ArrayAdapter<String> adapterTenHP;
+    private ArrayList<String> lstMaHP;
+    private ArrayList<String> lstTenHP;
+    private ArrayAdapter<String> adapterMaHP;
+    private ArrayAdapter<String> adapterTenHP;
 
-    LopHP currentLopHP;
+    private LopHP currentLopHP;
 
     public CustomDialogBuilderLopHP(@NonNull Context context) {
         super(context);
@@ -49,7 +49,6 @@ public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
     }
 
     private void init() {
-        //Log.d(TAG, "init: custome Alert Dialog");
         setTitle(getContext().getResources().getString(R.string.lop_hoc_phan));
         LayoutInflater inflater = LayoutInflater.from(getContext());
         rootView = inflater.inflate(R.layout.dialog_them_hphan, null);
@@ -73,9 +72,6 @@ public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
     private void setWidgets() {
         autoTenHP.setAdapter(adapterTenHP);
         autoMaHP.setAdapter(adapterMaHP);
-
-//        adapterTenHP.notifyDataSetChanged();
-//        adapterMaHP.notifyDataSetChanged();
     }
 
     void updateUI(LopHP lopHP) {
