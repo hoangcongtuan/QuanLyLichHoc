@@ -161,6 +161,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 //update UI
                 lstLopHP.add(DBLopHPHelper.getsInstance().getLopHocPhan(id));
                 lstMaHP.add(id);
+                Utils.sortLHP(lstLopHP);
                 lvtkBieuAdapter.notifyDataSetChanged();
             }
         }).addOnFailureListener(this, new OnFailureListener() {
@@ -206,7 +207,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                         getResources().getString(R.string.remove_hp_success),
                         Snackbar.LENGTH_LONG).show();
                 //delete in local db
-                DBLopHPHelper.getsInstance().deleteUserMaHocPhan(lstMaHP.get(position));
+                DBLopHPHelper.getsInstance().deleteUserMaHocPhan(lstLopHP.get(position).getMaHP());
 
                 //unbsubscrible topic
                 Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(lstMaHP.get(position));
@@ -215,8 +216,11 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 modified = true;
 
                 //update UI
+                lstMaHP.remove(
+                        lstLopHP.get(position).getMaHP()
+                );
                 lstLopHP.remove(position);
-                lstMaHP.remove(position);
+
                 lvtkBieuAdapter.notifyDataSetChanged();
 
             }

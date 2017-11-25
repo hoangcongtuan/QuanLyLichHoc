@@ -6,9 +6,12 @@ import android.os.AsyncTask;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by hoangcongtuan on 9/15/17.
@@ -93,5 +96,14 @@ public class Utils {
         public RequestQueue getRequestQueue() {
             return requestQueue;
         }
+    }
+
+    public static void sortLHP(ArrayList<LopHP> lstLopHP) {
+        Collections.sort(lstLopHP, new Comparator<LopHP>() {
+            @Override
+            public int compare(LopHP lopHP, LopHP lopHP2) {
+                return lopHP.getTkb().compareTo(lopHP2.getTkb());
+            }
+        });
     }
 }

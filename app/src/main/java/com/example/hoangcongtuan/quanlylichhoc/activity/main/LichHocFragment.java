@@ -12,6 +12,7 @@ import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.LVTKBieuAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -70,6 +71,8 @@ public class LichHocFragment extends Fragment {
         for(LopHP hp : lst) {
             lstLopHP.add(hp);
         }
+
+        Utils.sortLHP(lstLopHP);
         LVTKBieuAdapter.notifyDataSetChanged();
     }
 }

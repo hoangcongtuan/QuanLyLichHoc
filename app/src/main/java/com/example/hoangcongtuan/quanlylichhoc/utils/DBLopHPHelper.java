@@ -146,6 +146,7 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
             }
             while (cursor.moveToNext());
         }
+        Utils.sortLHP(lstLopHP);
         return lstLopHP;
     }
 
