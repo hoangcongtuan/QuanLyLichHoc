@@ -165,7 +165,7 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void facebookSignIn() {
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "public_profile"));
     }
 
     public void handleGgSignInResult(GoogleSignInResult result) {
