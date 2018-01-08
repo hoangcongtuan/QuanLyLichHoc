@@ -2,6 +2,7 @@ package com.example.hoangcongtuan.quanlylichhoc.activity.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -27,7 +28,6 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -76,6 +76,7 @@ public class LoginActivity extends AppCompatActivity
     private DatabaseReference firebaseDB;
     private DatabaseReference firebaseDBUserMaHP;
     private DatabaseReference firebaseUserToken;
+    private DatabaseReference firebaseUserNode;
 
     private Button btnLoginFb;
     private Button btnLoginGg;
@@ -113,7 +114,7 @@ public class LoginActivity extends AppCompatActivity
                 .build();
 
         //init facebook
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        //FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -138,11 +139,11 @@ public class LoginActivity extends AppCompatActivity
 
     private void getWidgets() {
         //getwidgets
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        progressBarLogin = (ProgressBar)findViewById(R.id.progresBar_login);
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-        btnLoginFb = (Button)findViewById(R.id.btnLoginFb);
-        btnLoginGg = (Button)findViewById(R.id.btnLoginGg);
+        toolbar = findViewById(R.id.toolbar);
+        progressBarLogin = findViewById(R.id.progresBar_login);
+        coordinatorLayout = findViewById(R.id.coordinatorLayout);
+        btnLoginFb = findViewById(R.id.btnLoginFb);
+        btnLoginGg = findViewById(R.id.btnLoginGg);
 
     }
 
@@ -161,11 +162,17 @@ public class LoginActivity extends AppCompatActivity
 
     public void googleSignIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected())
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+        else
+            showNoInternetMessage();
     }
 
     public void facebookSignIn() {
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+        if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected())
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
+        else
+            showNoInternetMessage();
     }
 
     public void handleGgSignInResult(GoogleSignInResult result) {
@@ -174,12 +181,6 @@ public class LoginActivity extends AppCompatActivity
             startAuthWithFirebase();
             firebaseAuthWithGoogle(signInAccount);
         }
-        else {
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, getResources().getString(R.string.gg_login_failed), Snackbar.LENGTH_INDEFINITE);
-            snackbar.show();
-            finishAuthWithFirebase();
-        }
-
     }
 
     public void handleFbLoginResult(AccessToken token) {
@@ -236,6 +237,7 @@ public class LoginActivity extends AppCompatActivity
                             Snackbar snackbar = Snackbar.make(coordinatorLayout,
                                     getResources().getString(R.string.gg_login_failed), Snackbar.LENGTH_INDEFINITE);
                             snackbar.show();
+                            finishAuthWithFirebase();
 
                         }
                     }
@@ -347,6 +349,21 @@ public class LoginActivity extends AppCompatActivity
 
         //write token FCM to firebase user
         firebaseUserToken.setValue(FirebaseInstanceId.getInstance().getToken());
+        firebaseUserNode = firebaseDB.child(getResources().getString(R.string.key_firebase_user_info))
+                .child(firebaseUser.getUid()).child(getResources().getString(R.string.key_firebase_user_detail));
+        firebaseUserNode.child(getResources().getString(R.string.key_firebase_user_email)).setValue(
+                firebaseUser.getEmail()
+        );
+        firebaseUserNode.child(getResources().getString(R.string.key_firebase_user_name)).setValue(
+                firebaseUser.getDisplayName()
+        );
+
+        firebaseUserNode.child(getResources().getString(R.string.key_firebase_user_providerId)).setValue(
+                firebaseUser.getProviders().get(0)
+        );
+
+
+
     }
 
     private void getTopicSubcribe(String token, final String key) {
@@ -387,6 +404,18 @@ public class LoginActivity extends AppCompatActivity
                 "Google Connect failed, code = " + connectionResult.getErrorCode(), Snackbar.LENGTH_INDEFINITE);
         snackbar.show();
 
+    }
+
+    public void showNoInternetMessage() {
+        Snackbar.make(coordinatorLayout,
+                getResources().getString(R.string.no_internet), Snackbar.LENGTH_LONG)
+                .setAction(R.string.setting, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                        startActivity(intent);
+                    }
+                }).show();
     }
 
 

@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.LVTKBieuAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.listener.HidingScrollListener;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
@@ -28,6 +29,7 @@ public class LichHocFragment extends Fragment {
     private ListView lvTKB;
     private LVTKBieuAdapter LVTKBieuAdapter;
     private ArrayList<LopHP> lstLopHP;
+    private HidingScrollListener hidingScrollListener;
 
     @Nullable
     @Override
@@ -47,6 +49,10 @@ public class LichHocFragment extends Fragment {
         init();
     }
 
+    public void setOnHidingScrollListener(HidingScrollListener hsl) {
+        hidingScrollListener = hsl;
+    }
+
 
     private void init() {
         lstLopHP = new ArrayList<>(getsInstance().getListUserLopHP());
@@ -55,6 +61,10 @@ public class LichHocFragment extends Fragment {
 
     private void getWidgets() {
         lvTKB = (ListView) rootView.findViewById(R.id.lvTKB);
+
+        int paddingTop = Utils.getToolbarHeight(getContext()) + Utils.getTabsHeight(getContext());
+        lvTKB.setPadding(lvTKB.getPaddingLeft(), paddingTop, lvTKB.getPaddingRight(), lvTKB.getPaddingBottom());
+
     }
 
     private void setWidgets() {

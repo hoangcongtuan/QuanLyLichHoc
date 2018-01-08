@@ -13,10 +13,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBChungAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBHPhanAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.listener.HidingScrollListener;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBaoObj;
+import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,13 +36,14 @@ public class TBHocPhanFragment extends Fragment {
 
     private final static String TAG = TBHocPhanFragment.class.getName();
 
-    private RVTBHPhanAdapter hocPhanAdapter;
+    private RVTBAdapter hocPhanAdapter;
     private RecyclerView recyclerView;
     private DatabaseReference database;
     private DatabaseReference tbHocPhanRef;
     private ValueEventListener tbHocPhanEvenListener;
-    private RVTBChungAdapter.ICallBack iCallBack;
-    private RVTBChungAdapter.ICallBack privCallBack;
+    private RVTBAdapter.ICallBack iCallBack;
+    private RVTBAdapter.ICallBack privCallBack;
+    private HidingScrollListener hidingScrollListener;
 
 
     @Override
@@ -60,17 +62,21 @@ public class TBHocPhanFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        hocPhanAdapter = new RVTBHPhanAdapter(recyclerView, getContext());
+        int paddingTop = Utils.getToolbarHeight(getContext()) + Utils.getTabsHeight(getContext());
+        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop, recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
+
+
+        hocPhanAdapter = new RVTBAdapter(recyclerView, getContext());
         hocPhanAdapter.notifyDataSetChanged();
 
         //set call back
-        hocPhanAdapter.setiCallBack(new RVTBChungAdapter.ICallBack() {
+        hocPhanAdapter.setICallBack(new RVTBAdapter.ICallBack() {
             @Override
             public void onLoadMore() {
                 hocPhanAdapter.addThongBao(null);
                 hocPhanAdapter.addThongBao(null);
                 hocPhanAdapter.notifyDataSetChanged();
-                hocPhanAdapter.itemLoadCount += RVTBHPhanAdapter.LOAD_MORE_DELTA;
+                hocPhanAdapter.itemLoadCount += RVTBAdapter.LOAD_MORE_DELTA;
                 tbHocPhanRef.removeEventListener(tbHocPhanEvenListener);
                 tbHocPhanRef.limitToLast(hocPhanAdapter.itemLoadCount).addListenerForSingleValueEvent(tbHocPhanEvenListener);
             }
@@ -94,6 +100,11 @@ public class TBHocPhanFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        recyclerView.addOnScrollListener(hidingScrollListener);
+    }
+
+    public void setOnHidingScrollListener(HidingScrollListener hsl) {
+        hidingScrollListener = hsl;
     }
 
     private void loadMore() {
@@ -106,7 +117,7 @@ public class TBHocPhanFragment extends Fragment {
     }
 
     public void scrollTo(final String hash) {
-        setPrivCallBack(new RVTBChungAdapter.ICallBack() {
+        setPrivCallBack(new RVTBAdapter.ICallBack() {
             @Override
             public void onLoadMore() {
 
@@ -149,7 +160,7 @@ public class TBHocPhanFragment extends Fragment {
     }
 
     private void scrollTo(final int position) {
-        setPrivCallBack(new RVTBChungAdapter.ICallBack() {
+        setPrivCallBack(new RVTBAdapter.ICallBack() {
             @Override
             public void onLoadMore() {
 
@@ -203,8 +214,8 @@ public class TBHocPhanFragment extends Fragment {
                 ArrayList<ThongBao> lstTmp = new ArrayList<>();
 
                 //xoa loading item
-                hocPhanAdapter.removeLastThongBao();
-                hocPhanAdapter.removeLastThongBao();
+                hocPhanAdapter.removeLast();
+                hocPhanAdapter.removeLast();
                 int count = 0;
                 for (DataSnapshot dtSnapShot :
                         lstThongBao) {
@@ -244,11 +255,11 @@ public class TBHocPhanFragment extends Fragment {
 
     }
 
-    public void setiCallBack(RVTBChungAdapter.ICallBack iCallBack) {
+    public void setiCallBack(RVTBAdapter.ICallBack iCallBack) {
         this.iCallBack = iCallBack;
     }
 
-    private void setPrivCallBack(RVTBChungAdapter.ICallBack privCallBack) {
+    private void setPrivCallBack(RVTBAdapter.ICallBack privCallBack) {
         this.privCallBack = privCallBack;
     }
 }

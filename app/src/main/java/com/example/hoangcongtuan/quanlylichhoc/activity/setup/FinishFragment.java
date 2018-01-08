@@ -2,6 +2,7 @@ package com.example.hoangcongtuan.quanlylichhoc.activity.setup;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.LVTKBieuAdapter;
@@ -22,11 +24,11 @@ import com.example.hoangcongtuan.quanlylichhoc.customview.CustomDialogBuilderLop
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
-
-import static com.example.hoangcongtuan.quanlylichhoc.R.id.btnAdd;
 
 /**
  * Created by hoangcongtuan on 10/13/17.
@@ -41,6 +43,8 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
     private LVTKBieuAdapter LVTKBieuAdapter;
     private ArrayList<LopHP> lstLopHP;
     private ArrayList<String> lstMaHP;
+
+    private OnUpLoadUserDBComplete onUpLoadUserDBComplete;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -122,19 +126,31 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
 
 
     public void writelstMaHPtoUserDB(DatabaseReference dbUserMaHocPhan) {
-        //write to SQLite DB
-        for (String s : lstMaHP) {
-            DBLopHPHelper.getsInstance().insertUserMaHocPhan(s);
-        }
-
         //write to FirebaseDB
-        dbUserMaHocPhan.setValue(lstMaHP);
+        dbUserMaHocPhan.setValue(lstMaHP).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                for (String s : lstMaHP) {
+                    DBLopHPHelper.getsInstance().insertUserMaHocPhan(s);
+                }
 
-        //subscribe a topics
-        Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic(lstMaHP);
-        Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic(
-                getResources().getString(R.string.topic_tb_chung)
-        );
+                //subscribe a topics
+                Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic(lstMaHP);
+                Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic(
+                        getResources().getString(R.string.topic_tb_chung)
+                );
+                onUpLoadUserDBComplete.onSuccess();
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(), "Push failed", Toast.LENGTH_LONG).show();
+                onUpLoadUserDBComplete.onFailed();
+            }
+        });
+        //write to SQLite DB
+
 
     }
 
@@ -198,9 +214,18 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case btnAdd:
+            case R.id.fabAdd:
                 showAddLopHPDialog();
                 break;
         }
+    }
+
+    public void setOnUpLoadUserDBComplete(OnUpLoadUserDBComplete onUpLoadUserDBComplete) {
+        this.onUpLoadUserDBComplete = onUpLoadUserDBComplete;
+    }
+
+    public interface OnUpLoadUserDBComplete {
+        public void onSuccess();
+        public void onFailed();
     }
 }

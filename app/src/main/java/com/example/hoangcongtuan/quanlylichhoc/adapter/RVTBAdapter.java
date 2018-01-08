@@ -25,9 +25,9 @@ import java.util.ArrayList;
  * Created by hoangcongtuan on 9/12/17.
  */
 
-public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final static String TAG = RVTBChungAdapter.class.getName();
+    private final static String TAG = RVTBAdapter.class.getName();
 
     private ArrayList<ThongBao> lstThongBao;
     private Context mContext;
@@ -48,7 +48,7 @@ public class RVTBChungAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public boolean allItemLoaded;
 
 
-    public RVTBChungAdapter(RecyclerView recyclerView, Context context) {
+    public RVTBAdapter(RecyclerView recyclerView, Context context) {
 
         lstThongBao = new ArrayList<>();
         linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();

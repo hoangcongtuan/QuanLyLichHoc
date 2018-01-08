@@ -1,5 +1,6 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.Alarm;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -20,35 +21,29 @@ import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDatabase;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class AddAlarmActivity extends AppCompatActivity implements View.OnClickListener{
-
     private Calendar mCalendar;
-    private String mTitle;
-    private String mContent;
     private String mTime;
     private String mDate;
-    private int mRepeat;
-    private String mType;
-    private int mYear, mMonth, mDay, mHour, mMinute;
     private EditText edtTitle, edtContent;
     private TextView tvDate, tvTime;
-    private Toolbar toolbar;
     private Reminder reminder;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alarm);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getResources().getString(R.string.alarm_add_act_title));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getResources().getString(R.string.alarm_add_act_title));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         getWidgets();
         setWidgets();
@@ -82,26 +77,21 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void getWidgets() {
-        edtTitle = (EditText) findViewById(R.id.edtReminderTitle);
-        edtContent = (EditText) findViewById(R.id.edtReminderContent);
-        tvDate = (TextView) findViewById(R.id.tvDate);
-        tvTime = (TextView) findViewById(R.id.tvTime);
+        edtTitle = findViewById(R.id.edtReminderTitle);
+        edtContent = findViewById(R.id.edtReminderContent);
+        tvDate = findViewById(R.id.tvDate);
+        tvTime = findViewById(R.id.tvTime);
     }
 
     private void setWidgets() {
         mCalendar = Calendar.getInstance();
-        mHour = mCalendar.get(Calendar.HOUR_OF_DAY);
-        mMinute = mCalendar.get(Calendar.MINUTE);
-        mYear = mCalendar.get(Calendar.YEAR);
-        mMonth = mCalendar.get(Calendar.MONTH);
-        mDay = mCalendar.get(Calendar.DATE);
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd/MM/yyyy");
 
-        mDate = mDay + "/" + (mMonth + 1)+ "/" + mYear;
-        if (mMinute < 10) {
-            mTime = mHour + ":" + "0" + mMinute;
-        } else {
-            mTime = mHour + ":" + mMinute;
-        }
+        mDate = sdf.format(mCalendar.getTime());
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
+        mTime = sdfTime.format(mCalendar.getTime());
         tvDate.setText(mDate);
         tvTime.setText(mTime);
 
@@ -137,72 +127,55 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void saveReminder() {
-        mCalendar.set(Calendar.MONTH, mMonth);
-        mCalendar.set(Calendar.YEAR, mYear);
-        mCalendar.set(Calendar.DAY_OF_MONTH, mDay);
-        mCalendar.set(Calendar.HOUR_OF_DAY, mHour);
-        mCalendar.set(Calendar.MINUTE, mMinute);
-        mCalendar.set(Calendar.SECOND, 0);
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+        mDate = sdfDate.format(mCalendar.getTime());
 
-        mDate = mDay + "/" + (mMonth + 1)+ "/" + mYear;
-        if (mMinute < 10) {
-            mTime = mHour + ":" + "0" + mMinute;
-        } else {
-            mTime = mHour + ":" + mMinute;
-        }
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
+        mTime = sdfTime.format(mCalendar.getTime());
 
-        mTitle = edtTitle.getText().toString();
-        mContent = edtContent.getText().toString();
+        String mTitle = edtTitle.getText().toString();
+        String mContent = edtContent.getText().toString();
 
+        int mRepeat = 0;
+        String mType = "none";
         reminder = new Reminder(mTitle, mContent, mDate, mTime, mRepeat, mType);
         ReminderDatabase.getsInstance(getApplicationContext()).addReminder(reminder);
 
-
         ReminderManager.getsInstance(getApplicationContext()).setReminder(reminder.getId(), mCalendar);
-
-
     }
 
     private void showTimePickerDialog() {
-        Calendar calendar;
-        calendar = Calendar.getInstance();
-        mHour = calendar.get(Calendar.HOUR_OF_DAY);
-        mMinute = calendar.get(Calendar.MINUTE);
-
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                mHour = hour;
-                mMinute = minute;
-                if (minute < 10) {
-                    mTime = hour + ":" + "0" + minute;
-                } else {
-                    mTime = hour + ":" + minute;
-                }
-                tvTime.setText(mTime);
+                mCalendar.set(mCalendar.get(Calendar.YEAR),
+                        mCalendar.get(Calendar.MONTH),
+                        mCalendar.get(Calendar.DATE),
+                        hour, minute);
+                SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
+                tvTime.setText(
+                        sdfTime.format(mCalendar.getTime())
+                );
             }
-        }, mHour, mMinute, false);
+        }, mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE), false);
 
         timePickerDialog.show();
     }
 
     private void showDatePickerDialog() {
-        Calendar calendar;
-        calendar = Calendar.getInstance();
-        mYear = calendar.get(Calendar.YEAR);
-        mMonth = calendar.get(Calendar.MONTH);
-        mDay = calendar.get(Calendar.DATE);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                mDay = day;
-                mMonth = month;
-                mYear = year;
-                mDate = day + "/" + (month + 1)+ "/" + year;
-                tvDate.setText(mDate);
+                mCalendar.set(year, month, day);
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd/MM/yyyy");
+                tvDate.setText(
+                        sdf.format(mCalendar.getTime())
+                );
             }
-        }, mYear, mMonth, mDay);
+        }, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DATE));
 
         datePickerDialog.show();
     }

@@ -50,7 +50,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_message_white_24dp)
+                .setSmallIcon(R.drawable.ic_chat_white_24dp)
                 .setContentTitle(msg.getNotification().getTitle())
                 .setAutoCancel(true)
                 .setContentText(msg.getNotification().getBody())

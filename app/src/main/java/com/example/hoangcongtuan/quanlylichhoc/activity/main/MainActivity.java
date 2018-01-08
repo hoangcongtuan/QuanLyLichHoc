@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -15,12 +16,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -34,7 +42,8 @@ import com.example.hoangcongtuan.quanlylichhoc.activity.EditHPActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.SettingsActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.MainPagerAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBChungAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.listener.HidingScrollListener;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.login.LoginManager;
@@ -49,6 +58,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TabLayout tabLayout;
     private String[] strTabs;
     private Toolbar toolbar;
+    private LinearLayout appBarLayout;
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -80,10 +91,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private LichHocFragment lichHocFragment;
     private CoordinatorLayout main_content_layout;
 
+
     private DatabaseReference database;
     private DatabaseReference firebaseDBUserMaHP;
 
     private GoogleApiClient mGoogleApiClient;
+    private int mToolbarHeight;
 
 
     @Override
@@ -119,13 +132,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         firebaseDBUserMaHP = database.child("userInfo").child(user.getUid()).child("listMaHocPHan");
     }
 
+
     private void getWidgets() {
         //getWidgets
         toolbar = (Toolbar)findViewById(R.id.toolbar);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         viewPager = (ViewPager)findViewById(R.id.viewPager);
 
         main_content_layout = (CoordinatorLayout) findViewById(R.id.main_content_layout);
+
+        mToolbarHeight = Utils.getToolbarHeight(this);
 
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         navigationView = (NavigationView)findViewById(R.id.navigaionView);
@@ -195,6 +212,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
 
+//        int paddingTop = Utils.getToolbarHeight(MainActivity.this) + Utils.getTabsHeight(MainActivity.this);
+//        viewPager.setPadding(viewPager.getPaddingLeft(), paddingTop, viewPager.getPaddingRight(), viewPager.getPaddingBottom());
+
+
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
         drawerLayout.addDrawerListener(toggle);
 
@@ -207,6 +228,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tvEmail.setText(user.getEmail());
 
     }
+
+
 
     private void setWidgetsEvent() {
         Intent intent = getIntent();
@@ -232,6 +255,68 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tbHPhan = new TBHocPhanFragment();
         lichHocFragment = new LichHocFragment();
 
+        final HidingScrollListener hidingScrollListener_tbChung = new HidingScrollListener(MainActivity.this) {
+            @Override
+            public void onHide() {
+                appBarLayout.animate().translationY(-mToolbarHeight).setInterpolator(new DecelerateInterpolator()).start();
+                //getSupportActionBar().hide();
+            }
+
+            @Override
+            public void onMoved(int distance) {
+                appBarLayout.setTranslationY(-distance);
+            }
+
+            @Override
+            public void onShow() {
+                appBarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
+                //getSupportActionBar().show();
+            }
+        };
+
+        HidingScrollListener hidingScrollListener_tbHPhan = new HidingScrollListener(MainActivity.this) {
+            @Override
+            public void onHide() {
+                appBarLayout.animate().translationY(-mToolbarHeight).setInterpolator(new DecelerateInterpolator()).start();
+                //getSupportActionBar().hide();
+            }
+
+            @Override
+            public void onMoved(int distance) {
+                appBarLayout.setTranslationY(-distance);
+            }
+
+            @Override
+            public void onShow() {
+                appBarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
+                //getSupportActionBar().show();
+            }
+        };
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //show toolbar when move to new page
+                hidingScrollListener_tbChung.showToolbar();
+                hidingScrollListener_tbChung.showToolbar();
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        tbChungFragment.setOnHidingScrollListener(hidingScrollListener_tbChung);
+
+        tbHPhan.setOnHidingScrollListener(hidingScrollListener_tbHPhan);
+
         pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(tbChungFragment, strTabs[0]);
         pagerAdapter.addFragment(tbHPhan, strTabs[1]);
@@ -239,6 +324,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(3);
+    }
+
+    private void hideViews() {
+        appBarLayout.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2));
+    }
+
+    private void showViews() {
+        appBarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
     }
 
     private void logOut() {
@@ -265,6 +358,84 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         finish();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        MenuItem myActionMenuItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                Toast.makeText(MainActivity.this, "Close Search View", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Toast like print
+                Toast.makeText(MainActivity.this, query, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // UserFeedback.show( "SearchOnQueryTextChanged: " + s);
+                return false;
+            }
+        });
+        return true;
+    }
+
+
+    public void showDeleteUserDBDialog()  {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getString(R.string.delete_data));
+        builder.setMessage(getResources().getString(R.string.delete_data_detail));
+        builder.setPositiveButton(getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //xoa du lieu tren firebase
+                firebaseDBUserMaHP.setValue(null).addOnSuccessListener(MainActivity.this,
+                        new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                //xoa du lieu local
+                                DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
+
+                                logOut();
+                            }
+                        }).addOnFailureListener(MainActivity.this,
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull final Exception e) {
+                                Snackbar.make(main_content_layout, getResources().getString(R.string.error), Snackbar.LENGTH_LONG)
+                                        .setAction(getResources().getString(R.string.details), new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                AlertDialog.Builder alerBulder = new AlertDialog.Builder(MainActivity.this);
+                                                alerBulder.setTitle(getResources().getString(R.string.error));
+                                                alerBulder.setMessage(e.getMessage());
+                                                alerBulder.create().show();
+                                            }
+                                        });
+                            }
+                        });
+
+            }
+        });
+
+        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -273,65 +444,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 logOut();
                 break;
             case R.id.item_xoa_du_lieu:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(getResources().getString(R.string.delete_data));
-                builder.setMessage(getResources().getString(R.string.delete_data_detail));
-                builder.setPositiveButton(getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //xoa du lieu tren firebase
-                        firebaseDBUserMaHP.setValue(null).addOnSuccessListener(MainActivity.this,
-                                new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        //xoa du lieu local
-                                        DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
+                if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
+                    showDeleteUserDBDialog();
+                }
+                else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(getResources().getString(R.string.no_internet));
+                    builder.setMessage(getResources().getString(R.string.no_internet_msg));
+                    builder.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                                        logOut();
-                                    }
-                                }).addOnFailureListener(MainActivity.this,
-                                new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull final Exception e) {
-                                        Snackbar.make(main_content_layout, getResources().getString(R.string.error), Snackbar.LENGTH_LONG)
-                                                .setAction(getResources().getString(R.string.details), new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        AlertDialog.Builder alerBulder = new AlertDialog.Builder(MainActivity.this);
-                                                        alerBulder.setTitle(getResources().getString(R.string.error));
-                                                        alerBulder.setMessage(e.getMessage());
-                                                        alerBulder.create().show();
-                                                    }
-                                                });
-                                    }
-                                });
-
-                    }
-                });
-
-                builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                        }
+                    });
+                    builder.create().show();
+                }
 
                 break;
             case R.id.item_thay_doi_HP:
                 Intent intent = new Intent(MainActivity.this, EditHPActivity.class);
                 startActivityForResult(intent, RC_EDITHPACT);
                 break;
-//            case R.id.item_showFCMDetails:
-//                getTopicSubcribe(
-//                        FirebaseInstanceId.getInstance().getToken(),
-//                        getResources().getString(R.string.SERVER_KEY)
-//                );
-//                break;
-//            case R.id.item_showSubscribeTopic:
-//                break;
+            case R.id.item_showFCMDetails:
+                getTopicSubcribe(
+                        FirebaseInstanceId.getInstance().getToken(),
+                        getResources().getString(R.string.SERVER_KEY)
+                );
+                break;
+            case R.id.item_showSubscribeTopic:
+                break;
             case R.id.item_cat_dat:
                 Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intentSettings);
@@ -354,7 +495,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     lichHocFragment.updateUI();
                 }
                 break;
-            case RVTBChungAdapter.RC_FAST_ADD_ALARM:
+            case RVTBAdapter.RC_FAST_ADD_ALARM:
                 if (resultCode == RESULT_OK) {
                     Snackbar.make(main_content_layout,
                             getResources().getString(R.string.add_alarm_success),

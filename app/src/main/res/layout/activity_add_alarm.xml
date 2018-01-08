@@ -39,7 +39,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top"
+                    android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_title" />
 
                 <EditText
@@ -65,9 +65,10 @@
                 android:layout_marginBottom="8dp">
 
                 <ImageView
+                    android:id="@+id/imageView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top"
+                    android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_content" />
 
                 <EditText

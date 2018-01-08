@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -33,9 +34,10 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icn_thongbao"
+                        android:src="@drawable/ic_book_black_24dp"
                         android:id="@+id/imgIcnThongBao"
                         android:layout_margin="@dimen/text_margin"
+                        android:tint="@color/colorIconFeed"
                         android:layout_gravity="center_vertical"
                         android:fontFamily="sans-serif-light"/>
                     <TextView
@@ -44,15 +46,9 @@
                         android:text="07/09/2017"
                         android:layout_margin="@dimen/text_margin"
                         android:id="@+id/tvTBThoiGian"
-                        android:textColor="@color/colorTBThoiGian"
+                        android:textColor="@color/colorHintText"
                         android:textSize="@dimen/time_size"
                         android:layout_gravity="center_vertical"/>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/icn_down_arow"
-                        android:layout_margin="@dimen/text_margin"/>
                     <Space
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -82,7 +78,7 @@
                     android:text="Thông báo đến lớp: [14.Nh25] Tuốc bin"
                     android:id="@+id/tvTBTieude"
                     android:layout_margin="@dimen/text_margin"
-                    android:textColor="@color/colorTBTieuDe"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/tittle_size"
                     android:textStyle="bold"/>
                 <TextView
@@ -91,9 +87,10 @@
                     android:text="Thầy/Cô nhắn: Lớp NGHỈ HỌC (Tiết:7-8) ngày: 07/09/2017"
                     android:id="@+id/tvTBNoiDung"
                     android:layout_margin="@dimen/text_margin"
+                    android:textColorLink="@color/colorLinkText"
                     android:layout_below="@+id/tvTBTieude"
                     android:textSize="@dimen/content_size"
-                    android:textColor="@color/colorTBNoiDung"
+                    android:textColor="@color/colorPrimaryText"
                     android:fontFamily="sans-serif-light"/>
             </RelativeLayout>
 

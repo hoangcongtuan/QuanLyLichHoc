@@ -2,6 +2,7 @@ package com.example.hoangcongtuan.quanlylichhoc.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -22,6 +23,7 @@ public class SplashActivity extends AppCompatActivity {
     private final static String TAG = SplashActivity.class.getName();
 
     private FirebaseAuth mAuth;
+    private final static int secondsDelayed = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,25 +37,29 @@ public class SplashActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //kiem tra tai khoan hien
+
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) {
             //chuyen den man hinh dang nhap
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, secondsDelayed * 1000);
+
         }
         else {
-            //chuyen den mang hinh chinh
             if(DBLopHPHelper.getsInstance().isUserLocalDBAvailable()) {
                 //kiem tra co payload tu notification gui toi hay ko
-                Intent intent = null;
                 Intent splashIntent = getIntent();
                 Log.d(TAG, "onCreate: Intent = " + splashIntent.toString());
                 if (splashIntent.getExtras() != null && splashIntent.hasExtra("screen")) {
+                    //co lenh chuyen den man hinh screen
                     String screen = splashIntent.getStringExtra("screen");
                     if (screen.equals("main")) {
-                        String strExtras;
-                        intent = new Intent(this, MainActivity.class);
+                        Intent intent = new Intent(this, MainActivity.class);
                         if (splashIntent.hasExtra("tieu_de"))
                             intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
                         else
@@ -78,11 +84,11 @@ public class SplashActivity extends AppCompatActivity {
                             intent.putExtra("type", splashIntent.getStringExtra("type"));
                         else
                             intent.putExtra("type", "Null");
-
+                        startActivity(intent);
+                        finish();
                     }
                     else if (screen.equals("add_alarm")) {
-                        String strExtras;
-                        intent = new Intent(this, AddAlarmActivity.class);
+                        Intent intent = new Intent(this, AddAlarmActivity.class);
                         if (splashIntent.hasExtra("tieu_de"))
                             intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
                         else
@@ -92,20 +98,35 @@ public class SplashActivity extends AppCompatActivity {
                             intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
                         else
                             intent.putExtra("noi_dung", "Null");
+                        startActivity(intent);
+                        finish();
                     }
-                    else
-                        intent = new Intent(this, MainActivity.class);
-
+                    else {
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
-                else
-                    intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                else {
+                    final Intent intent = new Intent(this, MainActivity.class);
+                    new Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, secondsDelayed * 1000);
+                }
             }
             else {
-                Intent intent = new Intent(this, SetupActivity.class);
-                startActivity(intent);
-                finish();
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        Intent intent = new Intent(SplashActivity.this, SetupActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, secondsDelayed * 1000);
+
+
             }
         }
     }

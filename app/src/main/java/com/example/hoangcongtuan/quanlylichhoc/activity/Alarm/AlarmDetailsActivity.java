@@ -1,5 +1,6 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.Alarm;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +11,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDatabase;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class AlarmDetailsActivity extends AppCompatActivity {
 
@@ -25,31 +31,38 @@ public class AlarmDetailsActivity extends AppCompatActivity {
 
     private int mReminderId;
 
-    private Toolbar toolbar;
+    private Calendar mCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alamr_details);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle(getResources().getString(R.string.alarm_detail_act_title));
+        }
 
-        getSupportActionBar().setTitle(getResources().getString(R.string.alarm_detail_act_title));
+        init();
 
         getWidgets();
 
     }
 
+    public void init() {
+        mCalendar = Calendar.getInstance();
+    }
+
 
     public void getWidgets() {
-        tvDate = (TextView) findViewById(R.id.tvDate);
-        tvTime = (TextView) findViewById(R.id.tvTime);
-        tvTitle = (TextView) findViewById(R.id.tvReminderTitle);
-        tvContent = (TextView) findViewById(R.id.tvReminderContent);
+        tvDate = findViewById(R.id.tvDate);
+        tvTime = findViewById(R.id.tvTime);
+        tvTitle = findViewById(R.id.tvReminderTitle);
+        tvContent = findViewById(R.id.tvReminderContent);
     }
 
 
@@ -69,8 +82,30 @@ public class AlarmDetailsActivity extends AppCompatActivity {
             Reminder reminder = ReminderDatabase.getsInstance(getApplicationContext()).getReminder(mReminderId);
             tvTitle.setText(reminder.getTitle());
             tvContent.setText(reminder.getContent());
-            tvDate.setText(reminder.getDate());
-            tvTime.setText(reminder.getTime());
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+            try {
+                mCalendar.setTime(
+                        sdf.parse(reminder.getDate())
+                );
+
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat sdfDate = new SimpleDateFormat("EEEE dd/MM/yyyy");
+
+                tvDate.setText(
+                        sdfDate.format(mCalendar.getTime())
+                );
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
+
+                tvTime.setText(
+                        sdfTime.format(mCalendar.getTime())
+                );
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Co loi khi truy xuat csdl!", Toast.LENGTH_LONG).show();
+            }
         }
 
     }

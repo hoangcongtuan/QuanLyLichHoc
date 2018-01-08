@@ -24,9 +24,9 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
-import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.StepPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
@@ -378,11 +378,24 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.btnFinish:
-                finishFragment.writelstMaHPtoUserDB(dbUserMaHocPhan);
+                if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
+                    finishFragment.writelstMaHPtoUserDB(dbUserMaHocPhan);
+                    finishFragment.setOnUpLoadUserDBComplete(new FinishFragment.OnUpLoadUserDBComplete() {
+                        @Override
+                        public void onSuccess() {
+                            Intent intent = new Intent(SetupActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
 
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                        @Override
+                        public void onFailed() {
+                            Toast.makeText(SetupActivity.this, "Có lỗi khi upload dữ liệu!", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+                else
+                    Toast.makeText(SetupActivity.this, "Không có internet, kiểm tra lại kết nôi mạng", Toast.LENGTH_LONG).show();
                 break;
         }
     }

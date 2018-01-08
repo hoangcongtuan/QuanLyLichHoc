@@ -1,7 +1,9 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -86,6 +88,18 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    public void showNoInternetMessage() {
+        Snackbar.make(editHPLayout,
+                getResources().getString(R.string.no_internet), Snackbar.LENGTH_LONG)
+                .setAction(R.string.setting, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                        startActivity(intent);
+                    }
+                }).show();
+    }
+
     private void setWidgetsEvent() {
         registerForContextMenu(lvTKB);
         fabAdd.setOnClickListener(this);
@@ -107,8 +121,12 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                     Snackbar.make(editHPLayout,
                              getResources().getString(R.string.incorrect_ma_hp), Snackbar.LENGTH_LONG).show();
                 }
-                else
+                else if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
                     addUserHP(customDialogBuilderLopHP.getCurrentLopHP().getMaHP());
+                }
+                else
+                    showNoInternetMessage();
+
             }
         });
 
@@ -251,12 +269,17 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.menu_remove:
-                removeUserHP(info.position);
+                if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected())
+                    removeUserHP(info.position);
+                else
+                    showNoInternetMessage();
                 break;
         }
         return super.onContextItemSelected(item);

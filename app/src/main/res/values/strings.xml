@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Quản lý lịch học</string>
     <string-array name="tab_name">
-        <item>TB chung</item>
-        <item>TB học phần</item>
+        <item>Chung</item>
+        <item>Học Phần</item>
         <item>Lịch học</item>
     </string-array>
 
@@ -15,7 +15,7 @@
 
     <string name="crop_dialog_title">Chọn lớp học phần</string>
     <string name="crop_dialog_message">Kéo chọn đúng danh sách mã học phần của bạn rồi nhấn CROP nhé</string>
-    
+
 
     <string name="facebook_app_id">1183042115172735</string>
     <string name="fb_login_protocol_scheme">fb1183042115172735</string>
@@ -46,6 +46,7 @@
     <string name="cancel">cancel</string>
     <string name="huy">Hủy</string>
     <string name="ok">OK</string>
+    <string name="undo">UNDO</string>
 
     <string name="remind_me">Nhắc tôi</string>
     <string name="notification">Thông báo</string>
@@ -71,14 +72,25 @@
     <string name="delete_data">Xóa dữ liệu lớp học phần</string>
     <string name="delete_data_detail">Dữ liệu về các lớp học phần của bạn sẽ bị xóa khỏi thiết bị và trên đám mây</string>
     <string name="delete">DELETE</string>
-    
+
     <string name="xoa_nhac_nho">Xóa nhắc nhở</string>
     <string name="xoa_nhac_nho_detail">Nhắc nhở này sẽ bị xóa khỏi thiết bị của bạn</string>
     <string name="incorrect_ma_hp">Nhập sai mã học phần</string>
+    <string name="no_internet">Không có kết nối mạng</string>
+    <string name="no_internet_msg">Dữ liệu của bạn được lưu trên đám mấy vì vậy ứng dụng cần được kết nối tới internet, hãy kiểm trại lại kết nối của bạn</string>
+    <string name="retry">Thử lại</string>
+    <string name="setting">Cài đặt</string>
 
     <string name="key_firebase_user_info">userInfo</string>
     <string name="key_firebase_list_mahp">listMaHocPHan</string>
     <string name="key_firebase_fcmtoken">FCMToken</string>
+    <string name="key_firebase_user_detail">user_info</string>
+    <string name="key_firebase_user_email">email</string>
+    <string name="key_firebase_user_name">name</string>
+    <string name="key_firebase_user_providerId">provider</string>
+    <string name="key_firebase_user_phone">phone</string>
+    <string name="key_firebase_user_photo_url">photo_url</string>
+    <string name="key_firebase_user_uid">uid</string>
 
     <string name="topic_tb_chung">TBChung</string>
     <string name="error">Error: </string>
@@ -91,5 +103,21 @@
     <string name="remove_hp_failed">Thất bại</string>
     <string name="add_hp_success">Đã thêm lớp học phần</string>
     <string name="add_hp_failed">Thêm lớp học phần thất bại</string>
+
+    <string name="today">Hôm nay</string>
+    <string name="tomorrow">Ngày mai</string>
+    <string name="lastday">Hôm qua</string>
+    <string name="thisweek">Tuần này</string>
+    <string name="nextweek">Tuần tới</string>
+    <string name="lastweek">Tuần trước</string>
+    <string name="infuture">Sắp tới</string>
+    <string name="inpast">Đã qua</string>
+    <string name="search_hint">Type some text</string>
+    <string name="title_activity_test_navigation">testNavigation</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 
 </resources>

@@ -14,9 +14,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBChungAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.listener.HidingScrollListener;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
 import com.example.hoangcongtuan.quanlylichhoc.models.ThongBaoObj;
+import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,12 +35,13 @@ import java.util.Collections;
 public class TBChungFragment extends Fragment {
     private static final String TAG = TBChungFragment.class.getName();
     private RecyclerView recyclerView;
-    private RVTBChungAdapter tbChungAdapter;
+    private RVTBAdapter tbChungAdapter;
     private DatabaseReference database;
     private DatabaseReference tbChungRef;
     private ValueEventListener tbChungEvenListener;
-    private RVTBChungAdapter.ICallBack iCallBack;
-    private RVTBChungAdapter.ICallBack privCallBack;
+    private RVTBAdapter.ICallBack iCallBack;
+    private RVTBAdapter.ICallBack privCallBack;
+    private HidingScrollListener hidingScrollListener;
 
     @Nullable
     @Override
@@ -48,6 +51,7 @@ public class TBChungFragment extends Fragment {
         return  viewGroup;
     }
 
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -55,13 +59,18 @@ public class TBChungFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addOnScrollListener(hidingScrollListener);
 
-        tbChungAdapter = new RVTBChungAdapter(recyclerView, getContext());
+        int paddingTop = Utils.getToolbarHeight(getContext()) + Utils.getTabsHeight(getContext());
+        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop, recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
+
+        tbChungAdapter = new RVTBAdapter(recyclerView, getContext());
         tbChungAdapter.notifyDataSetChanged();
 
         recyclerView.setAdapter(tbChungAdapter);
 
-        tbChungAdapter.setICallBack(new RVTBChungAdapter.ICallBack() {
+        //set call back cho adapter
+        tbChungAdapter.setICallBack(new RVTBAdapter.ICallBack() {
             @Override
             public void onLoadMore() {
                 Log.d(TAG, "onLoadMore: ");
@@ -85,6 +94,7 @@ public class TBChungFragment extends Fragment {
         loadData();
     }
 
+    //load them du lieu khi keo xuong
     private void loadMore() {
         Log.d(TAG, "loadMore: ");
         tbChungAdapter.addThongBao(null);
@@ -96,13 +106,16 @@ public class TBChungFragment extends Fragment {
     }
 
 
+    //scroll man hinh den thong bao co ma hash
     public void scrollTo(final String hash) {
-        setPrivCallBack(new RVTBChungAdapter.ICallBack() {
+        //set call back cho apdapter
+        setPrivCallBack(new RVTBAdapter.ICallBack() {
             @Override
             public void onLoadMore() {
 
             }
 
+            //sau khi load them du lieu
             @Override
             public void onLoadMoreFinish() {
                 ArrayList<ThongBao> lstTBChung;
@@ -139,8 +152,13 @@ public class TBChungFragment extends Fragment {
         });
     }
 
+    public void setOnHidingScrollListener(HidingScrollListener hsl) {
+        hidingScrollListener = hsl;
+    }
+
+    //scroll toi thong bao thu position
     private void scrollTo(final int position) {
-        setPrivCallBack(new RVTBChungAdapter.ICallBack() {
+        setPrivCallBack(new RVTBAdapter.ICallBack() {
             @Override
             public void onLoadMore() {
 
@@ -179,6 +197,7 @@ public class TBChungFragment extends Fragment {
     }
 
 
+    //load du lieu lan dau
     private void loadData() {
         database = FirebaseDatabase.getInstance().getReference();
         tbChungAdapter.addThongBao(null);
@@ -229,11 +248,12 @@ public class TBChungFragment extends Fragment {
         tbChungRef.limitToLast(tbChungAdapter.itemLoadCount).addListenerForSingleValueEvent(tbChungEvenListener);
     }
 
-    private void setPrivCallBack(RVTBChungAdapter.ICallBack privCallBack) {
+    //ham set call back
+    private void setPrivCallBack(RVTBAdapter.ICallBack privCallBack) {
         this.privCallBack = privCallBack;
     }
 
-    public void setiCallBack(RVTBChungAdapter.ICallBack iCallBack) {
+    public void setiCallBack(RVTBAdapter.ICallBack iCallBack) {
         this.iCallBack = iCallBack;
     }
 }
