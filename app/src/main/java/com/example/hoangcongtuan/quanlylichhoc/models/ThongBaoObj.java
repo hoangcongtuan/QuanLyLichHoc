@@ -5,7 +5,7 @@ package com.example.hoangcongtuan.quanlylichhoc.models;
  */
 
 public class ThongBaoObj {
-    public String context;
+    public String content;
     public String day;
     public String event;
     public String key;
@@ -14,8 +14,8 @@ public class ThongBaoObj {
 
     }
 
-    public ThongBaoObj(String context, String day, String event, String key) {
-        this.context = context;
+    public ThongBaoObj(String content, String day, String event, String key) {
+        this.content = content;
         this.day = day;
         this.event = event;
         this.key = key;
@@ -24,7 +24,7 @@ public class ThongBaoObj {
     @Override
     public String toString() {
         return "ThongBaoObj{" +
-                "context='" + context + '\'' +
+                "content='" + content + '\'' +
                 ", day='" + day + '\'' +
                 ", event='" + event + '\'' +
                 ", key='" + key + '\'' +
