@@ -13,10 +13,21 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         xmlns:android="http://schemas.android.com/apk/res/android">
-        <include
-            layout="@layout/toolbar_layout"/>
-        <include
-            layout="@layout/stepper_bar"/>
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+
+            <include
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                layout="@layout/toolbar_layout"/>
+            <include
+                layout="@layout/stepper_bar"/>
+        </android.support.design.widget.AppBarLayout>
+
         <com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager
             android:layout_width="match_parent"
             android:layout_height="0dp"

@@ -219,7 +219,7 @@ public class TBChungFragment extends Fragment {
                         lstThongBao) {
                     if (count < dataSnapshot.getChildrenCount() - tbChungAdapter.itemLoaded) {
                         tbObj = dtSnapShot.getValue(ThongBaoObj.class);
-                        lstTmp.add(new ThongBao(tbObj.day, tbObj.event, tbObj.context, tbObj.key));
+                        lstTmp.add(new ThongBao(tbObj.day, tbObj.event, tbObj.content, tbObj.key));
                     }
                     count++;
                 }

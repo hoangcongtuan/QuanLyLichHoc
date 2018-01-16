@@ -21,7 +21,7 @@
 
     <color name="colorPrimaryText">#D9000000</color>
     <color name="colorTitleText">#3F51B5</color>
-    <color name="colorSecondaryText">#8C000000</color>
+    <color name="colorSecondaryText">#E91E63</color>
     <color name="colorHintText">#455A64</color>
     <color name="colorLinkText">#3F51B5</color>
     <color name="colorIconFeed">#e95b707b</color>

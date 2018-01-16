@@ -37,7 +37,7 @@
                         android:src="@drawable/ic_book_black_24dp"
                         android:id="@+id/imgIcnThongBao"
                         android:layout_margin="@dimen/text_margin"
-                        android:tint="@color/colorPrimaryText"
+                        android:tint="@color/colorPrimary"
                         android:layout_gravity="center_vertical"
                         android:fontFamily="sans-serif-light"/>
                     <TextView
@@ -46,7 +46,7 @@
                         android:text="07/09/2017"
                         android:layout_margin="@dimen/text_margin"
                         android:id="@+id/tvTBThoiGian"
-                        android:textColor="@color/colorPrimaryText"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/time_size"
                         android:layout_gravity="center_vertical"/>
                     <Space
@@ -78,7 +78,7 @@
                     android:text="Thông báo đến lớp: [14.Nh25] Tuốc bin"
                     android:id="@+id/tvTBTieude"
                     android:layout_margin="@dimen/text_margin"
-                    android:textColor="@color/colorTitleText"
+                    android:textColor="@color/colorSecondaryText"
                     android:textSize="@dimen/tittle_size"
                     android:textStyle="bold"/>
                 <TextView
