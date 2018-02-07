@@ -8,6 +8,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,34 +29,55 @@ import java.util.ArrayList;
 public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final static String TAG = RVTBAdapter.class.getName();
-
     private ArrayList<ThongBao> lstThongBao;
     private Context mContext;
 
+    public Context getContext() {
+        return mContext;
+    }
+
+    public LinearLayoutManager getLinearLayoutManager() {
+        return linearLayoutManager;
+    }
+
     private LinearLayoutManager linearLayoutManager;
 
-    private ICallBack ICallBack;
+    //load more callback
+    private ILoadMoreCallBack ILoadMoreCallBack;
 
+    //type of item
     private final static int ITEM_LOADED = 0;
     private final static int ITEM_LOADING = 1;
+
+    //amount item load more
     public final static int LOAD_MORE_DELTA = 5;
+
+    //returen code when create fast alarm
     public final static int RC_FAST_ADD_ALARM = 2;
 
+    //true if new feed is loading more item
     public boolean isLoading;
+
+    //last visible item in recycle view
     private int lastVisibleItem;
+
+    //try to load itemloadcount item
     public int itemLoadCount;
+
+    //loaded item
     public int itemLoaded;
+
+    //true if all new feed is loaded
     public boolean allItemLoaded;
 
 
     public RVTBAdapter(RecyclerView recyclerView, Context context) {
-
         lstThongBao = new ArrayList<>();
         linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
         this.mContext = context;
 
         isLoading = false;
-        itemLoadCount = LOAD_MORE_DELTA;
+        itemLoadCount = 0;
         itemLoaded = 0;
         allItemLoaded = false;
 
@@ -64,14 +86,15 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                if (itemLoadCount == (lastVisibleItem + 1)) {
+                Log.d(TAG, "onScrolled: loaded = " + itemLoaded + ", last + 1 = " + lastVisibleItem);
+                if (itemLoaded == (lastVisibleItem + 1) && !isLoading) {
                     //load cac thong bao tiep theo
-                    if (ICallBack != null) {
+                    if (ILoadMoreCallBack != null) {
                         if (!allItemLoaded) {
                             //chua load het cac thong bao
                             isLoading = true;
-                            //call back toi
-                            ICallBack.onLoadMore();
+                            //call back toi ham load more ben fragment
+                            ILoadMoreCallBack.onLoadMore();
                         }
 
                     }
@@ -164,8 +187,8 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     //ham set callBack
-    public void setICallBack(ICallBack ICallBack) {
-        this.ICallBack = ICallBack;
+    public void setILoadMoreCallBack(ILoadMoreCallBack ILoadMoreCallBack) {
+        this.ILoadMoreCallBack = ILoadMoreCallBack;
     }
 
     @Override
@@ -190,10 +213,9 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     //interface dung de call back moi khi load them thong bao
-    public interface ICallBack {
+    public interface ILoadMoreCallBack {
         void onLoadMore();
         void onLoadMoreFinish();
-        void onFirstLoadFinish();
     }
 
 

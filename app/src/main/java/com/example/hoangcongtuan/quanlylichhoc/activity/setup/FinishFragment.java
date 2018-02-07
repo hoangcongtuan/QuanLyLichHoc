@@ -72,7 +72,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getWidgets(View rootView) {
-        lvTKB = (ListView)rootView.findViewById(R.id.lvTKB);
+        lvTKB = (ListView)rootView.findViewById(R.id.rvTKB);
         fabAdd = (FloatingActionButton)rootView.findViewById(R.id.fabAdd);
     }
 

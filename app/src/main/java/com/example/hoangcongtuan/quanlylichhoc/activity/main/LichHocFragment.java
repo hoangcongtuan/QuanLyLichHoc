@@ -60,7 +60,7 @@ public class LichHocFragment extends Fragment {
     }
 
     private void getWidgets() {
-        lvTKB = (ListView) rootView.findViewById(R.id.lvTKB);
+        lvTKB = (ListView) rootView.findViewById(R.id.rvTKB);
 
         int paddingTop = Utils.getToolbarHeight(getContext()) + Utils.getTabsHeight(getContext());
         lvTKB.setPadding(lvTKB.getPaddingLeft(), paddingTop, lvTKB.getPaddingRight(), lvTKB.getPaddingBottom());

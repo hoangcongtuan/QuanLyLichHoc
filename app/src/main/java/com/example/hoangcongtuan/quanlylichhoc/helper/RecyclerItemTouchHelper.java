@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTKBieuAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.ReminderAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 
@@ -46,30 +47,53 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         //super.onSelectedChanged(viewHolder, actionState);
         if (viewHolder != null) {
-            View foregroundView = ((ReminderAdapter.ViewHolder)viewHolder).viewForeground;
-            getDefaultUIUtil().onSelected(foregroundView);
+            if (viewHolder instanceof ReminderAdapter.ViewHolder) {
+                View foregroundView = ((ReminderAdapter.ViewHolder)viewHolder).viewForeground;
+                getDefaultUIUtil().onSelected(foregroundView);
+            } else if (viewHolder instanceof RVTKBieuAdapter.ViewHolder) {
+                View foregroundView = ((RVTKBieuAdapter.ViewHolder)viewHolder).viewForeground;
+                getDefaultUIUtil().onSelected(foregroundView);
+            }
+
         }
     }
 
     @Override
-    public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+    public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder
+            , float dX, float dY, int actionState, boolean isCurrentlyActive) {
         //super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-        View foregroundView = ((ReminderAdapter.ViewHolder)viewHolder).viewForeground;
-        getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        if (viewHolder instanceof ReminderAdapter.ViewHolder) {
+            View foregroundView = ((ReminderAdapter.ViewHolder)viewHolder).viewForeground;
+            getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        } else if (viewHolder instanceof RVTKBieuAdapter.ViewHolder) {
+            View foregroundView = ((RVTKBieuAdapter.ViewHolder)viewHolder).viewForeground;
+            getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        }
     }
 
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         //super.clearView(recyclerView, viewHolder);
-        View foregroundView = ((ReminderAdapter.ViewHolder)viewHolder).viewForeground;
-        getDefaultUIUtil().clearView(foregroundView);
+        if (viewHolder instanceof ReminderAdapter.ViewHolder) {
+            View foregroundView = ((ReminderAdapter.ViewHolder)viewHolder).viewForeground;
+            getDefaultUIUtil().clearView(foregroundView);
+        } else if (viewHolder instanceof RVTKBieuAdapter.ViewHolder) {
+            View foregroundView = ((RVTKBieuAdapter.ViewHolder)viewHolder).viewForeground;
+            getDefaultUIUtil().clearView(foregroundView);
+        }
+
     }
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         //super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-        View foregroundView = ((ReminderAdapter.ViewHolder)viewHolder).viewForeground;
-        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        if (viewHolder instanceof ReminderAdapter.ViewHolder) {
+            View foregroundView = ((ReminderAdapter.ViewHolder)viewHolder).viewForeground;
+            getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        } else if (viewHolder instanceof RVTKBieuAdapter.ViewHolder) {
+            View foregroundView = ((RVTKBieuAdapter.ViewHolder)viewHolder).viewForeground;
+            getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        }
     }
 
     @Override

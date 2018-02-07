@@ -5,45 +5,35 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.listener.HidingScrollListener;
-import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
-import com.example.hoangcongtuan.quanlylichhoc.models.ThongBaoObj;
+import com.example.hoangcongtuan.quanlylichhoc.utils.LoadFeedHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by hoangcongtuan on 9/6/17.
  * Java code cua fragment thong bao lop hoc phan
  */
 
-public class TBHocPhanFragment extends Fragment {
+public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMoreCallBack {
 
     private final static String TAG = TBHocPhanFragment.class.getName();
 
     private RVTBAdapter hocPhanAdapter;
     private RecyclerView recyclerView;
-    private DatabaseReference database;
-    private DatabaseReference tbHocPhanRef;
-    private ValueEventListener tbHocPhanEvenListener;
-    private RVTBAdapter.ICallBack iCallBack;
-    private RVTBAdapter.ICallBack privCallBack;
     private HidingScrollListener hidingScrollListener;
+    private LoadFeedHelper loadFeedHelper;
+
+    private String hash;
+    private boolean isScrollTo = false;
 
 
     @Override
@@ -67,32 +57,13 @@ public class TBHocPhanFragment extends Fragment {
 
 
         hocPhanAdapter = new RVTBAdapter(recyclerView, getContext());
-        hocPhanAdapter.notifyDataSetChanged();
 
-        //set call back
-        hocPhanAdapter.setICallBack(new RVTBAdapter.ICallBack() {
-            @Override
-            public void onLoadMore() {
-                hocPhanAdapter.addThongBao(null);
-                hocPhanAdapter.addThongBao(null);
-                hocPhanAdapter.notifyDataSetChanged();
-                hocPhanAdapter.itemLoadCount += RVTBAdapter.LOAD_MORE_DELTA;
-                tbHocPhanRef.removeEventListener(tbHocPhanEvenListener);
-                tbHocPhanRef.limitToLast(hocPhanAdapter.itemLoadCount).addListenerForSingleValueEvent(tbHocPhanEvenListener);
-            }
-
-            @Override
-            public void onLoadMoreFinish() {
-
-            }
-
-            @Override
-            public void onFirstLoadFinish() {
-
-            }
-        });
         recyclerView.setAdapter(hocPhanAdapter);
-        loadData();
+
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference tbHPhanRef = database.child("lop_hoc_phan/data/");
+
+        loadFeedHelper = new LoadFeedHelper(hocPhanAdapter, tbHPhanRef, this);
         return  rootView;
     }
 
@@ -101,165 +72,35 @@ public class TBHocPhanFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView.addOnScrollListener(hidingScrollListener);
+
+        loadFeedHelper.loadFirstTime();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (isScrollTo) {
+            loadFeedHelper.scrollTo(hash);
+            isScrollTo = false;
+        }
+    }
+
+    public void scrollTo(String hash) {
+        this.hash = hash;
+        this.isScrollTo = true;
     }
 
     public void setOnHidingScrollListener(HidingScrollListener hsl) {
         hidingScrollListener = hsl;
     }
 
-    private void loadMore() {
-        hocPhanAdapter.addThongBao(null);
-        hocPhanAdapter.addThongBao(null);
-        hocPhanAdapter.notifyDataSetChanged();
-        hocPhanAdapter.itemLoadCount += hocPhanAdapter.LOAD_MORE_DELTA;
-        tbHocPhanRef.removeEventListener(tbHocPhanEvenListener);
-        tbHocPhanRef.limitToLast(hocPhanAdapter.itemLoadCount).addListenerForSingleValueEvent(tbHocPhanEvenListener);
-    }
-
-    public void scrollTo(final String hash) {
-        setPrivCallBack(new RVTBAdapter.ICallBack() {
-            @Override
-            public void onLoadMore() {
-
-            }
-
-            @Override
-            public void onLoadMoreFinish() {
-                ArrayList<ThongBao> lstTBHocPhan;
-                lstTBHocPhan = hocPhanAdapter.getLstThongBao();
-
-                if (hocPhanAdapter.allItemLoaded) {
-                    Toast.makeText(getActivity(), "Khong tim thay thong bao!", Toast.LENGTH_SHORT).show();
-                    setPrivCallBack(null);
-                    return;
-                }
-
-                for(ThongBao tb : lstTBHocPhan) {
-                    if (hash.compareTo(tb.getKey()) == 0) {
-                        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
-                            @Override
-                            protected int getVerticalSnapPreference() {
-                                return SNAP_TO_START;
-                            }
-                        };
-                        int position = lstTBHocPhan.indexOf(tb);
-                        smoothScroller.setTargetPosition(position);
-                        recyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
-                        setPrivCallBack(null);
-                        return;
-                    }
-                }
-                loadMore();
-            }
-
-            @Override
-            public void onFirstLoadFinish() {
-
-            }
-        });
-    }
-
-    private void scrollTo(final int position) {
-        setPrivCallBack(new RVTBAdapter.ICallBack() {
-            @Override
-            public void onLoadMore() {
-
-            }
-
-            @Override
-            public void onLoadMoreFinish() {
-
-                if (hocPhanAdapter.allItemLoaded) {
-                    Toast.makeText(getActivity(), "Khong tim thay thong bao!", Toast.LENGTH_SHORT).show();
-                    setPrivCallBack(null);
-                    return;
-                }
-
-
-                if (hocPhanAdapter.getLstThongBao().size() - 1 < position)
-                    loadMore();
-                else {
-                    RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
-                        @Override
-                        protected int getVerticalSnapPreference() {
-                            return SNAP_TO_START;
-                        }
-                    };
-                    smoothScroller.setTargetPosition(position);
-                    recyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
-                    setPrivCallBack(null);
-                }
-            }
-
-            @Override
-            public void onFirstLoadFinish() {
-
-            }
-        });
-    }
-
-
-    private void loadData() {
-        database = FirebaseDatabase.getInstance().getReference();
-        //them loading item
-        hocPhanAdapter.addThongBao(null);
-        hocPhanAdapter.addThongBao(null);
-        hocPhanAdapter.notifyDataSetChanged();
-        tbHocPhanEvenListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ThongBaoObj tbObj;
-                Iterable<DataSnapshot> lstThongBao;
-                lstThongBao  = dataSnapshot.getChildren();
-                ArrayList<ThongBao> lstTmp = new ArrayList<>();
-
-                //xoa loading item
-                hocPhanAdapter.removeLast();
-                hocPhanAdapter.removeLast();
-                int count = 0;
-                for (DataSnapshot dtSnapShot :
-                        lstThongBao) {
-                    if (count < dataSnapshot.getChildrenCount() - hocPhanAdapter.itemLoaded) {
-                        tbObj = dtSnapShot.getValue(ThongBaoObj.class);
-                        lstTmp.add(new ThongBao(tbObj.day, tbObj.event, tbObj.content, tbObj.key));
-                    }
-                    count++;
-                }
-                Collections.reverse(lstTmp);
-                for(ThongBao tb : lstTmp) {
-                    hocPhanAdapter.addThongBao(tb);
-                }
-                if (count == hocPhanAdapter.itemLoaded) {
-                    hocPhanAdapter.allItemLoaded = true;
-                }
-
-                //tinh lai so item da load
-                hocPhanAdapter.itemLoaded = count;
-                hocPhanAdapter.itemLoadCount = count;
-                hocPhanAdapter.notifyDataSetChanged();
-                hocPhanAdapter.isLoading = false;
-
-                if (privCallBack != null)
-                    privCallBack.onLoadMoreFinish();
-                if (iCallBack != null)
-                    iCallBack.onLoadMoreFinish();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-        tbHocPhanRef = database.child("lop_hoc_phan/data/");
-        tbHocPhanRef.limitToLast(hocPhanAdapter.itemLoadCount).addListenerForSingleValueEvent(tbHocPhanEvenListener);
+    @Override
+    public void onLoadMore() {
 
     }
 
-    public void setiCallBack(RVTBAdapter.ICallBack iCallBack) {
-        this.iCallBack = iCallBack;
-    }
+    @Override
+    public void onLoadMoreFinish() {
 
-    private void setPrivCallBack(RVTBAdapter.ICallBack privCallBack) {
-        this.privCallBack = privCallBack;
     }
 }

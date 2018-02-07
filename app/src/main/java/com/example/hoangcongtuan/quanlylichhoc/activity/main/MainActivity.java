@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView tvUserName;
     private TextView tvEmail;
     private TBChungFragment tbChungFragment;
-    private TBHocPhanFragment tbHPhan;
+    private TBHocPhanFragment tbHPhanFragment;
     private LichHocFragment lichHocFragment;
     private CoordinatorLayout main_content_layout;
 
@@ -139,6 +139,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         viewPager = (ViewPager)findViewById(R.id.viewPager);
+
+        tbChungFragment = new TBChungFragment();
+        tbHPhanFragment = new TBHocPhanFragment();
+        lichHocFragment = new LichHocFragment();
 
         main_content_layout = (CoordinatorLayout) findViewById(R.id.main_content_layout);
 
@@ -232,28 +236,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void setWidgetsEvent() {
-        Intent intent = getIntent();
-        Log.d(TAG, "onCreate: Intent = " + intent.toString());
-        if (intent.getExtras() != null && intent.hasExtra("tieu_de")) {
-            Log.d(TAG, "setWidgetsEvent: key = " + intent.getStringExtra("id"));
-            String tbType = intent.getStringExtra("type");
-            if (tbType.compareTo("tbc") == 0) {
-                viewPager.setCurrentItem(0);
-                tbChungFragment.scrollTo(intent.getStringExtra("id"));
-            }
 
-            else {
-                viewPager.setCurrentItem(1);
-                tbHPhan.scrollTo(intent.getStringExtra("id"));
-            }
-
-        }
     }
 
+
     private void setupViewPager(ViewPager viewPager) {
-        tbChungFragment = new TBChungFragment();
-        tbHPhan = new TBHocPhanFragment();
-        lichHocFragment = new LichHocFragment();
 
         final HidingScrollListener hidingScrollListener_tbChung = new HidingScrollListener(MainActivity.this) {
             @Override
@@ -315,11 +302,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         tbChungFragment.setOnHidingScrollListener(hidingScrollListener_tbChung);
 
-        tbHPhan.setOnHidingScrollListener(hidingScrollListener_tbHPhan);
+        tbHPhanFragment.setOnHidingScrollListener(hidingScrollListener_tbHPhan);
 
         pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(tbChungFragment, strTabs[0]);
-        pagerAdapter.addFragment(tbHPhan, strTabs[1]);
+        pagerAdapter.addFragment(tbHPhanFragment, strTabs[1]);
         pagerAdapter.addFragment(lichHocFragment, strTabs[2]);
 
         viewPager.setAdapter(pagerAdapter);
@@ -369,6 +356,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public boolean onClose() {
                 Toast.makeText(MainActivity.this, "Close Search View", Toast.LENGTH_SHORT).show();
                 return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, "On click search", Toast.LENGTH_SHORT).show();
+                tbChungFragment.scrollTo("5896914293f0446f65b391e51d0cf4e0");
             }
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -472,6 +467,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 );
                 break;
             case R.id.item_showSubscribeTopic:
+                tbHPhanFragment.scrollTo("c27bd18081c2c847b0ba3dd25c637779");
                 break;
             case R.id.item_cat_dat:
                 Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
@@ -486,6 +482,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawers();
         return true;
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = getIntent();
+        Log.d(TAG, "onCreate: Intent = " + intent.toString());
+        if (intent.getExtras() != null && intent.hasExtra("tieu_de")) {
+            Log.d(TAG, "setWidgetsEvent: key = " + intent.getStringExtra("id"));
+            String tbType = intent.getStringExtra("type");
+            if (tbType.compareTo("tbc") == 0) {
+                viewPager.setCurrentItem(0);
+                tbChungFragment.scrollTo(intent.getStringExtra("id"));
+            }
+
+            else {
+                viewPager.setCurrentItem(1);
+                tbHPhanFragment.scrollTo(intent.getStringExtra("id"));
+            }
+
+        }
+//        viewPager.setCurrentItem(0);
+//                tbChungFragment.scrollTo("8a31f36bfdaaf8d590d2a705cb2bd728");
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -103,6 +103,10 @@
     <string name="remove_hp_failed">Thất bại</string>
     <string name="add_hp_success">Đã thêm lớp học phần</string>
     <string name="add_hp_failed">Thêm lớp học phần thất bại</string>
+    <string name="sorry_error">Ứng dụng lỗi rồi!</string>
+    <string name="undo_failed">Lỗi khi khôi phục!</string>
+    <string name="error_alarm_database_access">"Có lỗi khi truy xuất cơ sở dữ liệu</string>
+    <string name="error_title">Có lỗi</string>
 
     <string name="today">Hôm nay</string>
     <string name="tomorrow">Ngày mai</string>

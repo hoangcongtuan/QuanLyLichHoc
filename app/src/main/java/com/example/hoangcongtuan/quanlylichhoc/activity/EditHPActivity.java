@@ -10,17 +10,23 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.LVTKBieuAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTKBieuAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomDialogBuilderLopHP;
+import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
+import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
@@ -31,18 +37,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class EditHPActivity extends AppCompatActivity implements View.OnClickListener{
+public class EditHPActivity extends AppCompatActivity implements View.OnClickListener
+        , RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
 
     private FloatingActionButton fabAdd;
-    private ListView lvTKB;
-    private LVTKBieuAdapter lvtkBieuAdapter;
-    private ArrayList<LopHP> lstLopHP;
-    private ArrayList<String> lstMaHP;
-    private ArrayList<String> lstMaHPOld;
+    private RecyclerView rvTKB;
+    private RVTKBieuAdapter rvtkBieuAdapter;
     private Toolbar toolbar;
-    private Boolean modified;
+    private Boolean modified = false;
     private CoordinatorLayout editHPLayout;
 
     private DatabaseReference dbUserMaHocPhan;
@@ -52,7 +57,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_hp);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -69,22 +74,26 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         dbUserMaHocPhan = database.child("userInfo").child(user.getUid()).child("listMaHocPHan");
-        lstLopHP = DBLopHPHelper.getsInstance().getListUserLopHP();
-        lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
-        lstMaHPOld = DBLopHPHelper.getsInstance().getListUserMaHP();
-        lvtkBieuAdapter = new LVTKBieuAdapter(this, android.R.layout.simple_list_item_1, lstLopHP);
-        modified = false;
-
+        ArrayList<LopHP> lstLopHP = DBLopHPHelper.getsInstance().getListUserLopHP();
+        rvtkBieuAdapter = new RVTKBieuAdapter(this, lstLopHP);
     }
 
     private void getWidgets() {
-        lvTKB = (ListView) findViewById(R.id.lvTKB);
-        fabAdd = (FloatingActionButton)findViewById(R.id.fabAdds);
-        editHPLayout = (CoordinatorLayout)findViewById(R.id.editHPLayout);
+        rvTKB = findViewById(R.id.rvTKB);
+        fabAdd = findViewById(R.id.fabAdds);
+        editHPLayout = findViewById(R.id.editHPLayout);
     }
 
     private void setWidgets() {
-        lvTKB.setAdapter(lvtkBieuAdapter);
+        rvTKB.setAdapter(rvtkBieuAdapter);
+        rvTKB.setLayoutManager(new LinearLayoutManager(this));
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvTKB);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvTKB.getContext(),
+                ((LinearLayoutManager)rvTKB.getLayoutManager()).getOrientation());
+        rvTKB.addItemDecoration(dividerItemDecoration);
 
     }
 
@@ -94,14 +103,14 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 .setAction(R.string.setting, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                        Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
                         startActivity(intent);
                     }
                 }).show();
     }
 
     private void setWidgetsEvent() {
-        registerForContextMenu(lvTKB);
+        registerForContextMenu(rvTKB);
         fabAdd.setOnClickListener(this);
     }
     public void showAddLopHPDialog() {
@@ -148,16 +157,10 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.tkb_menu, menu);
-    }
-
     public void addUserHP(final String id) {
         //add on firebase
         ArrayList<String> tmp = new ArrayList<>();
+        ArrayList<String> lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
         tmp.addAll(lstMaHP);
         tmp.add(id);
         dbUserMaHocPhan.setValue(tmp).addOnSuccessListener(this, new OnSuccessListener<Void>() {
@@ -166,21 +169,25 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 Snackbar.make(
                         editHPLayout,
                         getResources().getString(R.string.add_hp_success),
-                        Snackbar.LENGTH_LONG).show();
+                        Snackbar.LENGTH_INDEFINITE)
+                        .setAction(
+                                R.string.undo, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        undo_addUserLopHP(id);
+                                    }
+                                }
+                        ).show();
                 //insert to local db
                 DBLopHPHelper.getsInstance().insertUserMaHocPhan(id);
 
                 //subscrible topic
                 Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(id);
 
-                //update flag
                 modified = true;
 
-                //update UI
-                lstLopHP.add(DBLopHPHelper.getsInstance().getLopHocPhan(id));
-                lstMaHP.add(id);
-                Utils.sortLHP(lstLopHP);
-                lvtkBieuAdapter.notifyDataSetChanged();
+                //update ui
+                rvtkBieuAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
             }
         }).addOnFailureListener(this, new OnFailureListener() {
             @Override
@@ -188,21 +195,12 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 Snackbar.make(
                         editHPLayout,
                         getResources().getString(R.string.add_hp_failed),
-                        Snackbar.LENGTH_LONG)
-                        .setAction(getResources().getString(R.string.details),
+                        Snackbar.LENGTH_INDEFINITE)
+                        .setAction(getResources().getString(R.string.retry),
                                 new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(EditHPActivity.this);
-                                        builder.setTitle(getResources().getString(R.string.hoc_phan_act_title));
-                                        builder.setMessage(e.getMessage());
-                                        builder.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                            }
-                                        });
-                                        builder.create().show();
+                                       addUserHP(id);
 
                                     }
                                 }).show();
@@ -210,10 +208,86 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    public void removeUserHP(final int position) {
+    public void undo_addUserLopHP(final String id) {
         ArrayList<String> tmp = new ArrayList<>();
+        final ArrayList<String> lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
         tmp.addAll(lstMaHP);
-        tmp.remove(position);
+        tmp.remove(
+                tmp.indexOf(id)
+        );
+        //remove on firebase DB
+        dbUserMaHocPhan.setValue(tmp).addOnSuccessListener(this, new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                //delete in local db
+                DBLopHPHelper.getsInstance().deleteUserMaHocPhan(id);
+
+                //unbsubscrible topic
+                Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(id);
+
+                //update flag
+                modified = true;
+
+                //update ui
+                try {
+                    rvtkBieuAdapter.removeItem(id);
+                } catch (AppException e) {
+                    e.printStackTrace();
+                    Toast.makeText(EditHPActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+
+                }
+
+            }
+        }).addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull final Exception e) {
+                Snackbar.make(
+                        editHPLayout,
+                        getResources().getString(R.string.undo_failed),
+                        Snackbar.LENGTH_INDEFINITE).show();
+            }
+        });
+
+    }
+
+    public void undo_removeUserLopHP(final String id) {
+        //add on firebase
+        ArrayList<String> tmp = new ArrayList<>();
+        ArrayList<String> lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
+        tmp.addAll(lstMaHP);
+        tmp.add(id);
+        dbUserMaHocPhan.setValue(tmp).addOnSuccessListener(this, new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                //insert to local db
+                DBLopHPHelper.getsInstance().insertUserMaHocPhan(id);
+
+                //subscrible topic
+                Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(id);
+
+                modified = true;
+
+                //update ui
+                rvtkBieuAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
+            }
+        }).addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull final Exception e) {
+                Snackbar.make(
+                        editHPLayout,
+                        getResources().getString(R.string.undo_failed),
+                        Snackbar.LENGTH_INDEFINITE).show();
+            }
+        });
+    }
+
+    public void removeUserHP(final String id) {
+        ArrayList<String> tmp = new ArrayList<>();
+        final ArrayList<String> lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
+        tmp.addAll(lstMaHP);
+        tmp.remove(
+                tmp.indexOf(id)
+        );
         //remove on firebase DB
         dbUserMaHocPhan.setValue(tmp).addOnSuccessListener(this, new OnSuccessListener<Void>() {
             @Override
@@ -221,23 +295,30 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 Snackbar.make(
                         editHPLayout,
                         getResources().getString(R.string.remove_hp_success),
-                        Snackbar.LENGTH_LONG).show();
+                        Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.undo, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                undo_removeUserLopHP(id);
+                            }
+                        }).show();
                 //delete in local db
-                DBLopHPHelper.getsInstance().deleteUserMaHocPhan(lstLopHP.get(position).getMaHP());
+                DBLopHPHelper.getsInstance().deleteUserMaHocPhan(id);
 
                 //unbsubscrible topic
-                Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(lstMaHP.get(position));
+                Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(id);
 
                 //update flag
                 modified = true;
 
-                //update UI
-                lstMaHP.remove(
-                        lstLopHP.get(position).getMaHP()
-                );
-                lstLopHP.remove(position);
+                //update ui
+                try {
+                    rvtkBieuAdapter.removeItem(id);
+                } catch (AppException e) {
+                    e.printStackTrace();
+                    Toast.makeText(EditHPActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
 
-                lvtkBieuAdapter.notifyDataSetChanged();
+                }
 
             }
         }).addOnFailureListener(this, new OnFailureListener() {
@@ -246,21 +327,12 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 Snackbar.make(
                         editHPLayout,
                         getResources().getString(R.string.remove_hp_failed),
-                        Snackbar.LENGTH_LONG)
-                        .setAction(getResources().getString(R.string.details),
+                        Snackbar.LENGTH_INDEFINITE)
+                        .setAction(getResources().getString(R.string.retry),
                                 new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(EditHPActivity.this);
-                                        builder.setTitle(getResources().getString(R.string.hoc_phan_act_title));
-                                        builder.setMessage(e.getMessage());
-                                        builder.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                            }
-                                        });
-                                        builder.create().show();
+                                        removeUserHP(id);
 
                                     }
                                 }).show();
@@ -269,29 +341,21 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.menu_remove:
-                if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected())
-                    removeUserHP(info.position);
-                else
-                    showNoInternetMessage();
-                break;
-        }
-        return super.onContextItemSelected(item);
-    }
-
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fabAdds:
                 showAddLopHPDialog();
                 break;
+        }
+    }
+
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof RVTKBieuAdapter.ViewHolder) {
+            final LopHP lopHP = rvtkBieuAdapter.getItem(position);
+            removeUserHP(lopHP.getMaHP());
         }
     }
 }

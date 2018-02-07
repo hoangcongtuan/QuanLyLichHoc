@@ -26,10 +26,10 @@ public class LVTKBieuAdapter extends ArrayAdapter<LopHP> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.lop_hp_item, parent, false);
 
-            viewHolder.tenHP = convertView.findViewById(R.id.tenHP);
-            viewHolder.tenGV = convertView.findViewById(R.id.tenGV);
-            viewHolder.maHP = convertView.findViewById(R.id.maHP);
-            viewHolder.tkb = convertView.findViewById(R.id.tkb);
+            viewHolder.tenHP = convertView.findViewById(R.id.tvTenHP);
+            viewHolder.tenGV = convertView.findViewById(R.id.tvTenGV);
+            viewHolder.maHP = convertView.findViewById(R.id.tvMaHP);
+            viewHolder.tkb = convertView.findViewById(R.id.tvTkb);
             viewHolder.tvIndex = convertView.findViewById(R.id.tvIndex);
 
             convertView.setTag(viewHolder);
@@ -49,5 +49,8 @@ public class LVTKBieuAdapter extends ArrayAdapter<LopHP> {
 
     private class ViewHolder {
         TextView maHP, tenHP, tenGV, tkb, tvIndex;
+    }
+
+    public void getitem(int position) {
     }
 }

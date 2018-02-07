@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -34,15 +35,19 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
     private final static int RC_DETAIL = 0;
     private final static int RC_ADD = 1;
     private static final String TAG = AlarmActivity.class.getName();
-    private ReminderAdapter mAdapter;
+    private ReminderAdapter reminderAdapter;
 
-    private CoordinatorLayout alarm_layout;
+    private CoordinatorLayout alarmLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
+        initWidget();
+    }
+
+    public void initWidget() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -53,20 +58,24 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
         }
 
 
-        alarm_layout = findViewById(R.id.alarm_layout);
+        alarmLayout = findViewById(R.id.alarm_layout);
+        RecyclerView rvAlarm = findViewById(R.id.rvAlarms);
+        
 
-        RecyclerView mRecyclerView = findViewById(R.id.rvAlarms);
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(
+                0, ItemTouchHelper.RIGHT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvAlarm);
 
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+        ArrayList<Reminder> listReminders = ReminderDatabase.getsInstance(getApplicationContext()).getAllReminders();
+        reminderAdapter = new ReminderAdapter(this, listReminders);
+        rvAlarm.setAdapter(reminderAdapter);
+        reminderAdapter.setClickListener(this);
 
-        ArrayList<Reminder> mReminders = ReminderDatabase.getsInstance(getApplicationContext()).getAllReminders();
-        mAdapter = new ReminderAdapter(this, mReminders);
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setClickListener(this);
+        rvAlarm.setLayoutManager(new LinearLayoutManager(this));
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvAlarm.getContext(),
+                ((LinearLayoutManager)rvAlarm.getLayoutManager()).getOrientation());
+        rvAlarm.addItemDecoration(dividerItemDecoration);
 
         FloatingActionButton btnAddAlarm = findViewById(R.id.btnAdd);
         btnAddAlarm.setOnClickListener(new View.OnClickListener() {
@@ -89,60 +98,27 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
         return true;
     }
 
-    private void showDeleteDialog(final Reminder reminder, final int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getResources().getString(R.string.xoa_nhac_nho));
-        builder.setMessage(getResources().getString(R.string.xoa_nhac_nho_detail));
-        builder.setPositiveButton(getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //xoa
-                ReminderDatabase.getsInstance(getApplicationContext()).deleteReminder(reminder.getId());
-                ReminderManager.getsInstance(getApplicationContext()).deleteReminder(reminder.getId());
-                mAdapter.removeReminder(position);
-                //mAdapter.notifyDataSetChanged();
-                Snackbar.make(alarm_layout, getResources().getString(R.string.remove_alarm_success), Snackbar.LENGTH_LONG).show();
-
-            }
-        });
-        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //ko xoa
-            }
-        });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
 
     @Override
     public void onClick(View view, int position, boolean isLongClick) {
-        Reminder reminder = mAdapter.getReminder(position);
-        if(isLongClick) {
-            showDeleteDialog(reminder, position);
-        } else {
-            Intent i = new Intent(AlarmActivity.this, AlarmDetailsActivity.class);
-            i.putExtra(ReminderManager.KEY_REMINDER_ID, reminder.getId());
-            startActivityForResult(i, RC_DETAIL);
-        }
-
+        Reminder reminder = reminderAdapter.getReminder(position);
+        Intent i = new Intent(AlarmActivity.this, AlarmDetailsActivity.class);
+        i.putExtra(ReminderManager.KEY_REMINDER_ID, reminder.getId());
+        startActivityForResult(i, RC_DETAIL);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: Result");
         if (requestCode == RC_DETAIL || requestCode == RC_ADD) {
-            Log.d(TAG, "onActivityResult: RC_DETAIL");
             //update alarm list
-            mAdapter.removeAllReminder();
+            reminderAdapter.removeAllReminder();
             ArrayList<Reminder> lstReminder = ReminderDatabase.getsInstance(getApplicationContext()).getAllReminders();
             for(Reminder r : lstReminder)
-                mAdapter.addReminder(r);
-            mAdapter.notifyDataSetChanged();
+                reminderAdapter.addReminder(r);
+            reminderAdapter.notifyDataSetChanged();
             if (requestCode == RC_ADD && resultCode == RESULT_OK)
-                Snackbar.make(alarm_layout, getResources().getString(R.string.add_alarm_success), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(alarmLayout, getResources().getString(R.string.add_alarm_success), Snackbar.LENGTH_LONG).show();
 
         }
     }
@@ -150,7 +126,7 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof ReminderAdapter.ViewHolder) {
-            final Reminder deleteReminder = mAdapter.getReminder(position);
+            final Reminder deleteReminder = reminderAdapter.getReminder(position);
             final int deletePosition = position;
             @SuppressLint("SimpleDateFormat")
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
@@ -164,13 +140,13 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
             }
             ReminderDatabase.getsInstance(getApplicationContext()).deleteReminder(deleteReminder.getId());
             ReminderManager.getsInstance(getApplicationContext()).deleteReminder(deleteReminder.getId());
-            mAdapter.removeReminder(viewHolder.getAdapterPosition());
-            //mAdapter.notifyDataSetChanged();
-            Snackbar.make(alarm_layout, getResources().getString(R.string.remove_alarm_success), Snackbar.LENGTH_INDEFINITE)
+            reminderAdapter.removeReminder(viewHolder.getAdapterPosition());
+            //reminderAdapter.notifyDataSetChanged();
+            Snackbar.make(alarmLayout, getResources().getString(R.string.remove_alarm_success), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getResources().getString(R.string.undo), new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            mAdapter.restoreReminder(deleteReminder, deletePosition);
+                            reminderAdapter.restoreReminder(deleteReminder, deletePosition);
                             ReminderDatabase.getsInstance(getApplicationContext()).addReminder(deleteReminder);
                             ReminderManager.getsInstance(getApplicationContext()).setReminder(deleteReminder.getId(), calendar);
                         }
