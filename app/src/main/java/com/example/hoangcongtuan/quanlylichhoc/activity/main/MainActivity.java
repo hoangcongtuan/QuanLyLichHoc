@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -23,6 +24,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
@@ -70,6 +73,8 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private final static String TAG = MainActivity.class.getName();
+
+    private  final static String TOPIC_TBCHUNG = "TBChung";
     public final static int RC_EDITHPACT = 1;
 
     private MainPagerAdapter pagerAdapter;
@@ -162,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 },
                 0, 0,
-                ImageView.ScaleType.CENTER_CROP,
+                ImageView.ScaleType.FIT_CENTER,
                 Bitmap.Config.RGB_565,
                 new Response.ErrorListener() {
                     @Override
@@ -290,7 +295,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onPageSelected(int position) {
                 //show toolbar when move to new page
                 hidingScrollListener_tbChung.showToolbar();
-                hidingScrollListener_tbChung.showToolbar();
 
             }
 
@@ -328,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 DBLopHPHelper.getsInstance().getListUserMaHP()
         );
         Utils.QLLHUtils.getsInstance(this).unSubscribeTopic(
-                getResources().getString(R.string.topic_tb_chung)
+                TOPIC_TBCHUNG
         );
 
         FirebaseAuth.getInstance().signOut();

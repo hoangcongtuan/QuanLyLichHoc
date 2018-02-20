@@ -37,6 +37,8 @@ import java.util.ArrayList;
 public class FinishFragment extends Fragment implements View.OnClickListener {
     private final static String TAG = FinishFragment.class.getName();
 
+    private  final static String TOPIC_TBCHUNG = "TBChung";
+
     private ListView lvTKB;
     private FloatingActionButton fabAdd;
 
@@ -137,7 +139,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener {
                 //subscribe a topics
                 Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic(lstMaHP);
                 Utils.QLLHUtils.getsInstance(getActivity()).subscribeTopic(
-                        getResources().getString(R.string.topic_tb_chung)
+                        TOPIC_TBCHUNG
                 );
                 onUpLoadUserDBComplete.onSuccess();
             }

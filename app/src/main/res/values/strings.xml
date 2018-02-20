@@ -48,6 +48,7 @@
     <string name="ok">OK</string>
     <string name="undo">UNDO</string>
 
+    <string name="login_with">LOGIN WITH</string>
     <string name="remind_me">Nhắc tôi</string>
     <string name="notification">Thông báo</string>
     <string name="are_you_sure_to_delete">Bạn có chắc muốn xóa không?</string>
@@ -92,7 +93,6 @@
     <string name="key_firebase_user_photo_url">photo_url</string>
     <string name="key_firebase_user_uid">uid</string>
 
-    <string name="topic_tb_chung">TBChung</string>
     <string name="error">Error: </string>
     <string name="unknown">Không rõ</string>
     <string name="unknown_symbol">###########</string>

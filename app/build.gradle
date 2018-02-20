@@ -36,28 +36,14 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:11.8.0'
     compile 'com.google.android.gms:play-services-vision:11.8.0'
     compile 'com.android.volley:volley:1.0.0'
-    compile 'com.theartofdev.edmodo:android-image-cropper:2.5.1'
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.6.0'
     compile 'com.android.support:support-v4:27.0.2'
     compile 'com.android.support:support-vector-drawable:27.0.2'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
     testCompile 'junit:junit:4.12'
 
-    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+    implementation 'com.facebook.android:facebook-android-sdk:4.30.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
 
-
-
-
-
-
-configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        def requested = details.requested
-        if (requested.group == 'com.android.support') {
-            if (!requested.name.startsWith("multidex")) {
-                details.useVersion '26.1.0'
-            }
-        }
-    }
-}

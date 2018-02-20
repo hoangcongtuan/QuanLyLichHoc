@@ -3,7 +3,6 @@
     android:layout_height="?attr/actionBarSize"
     app:layout_scrollFlags="scroll|enterAlways"
     android:title="@string/app_name"
-    style="@style/ToolBarStyle.Event"
     android:layout_centerInParent="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" />

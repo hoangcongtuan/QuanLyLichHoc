@@ -1,9 +1,11 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.login;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -11,8 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -28,6 +33,9 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -53,6 +61,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -69,19 +78,27 @@ public class LoginActivity extends AppCompatActivity
     private final static String TAG = LoginActivity.class.getName();
     private final static int RC_SIGN_IN = 1;
 
+    private  final static String KEY_FIRBASE_USERPROFILE = "userInfo";
+    private  final static String KEY_FIREBASE_LIST_MAHP = "listMaHocPHan";
+    private  final static String KEY_FIREBASE_FCMTOKEN = "FCMToken";
+    private  final static String KEY_FIREBASE_USERINFO = "user_info";
+    private  final static String KEY_FIREBASE_USERNAME = "name";
+    private  final static String KEY_FIREBASE_USEREMAIL = "email";
+    private  final static String KEY_FIREBASE_USERPHONE = "phone";
+    private  final static String KEY_FIREBASE_USERPROVIDER = "provider";
+    private  final static String TOPIC_TBCHUNG = "TBChung";
+
+
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private GoogleApiClient mGoogleApiClient;
-
-    private DatabaseReference firebaseDB;
-    private DatabaseReference firebaseDBUserMaHP;
-    private DatabaseReference firebaseUserToken;
-    private DatabaseReference firebaseUserNode;
 
     private Button btnLoginFb;
     private Button btnLoginGg;
     private ProgressBar progressBarLogin;
     private CoordinatorLayout coordinatorLayout;
+    private ConstraintLayout viewgroup_login;
+    private TextView tvUserName;
     Toolbar toolbar;
 
     private CallbackManager callbackManager;
@@ -99,7 +116,6 @@ public class LoginActivity extends AppCompatActivity
     }
 
     private void init() {
-        //init
         //init firebase
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -114,13 +130,34 @@ public class LoginActivity extends AppCompatActivity
                 .build();
 
         //init facebook
-        //FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
-                startAuthWithFirebase();
-                handleFbLoginResult(loginResult.getAccessToken());
+            public void onSuccess(final LoginResult loginResult) {
+                GraphRequest graphRequest = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                try {
+                                    tvUserName.setText(object.getString("name"));
+                                    startAuthWithFirebase();
+                                    handleFbLoginResult(loginResult.getAccessToken());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Snackbar.make(coordinatorLayout,
+                                            getResources().getString(R.string.fb_login_failed), Snackbar.LENGTH_INDEFINITE)
+                                            .show();
+                                }
+
+                            }
+                        }
+                );
+
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id, name, link");
+                graphRequest.setParameters(parameters);
+                graphRequest.executeAsync();
+
             }
 
             @Override
@@ -142,16 +179,15 @@ public class LoginActivity extends AppCompatActivity
         toolbar = findViewById(R.id.toolbar);
         progressBarLogin = findViewById(R.id.progresBar_login);
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
+        viewgroup_login = findViewById(R.id.viewgroup_login);
         btnLoginFb = findViewById(R.id.btnLoginFb);
         btnLoginGg = findViewById(R.id.btnLoginGg);
-
+        tvUserName = findViewById(R.id.tvUserName);
     }
 
     private void setWidgets() {
         //setwidgets
         setSupportActionBar(toolbar);
-        progressBarLogin.setVisibility(View.INVISIBLE);
-
     }
 
     private void setWidgetsEvent() {
@@ -179,6 +215,7 @@ public class LoginActivity extends AppCompatActivity
         if (result.isSuccess()) {
             GoogleSignInAccount signInAccount = result.getSignInAccount();
             startAuthWithFirebase();
+            tvUserName.setText(result.getSignInAccount().getDisplayName());
             firebaseAuthWithGoogle(signInAccount);
         }
     }
@@ -191,7 +228,7 @@ public class LoginActivity extends AppCompatActivity
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             firebaseUser = firebaseAuth.getCurrentUser();
-                            handleFirebaseLoginSuccess(firebaseUser);
+                            handleFirebaseLoginSuccess();
                         }
                         else {
                             Snackbar snackbar = Snackbar.make(coordinatorLayout,
@@ -217,10 +254,15 @@ public class LoginActivity extends AppCompatActivity
 
     public void startAuthWithFirebase() {
         progressBarLogin.setVisibility(View.VISIBLE);
+        viewgroup_login.setVisibility(View.GONE);
+        tvUserName.setVisibility(View.VISIBLE);
+
     }
 
     public void finishAuthWithFirebase() {
         progressBarLogin.setVisibility(View.INVISIBLE);
+        viewgroup_login.setVisibility(View.VISIBLE);
+        tvUserName.setVisibility(View.INVISIBLE);
     }
 
     public void firebaseAuthWithGoogle(GoogleSignInAccount account) {
@@ -231,7 +273,7 @@ public class LoginActivity extends AppCompatActivity
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
                             firebaseUser = firebaseAuth.getCurrentUser();
-                            handleFirebaseLoginSuccess(firebaseUser);
+                            handleFirebaseLoginSuccess();
                         }
                         else {
                             Snackbar snackbar = Snackbar.make(coordinatorLayout,
@@ -244,13 +286,13 @@ public class LoginActivity extends AppCompatActivity
                 });
     }
 
-    private void handleFirebaseLoginSuccess(FirebaseUser user) {
+    private void handleFirebaseLoginSuccess() {
         //get local user db
-        firebaseDB = FirebaseDatabase.getInstance().getReference();
-        firebaseDBUserMaHP = firebaseDB.child(getResources().getString(R.string.key_firebase_user_info))
-                .child(firebaseUser.getUid()).child(getResources().getString(R.string.key_firebase_list_mahp));
-        firebaseUserToken = firebaseDB.child(getResources().getString(R.string.key_firebase_user_info))
-                .child(firebaseUser.getUid()).child(getResources().getString(R.string.key_firebase_fcmtoken));
+        DatabaseReference firebaseDB = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference firebaseDBUserMaHP = firebaseDB.child(KEY_FIRBASE_USERPROFILE)
+                .child(firebaseUser.getUid()).child(KEY_FIREBASE_LIST_MAHP);
+        DatabaseReference firebaseUserToken = firebaseDB.child(KEY_FIREBASE_USERINFO)
+                .child(firebaseUser.getUid()).child(KEY_FIREBASE_FCMTOKEN);
         firebaseDBUserMaHP.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -267,14 +309,14 @@ public class LoginActivity extends AppCompatActivity
                         DBLopHPHelper.getsInstance().setOnCheckDB(new DBLopHPHelper.OnCheckDB() {
                             @Override
                             public void onDBAvailable() {
-                                finishAuthWithFirebase();
+                                //finishAuthWithFirebase();
                                 //subscrible topics
                                 Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic(
                                         DBLopHPHelper.getsInstance().getListUserMaHP()
                                 );
 
                                 Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic(
-                                        getResources().getString(R.string.topic_tb_chung)
+                                        TOPIC_TBCHUNG
                                 );
 
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -284,14 +326,14 @@ public class LoginActivity extends AppCompatActivity
 
                             @Override
                             public void onDownloadFinish() {
-                                finishAuthWithFirebase();
+                                //finishAuthWithFirebase();
                                 //subscrible topics
                                 Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic(
                                         DBLopHPHelper.getsInstance().getListUserMaHP()
                                 );
 
                                 Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic(
-                                        getResources().getString(R.string.topic_tb_chung)
+                                        TOPIC_TBCHUNG
                                 );
 
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -312,7 +354,7 @@ public class LoginActivity extends AppCompatActivity
                         //di toi man hinh setup
                         //xoa du lieu cu trong may
                         DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
-                        finishAuthWithFirebase();
+                        //finishAuthWithFirebase();
                         Intent intent = new Intent(LoginActivity.this, SetupActivity.class);
                         startActivity(intent);
                         finish();
@@ -322,7 +364,7 @@ public class LoginActivity extends AppCompatActivity
                     //di toi man hinh setup
                     //xoa du lieu cu trong may
                     DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
-                    finishAuthWithFirebase();
+                    //finishAuthWithFirebase();
                     Intent intent = new Intent(LoginActivity.this, SetupActivity.class);
                     startActivity(intent);
                     finish();
@@ -344,25 +386,24 @@ public class LoginActivity extends AppCompatActivity
                             }
                         });
                 snackbar.show();
+                finishAuthWithFirebase();
             }
         });
 
         //write token FCM to firebase user
         firebaseUserToken.setValue(FirebaseInstanceId.getInstance().getToken());
-        firebaseUserNode = firebaseDB.child(getResources().getString(R.string.key_firebase_user_info))
-                .child(firebaseUser.getUid()).child(getResources().getString(R.string.key_firebase_user_detail));
-        firebaseUserNode.child(getResources().getString(R.string.key_firebase_user_email)).setValue(
+        DatabaseReference firebaseUserNode = firebaseDB.child(KEY_FIRBASE_USERPROFILE)
+                .child(firebaseUser.getUid()).child(KEY_FIREBASE_USERINFO);
+        firebaseUserNode.child(KEY_FIREBASE_USEREMAIL).setValue(
                 firebaseUser.getEmail()
         );
-        firebaseUserNode.child(getResources().getString(R.string.key_firebase_user_name)).setValue(
+        firebaseUserNode.child(KEY_FIREBASE_USERNAME).setValue(
                 firebaseUser.getDisplayName()
         );
 
-        firebaseUserNode.child(getResources().getString(R.string.key_firebase_user_providerId)).setValue(
+        firebaseUserNode.child(KEY_FIREBASE_USERPROVIDER).setValue(
                 firebaseUser.getProviders().get(0)
         );
-
-
 
     }
 

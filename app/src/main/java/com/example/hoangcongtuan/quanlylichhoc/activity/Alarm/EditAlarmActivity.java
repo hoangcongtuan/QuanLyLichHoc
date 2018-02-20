@@ -34,6 +34,7 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
     private int remiderId;
 
     public EditAlarmActivity() {
+
     }
 
     @Override
@@ -41,6 +42,16 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_alarm);
 
+        init();
+        initWidget();
+    }
+
+
+    private void init() {
+        mCalendar = Calendar.getInstance();
+    }
+
+    public void initWidget() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -49,25 +60,13 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        init();
-        getWidgets();
-        setWidgets();
-        addWidgetsListener();
-    }
-
-
-    private void init() {
-        mCalendar = Calendar.getInstance();
-    }
-    private void getWidgets() {
         edtTitle = findViewById(R.id.edtReminderTitle);
         edtContent = findViewById(R.id.edtReminderContent);
         tvDate = findViewById(R.id.tvDate);
         tvTime = findViewById(R.id.tvTime);
-    }
 
-    private void setWidgets() {
-
+        tvDate.setOnClickListener(this);
+        tvTime.setOnClickListener(this);
     }
 
     @Override
@@ -105,21 +104,24 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
                 } catch (ParseException e) {
                     e.printStackTrace();
                     errorOccurReturn();
-                    Toast.makeText(this, "Co loi khi truy xuat csdl!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this,
+                            getResources().getString(R.string.error_alarm_database_access), Toast.LENGTH_LONG).show();
                 }
 
 
             }
             else{
                 errorOccurReturn();
-                Toast.makeText(this, "Khong tim thay Alarm!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this,
+                        getResources().getString(R.string.error_alarm_database_access), Toast.LENGTH_LONG).show();
             }
 
 
         }
         else {
             errorOccurReturn();
-            Toast.makeText(this, "Khong tim thay Alarm!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this,
+                    getResources().getString(R.string.error_alarm_database_access), Toast.LENGTH_LONG).show();
         }
 
     }
@@ -151,11 +153,6 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
         Intent intent = new Intent();
         setResult(RESULT_CANCELED, intent);
         finish();
-    }
-
-    private void addWidgetsListener() {
-        tvDate.setOnClickListener(this);
-        tvTime.setOnClickListener(this);
     }
 
     @Override
@@ -222,6 +219,4 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
 
         datePickerDialog.show();
     }
-
-
 }
