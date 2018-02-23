@@ -15,15 +15,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.ContextMenu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTKBieuAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVHPhanAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomDialogBuilderLopHP;
 import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
 import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
@@ -37,7 +35,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class EditHPActivity extends AppCompatActivity implements View.OnClickListener
@@ -45,7 +42,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
     private FloatingActionButton fabAdd;
     private RecyclerView rvTKB;
-    private RVTKBieuAdapter rvtkBieuAdapter;
+    private RVHPhanAdapter rvHPhanAdapter;
     private Toolbar toolbar;
     private Boolean modified = false;
     private CoordinatorLayout editHPLayout;
@@ -75,7 +72,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         dbUserMaHocPhan = database.child("userInfo").child(user.getUid()).child("listMaHocPHan");
         ArrayList<LopHP> lstLopHP = DBLopHPHelper.getsInstance().getListUserLopHP();
-        rvtkBieuAdapter = new RVTKBieuAdapter(this, lstLopHP);
+        rvHPhanAdapter = new RVHPhanAdapter(this, lstLopHP);
     }
 
     private void getWidgets() {
@@ -85,7 +82,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setWidgets() {
-        rvTKB.setAdapter(rvtkBieuAdapter);
+        rvTKB.setAdapter(rvHPhanAdapter);
         rvTKB.setLayoutManager(new LinearLayoutManager(this));
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
@@ -139,7 +136,10 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
+
+
         AlertDialog alertDialog = customDialogBuilderLopHP.create();
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
     }
 
@@ -187,7 +187,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 modified = true;
 
                 //update ui
-                rvtkBieuAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
+                rvHPhanAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
             }
         }).addOnFailureListener(this, new OnFailureListener() {
             @Override
@@ -230,7 +230,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
                 //update ui
                 try {
-                    rvtkBieuAdapter.removeItem(id);
+                    rvHPhanAdapter.removeItem(id);
                 } catch (AppException e) {
                     e.printStackTrace();
                     Toast.makeText(EditHPActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -268,7 +268,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 modified = true;
 
                 //update ui
-                rvtkBieuAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
+                rvHPhanAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
             }
         }).addOnFailureListener(this, new OnFailureListener() {
             @Override
@@ -313,7 +313,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
                 //update ui
                 try {
-                    rvtkBieuAdapter.removeItem(id);
+                    rvHPhanAdapter.removeItem(id);
                 } catch (AppException e) {
                     e.printStackTrace();
                     Toast.makeText(EditHPActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -353,8 +353,8 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if (viewHolder instanceof RVTKBieuAdapter.ViewHolder) {
-            final LopHP lopHP = rvtkBieuAdapter.getItem(position);
+        if (viewHolder instanceof RVHPhanAdapter.ViewHolder) {
+            final LopHP lopHP = rvHPhanAdapter.getItem(position);
             removeUserHP(lopHP.getMaHP());
         }
     }

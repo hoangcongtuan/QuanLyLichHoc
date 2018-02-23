@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
@@ -16,21 +16,25 @@
         android:layout_marginRight="@dimen/card_margin_left_right"
         android:elevation="2dp"
         card_view:cardCornerRadius="@dimen/card_album_radius">
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@color/colorNewFeedHeader"
                 android:id="@+id/layout_contain">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:background="@color/colorNewFeedHeader"
                     android:padding="@dimen/view_padding">
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -40,6 +44,7 @@
                         android:tint="@color/colorPrimary"
                         android:layout_gravity="center_vertical"
                         android:fontFamily="sans-serif-light"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -49,10 +54,12 @@
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/time_size"
                         android:layout_gravity="center_vertical"/>
+
                     <Space
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"/>
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -60,17 +67,20 @@
                         android:layout_gravity="right"
                         android:id="@+id/btnDots"/>
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/colorNewFeedHeaderBorder"
                     android:layout_gravity="bottom"/>
             </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_below="@+id/layout_contain">
+
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
@@ -81,6 +91,7 @@
                     android:textColor="@color/colorSecondaryText"
                     android:textSize="@dimen/tittle_size"
                     android:textStyle="bold"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -93,10 +104,6 @@
                     android:textColor="@color/colorPrimaryText"
                     android:fontFamily="sans-serif-light"/>
             </RelativeLayout>
-
-
-
         </RelativeLayout>
     </android.support.v7.widget.CardView>
-
 </RelativeLayout>

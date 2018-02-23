@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.hoangcongtuan.quanlylichhoc.activity.SplashActivity">
+
     <ImageView
         android:layout_width="304dp"
         android:layout_height="200dp"

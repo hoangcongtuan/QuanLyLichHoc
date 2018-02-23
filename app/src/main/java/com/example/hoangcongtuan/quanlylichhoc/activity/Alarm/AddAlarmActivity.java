@@ -164,6 +164,7 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
         tvDate = findViewById(R.id.tvDate);
         tvTime = findViewById(R.id.tvTime);
 
+
         calendar = Calendar.getInstance();
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd/MM/yyyy");

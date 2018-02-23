@@ -29,7 +29,6 @@ public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMore
 
     private RVTBAdapter hocPhanAdapter;
     private RecyclerView recyclerView;
-    private HidingScrollListener hidingScrollListener;
     private LoadFeedHelper loadFeedHelper;
 
     private String hash;
@@ -52,10 +51,6 @@ public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMore
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        int paddingTop = Utils.getToolbarHeight(getContext()) + Utils.getTabsHeight(getContext());
-        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop, recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
-
-
         hocPhanAdapter = new RVTBAdapter(recyclerView, getContext());
 
         recyclerView.setAdapter(hocPhanAdapter);
@@ -71,7 +66,7 @@ public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMore
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView.addOnScrollListener(hidingScrollListener);
+        //recyclerView.addOnScrollListener(hidingScrollListener);
 
         loadFeedHelper.loadFirstTime();
     }
@@ -88,10 +83,6 @@ public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMore
     public void scrollTo(String hash) {
         this.hash = hash;
         this.isScrollTo = true;
-    }
-
-    public void setOnHidingScrollListener(HidingScrollListener hsl) {
-        hidingScrollListener = hsl;
     }
 
     @Override

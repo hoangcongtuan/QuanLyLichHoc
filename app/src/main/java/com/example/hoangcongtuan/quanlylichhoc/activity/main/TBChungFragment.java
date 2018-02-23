@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,6 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
     private RecyclerView recyclerView;
     private RVTBAdapter tbChungAdapter;
     private LoadFeedHelper loadFeedHelper;
-    private HidingScrollListener hidingScrollListener;
     //if hash not null, scroll to new feed has hashkey == hash
     private String hash;
     private boolean isScrollTo = false;
@@ -69,10 +69,6 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addOnScrollListener(hidingScrollListener);
-
-        int paddingTop = Utils.getToolbarHeight(getContext()) + Utils.getTabsHeight(getContext());
-        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop, recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
 
         tbChungAdapter = new RVTBAdapter(recyclerView, getContext());
         recyclerView.setAdapter(tbChungAdapter);
@@ -84,22 +80,16 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
         this.isScrollTo = true;
     }
 
-
-
-
-    public void setOnHidingScrollListener(HidingScrollListener hsl) {
-        hidingScrollListener = hsl;
-    }
-
-
     @Override
     public void onLoadMore() {
-        Toast.makeText(getContext(), "Load more", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Load more", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onLoadMore: ");
     }
 
     @Override
     public void onLoadMoreFinish() {
-        Toast.makeText(getContext(), "Load more Finsh", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getContext(), "Load more Finsh", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onLoadMoreFinish: ");
     }
 
 }

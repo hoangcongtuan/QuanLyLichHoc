@@ -151,8 +151,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         main_content_layout = (CoordinatorLayout) findViewById(R.id.main_content_layout);
 
-        mToolbarHeight = Utils.getToolbarHeight(this);
-
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         navigationView = (NavigationView)findViewById(R.id.navigaionView);
         tvUserName = (TextView)navigationView.getHeaderView(0).findViewById(R.id.tvUserName);
@@ -247,43 +245,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupViewPager(ViewPager viewPager) {
 
-        final HidingScrollListener hidingScrollListener_tbChung = new HidingScrollListener(MainActivity.this) {
-            @Override
-            public void onHide() {
-                appBarLayout.animate().translationY(-mToolbarHeight).setInterpolator(new DecelerateInterpolator()).start();
-                //getSupportActionBar().hide();
-            }
-
-            @Override
-            public void onMoved(int distance) {
-                appBarLayout.setTranslationY(-distance);
-            }
-
-            @Override
-            public void onShow() {
-                appBarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
-                //getSupportActionBar().show();
-            }
-        };
-
-        HidingScrollListener hidingScrollListener_tbHPhan = new HidingScrollListener(MainActivity.this) {
-            @Override
-            public void onHide() {
-                appBarLayout.animate().translationY(-mToolbarHeight).setInterpolator(new DecelerateInterpolator()).start();
-                //getSupportActionBar().hide();
-            }
-
-            @Override
-            public void onMoved(int distance) {
-                appBarLayout.setTranslationY(-distance);
-            }
-
-            @Override
-            public void onShow() {
-                appBarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
-                //getSupportActionBar().show();
-            }
-        };
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -294,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onPageSelected(int position) {
                 //show toolbar when move to new page
-                hidingScrollListener_tbChung.showToolbar();
+                //hidingScrollListener_tbChung.showToolbar();
 
             }
 
@@ -304,9 +265,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        tbChungFragment.setOnHidingScrollListener(hidingScrollListener_tbChung);
-
-        tbHPhanFragment.setOnHidingScrollListener(hidingScrollListener_tbHPhan);
+//        tbChungFragment.setOnHidingScrollListener(hidingScrollListener_tbChung);
+//
+//        tbHPhanFragment.setOnHidingScrollListener(hidingScrollListener_tbHPhan);
 
         pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(tbChungFragment, strTabs[0]);

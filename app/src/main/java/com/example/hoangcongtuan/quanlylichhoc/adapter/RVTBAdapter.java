@@ -67,11 +67,14 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //loaded item
     public int itemLoaded;
 
+    //thresh sold
+    public int visibleThreshold = 1;
+
     //true if all new feed is loaded
     public boolean allItemLoaded;
 
 
-    public RVTBAdapter(RecyclerView recyclerView, Context context) {
+    public RVTBAdapter(final RecyclerView recyclerView, Context context) {
         lstThongBao = new ArrayList<>();
         linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
         this.mContext = context;
@@ -86,8 +89,8 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                Log.d(TAG, "onScrolled: loaded = " + itemLoaded + ", last + 1 = " + lastVisibleItem);
-                if (itemLoaded == (lastVisibleItem + 1) && !isLoading) {
+                //itemLoaded = linearLayoutManager.getItemCount();
+                if (itemLoaded == (lastVisibleItem + visibleThreshold) && !isLoading) {
                     //load cac thong bao tiep theo
                     if (ILoadMoreCallBack != null) {
                         if (!allItemLoaded) {
@@ -99,6 +102,13 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                     }
                 }
+            }
+        });
+
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
     }

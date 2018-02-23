@@ -29,6 +29,12 @@ public class LopHP {
         this.tkb = lopHPObj.tkb;
     }
 
+    public void update(String maHP, String tenHP, String tenGV, String tkb) {
+        this.maHP = maHP;
+        this.tenHP = tenHP;
+        this.tenGV = tenGV;
+        this.tkb = tkb;
+    }
 
     public String getMaHP() {
         return maHP;

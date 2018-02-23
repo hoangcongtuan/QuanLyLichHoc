@@ -2,6 +2,7 @@ package com.example.hoangcongtuan.quanlylichhoc.utils;
 
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
@@ -20,11 +21,15 @@ import java.util.ArrayList;
  */
 
 public class LoadFeedHelper {
+
+    private final static String TAG = LoadFeedHelper.class.getName();
     private RVTBAdapter rvtbAdapter;
     private DatabaseReference firebase_ref;
     private ValueEventListener feedEvenListener;
     private RVTBAdapter.ILoadMoreCallBack privCallBack;
     private RVTBAdapter.ILoadMoreCallBack scrollToCallBack;
+
+
     public void setScrollToCallBack(RVTBAdapter.ILoadMoreCallBack scrollToCallBack) {
         this.scrollToCallBack = scrollToCallBack;
     }
@@ -82,14 +87,17 @@ public class LoadFeedHelper {
         rvtbAdapter.setILoadMoreCallBack(new RVTBAdapter.ILoadMoreCallBack() {
             @Override
             public void onLoadMore() {
+
+                Log.d(TAG, "onLoadMore: ");
                 //add empty new feed such as facebook new feed
                 rvtbAdapter.addThongBao(null);
                 rvtbAdapter.addThongBao(null);
 
                 rvtbAdapter.notifyDataSetChanged();
 
+
                 //will load .. item
-                rvtbAdapter.itemLoadCount += rvtbAdapter.LOAD_MORE_DELTA;
+                rvtbAdapter.itemLoadCount += RVTBAdapter.LOAD_MORE_DELTA;
 
                 //query to get next new feed from ..
                 Query qrGetNextItemt = firebase_ref.orderByKey().startAt(rvtbAdapter.itemLoaded + "")
@@ -111,8 +119,7 @@ public class LoadFeedHelper {
         //called when call scroll to
         rvtbAdapter.addThongBao(null);
         rvtbAdapter.addThongBao(null);
-        rvtbAdapter.notifyDataSetChanged();
-        rvtbAdapter.itemLoadCount += rvtbAdapter.LOAD_MORE_DELTA;
+        rvtbAdapter.itemLoadCount += RVTBAdapter.LOAD_MORE_DELTA;
         Query qrGetNextItemt = firebase_ref.orderByKey().startAt(rvtbAdapter.itemLoaded + "")
                 .limitToFirst(RVTBAdapter.LOAD_MORE_DELTA);
         qrGetNextItemt.addListenerForSingleValueEvent(feedEvenListener);

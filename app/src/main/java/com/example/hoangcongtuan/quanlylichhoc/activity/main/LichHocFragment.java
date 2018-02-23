@@ -3,21 +3,20 @@ package com.example.hoangcongtuan.quanlylichhoc.activity.main;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.LVTKBieuAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.listener.HidingScrollListener;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVRecogHPhanAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 
 import java.util.ArrayList;
-
-import static com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper.getsInstance;
 
 /**
  * Created by hoangcongtuan on 9/6/17.
@@ -26,10 +25,9 @@ import static com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper.getsIn
 public class LichHocFragment extends Fragment {
 
     private View rootView;
-    private ListView lvTKB;
-    private LVTKBieuAdapter LVTKBieuAdapter;
+    private RecyclerView rvTKB;
+    private RVRecogHPhanAdapter rvTKBieuAdapter;
     private ArrayList<LopHP> lstLopHP;
-    private HidingScrollListener hidingScrollListener;
 
     @Nullable
     @Override
@@ -49,26 +47,27 @@ public class LichHocFragment extends Fragment {
         init();
     }
 
-    public void setOnHidingScrollListener(HidingScrollListener hsl) {
-        hidingScrollListener = hsl;
-    }
 
 
     private void init() {
-        lstLopHP = new ArrayList<>(getsInstance().getListUserLopHP());
-        LVTKBieuAdapter = new LVTKBieuAdapter(getActivity(), android.R.layout.simple_list_item_1, lstLopHP);
+        lstLopHP = new ArrayList<>(DBLopHPHelper.getsInstance().getListUserLopHP());
+        rvTKBieuAdapter = new RVRecogHPhanAdapter(getActivity(), lstLopHP);
     }
 
     private void getWidgets() {
-        lvTKB = (ListView) rootView.findViewById(R.id.rvTKB);
-
-        int paddingTop = Utils.getToolbarHeight(getContext()) + Utils.getTabsHeight(getContext());
-        lvTKB.setPadding(lvTKB.getPaddingLeft(), paddingTop, lvTKB.getPaddingRight(), lvTKB.getPaddingBottom());
+        rvTKB = rootView.findViewById(R.id.rvTKB);
 
     }
 
     private void setWidgets() {
-        lvTKB.setAdapter(LVTKBieuAdapter);
+        rvTKB.setAdapter(rvTKBieuAdapter);
+
+        rvTKB.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvTKB.getContext(),
+                ((LinearLayoutManager)rvTKB.getLayoutManager()).getOrientation());
+        rvTKB.addItemDecoration(dividerItemDecoration);
     }
 
     private void setWidgetsEvent() {
@@ -79,10 +78,11 @@ public class LichHocFragment extends Fragment {
         lstLopHP.clear();
         ArrayList<LopHP> lst = DBLopHPHelper.getsInstance().getListUserLopHP();
         for(LopHP hp : lst) {
-            lstLopHP.add(hp);
+            //lstLopHP.add(hp);
+            rvTKBieuAdapter.addItem(hp);
         }
 
         Utils.sortLHP(lstLopHP);
-        LVTKBieuAdapter.notifyDataSetChanged();
+        rvTKBieuAdapter.notifyDataSetChanged();
     }
 }

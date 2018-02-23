@@ -57,5 +57,4 @@ public class CustomDialogBuilderEditMaHP extends AlertDialog.Builder {
     public String getMaHP() {
         return edtMaHP.getText().toString();
     }
-
 }

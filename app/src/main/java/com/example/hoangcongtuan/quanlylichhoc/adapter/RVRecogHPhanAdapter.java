@@ -14,12 +14,12 @@ import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 
 import java.util.ArrayList;
 
-public class RVTKBieuAdapter extends RecyclerView.Adapter<RVTKBieuAdapter.ViewHolder> {
+public class RVRecogHPhanAdapter extends RecyclerView.Adapter<RVRecogHPhanAdapter.ViewHolder> {
 
     private Context context;
     private ArrayList<LopHP> lstLopHP;
 
-    public RVTKBieuAdapter(Context context, ArrayList<LopHP> arrayList) {
+    public RVRecogHPhanAdapter(Context context, ArrayList<LopHP> arrayList) {
         this.context = context;
         this.lstLopHP = arrayList;
     }
@@ -57,7 +57,7 @@ public class RVTKBieuAdapter extends RecyclerView.Adapter<RVTKBieuAdapter.ViewHo
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.item_hphan_with_background, parent, false);
-        RVTKBieuAdapter.ViewHolder viewHolder = new RVTKBieuAdapter.ViewHolder(view);
+        RVRecogHPhanAdapter.ViewHolder viewHolder = new RVRecogHPhanAdapter.ViewHolder(view);
         return viewHolder;
     }
 

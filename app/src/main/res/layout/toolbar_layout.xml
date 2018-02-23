@@ -1,8 +1,12 @@
-<android.support.v7.widget.Toolbar android:id="@+id/toolbar"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    app:layout_scrollFlags="scroll|enterAlways"
-    android:title="@string/app_name"
-    android:layout_centerInParent="true"
+    android:background="?attr/colorPrimary"
+    app:titleTextAppearance="@style/ToolbarFont"
+    app:layout_scrollFlags="scroll|enterAlways|snap"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>

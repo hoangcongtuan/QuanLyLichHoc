@@ -1,42 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<android.support.v4.widget.DrawerLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:openDrawer="right"
     android:layout_gravity="start"
     android:id="@+id/drawer_setup"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        xmlns:android="http://schemas.android.com/apk/res/android">
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            xmlns:android="http://schemas.android.com/apk/res/android">
-
-            <include
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                layout="@layout/toolbar_layout"/>
-            <include
-                layout="@layout/stepper_bar"/>
-        </android.support.design.widget.AppBarLayout>
-
-        <com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager
+        android:orientation="vertical">
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:id="@+id/viewPagerSetup"/>
+            android:layout_weight="1">
+
+            <include layout="@layout/layout_setup_app_bar"/>
+
+            <com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:id="@+id/viewPagerSetup" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add_white_24dp"
+                android:layout_gravity="bottom|right"
+                android:layout_margin="@dimen/viewMargin2"/>
+
+        </android.support.design.widget.CoordinatorLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorBackNextBackground">
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,6 +49,7 @@
                 android:layout_alignParentLeft="true"
                 android:text="@string/back"
                 style="@style/Widget.AppCompat.Button.Colored"/>
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -52,13 +58,13 @@
                 android:visibility="invisible"
                 android:layout_alignParentRight="true"
                 style="@style/Widget.AppCompat.Button.Colored"/>
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnNext"
                 android:layout_alignParentRight="true"
-                android:text="@string/next"
-                style="@style/Widget.AppCompat.Button.Colored"/>
+                android:text="@string/next"/>
         </RelativeLayout>
     </LinearLayout>
 
@@ -69,8 +75,5 @@
         app:headerLayout="@layout/navigation_header"
         app:menu="@menu/setup_menu"
         android:id="@+id/setup_navigation">
-
     </android.support.design.widget.NavigationView>
-
-
 </android.support.v4.widget.DrawerLayout>

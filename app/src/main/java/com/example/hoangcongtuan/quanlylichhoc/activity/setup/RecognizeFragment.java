@@ -9,6 +9,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.ContextMenu;
@@ -17,15 +21,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.LVTKBieuAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVHPhanAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomDialogBuilderEditMaHP;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomDialogBuilderLopHP;
+import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
+import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
+import com.example.hoangcongtuan.quanlylichhoc.listener.RecyclerTouchListener;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.google.android.gms.vision.Frame;
@@ -38,12 +45,12 @@ import java.util.ArrayList;
  * Created by hoangcongtuan on 9/27/17.
  */
 
-public class RecognizeFragment extends Fragment {
+public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private final static String TAG = RecognizeFragment.class.getName();
-    private LVTKBieuAdapter adapter;
+    private RVHPhanAdapter rvhPhanAdapter;
     private CoordinatorLayout recognizeLayout;
-    private ListView lvLopHP;
+    private RecyclerView rvLopHP;
     private FloatingActionButton fabAdd;
     public ArrayList<LopHP> lstMaHP;
     private Bitmap bitmap;
@@ -60,37 +67,100 @@ public class RecognizeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_recognize, container, false);
-        getWidgets();
-        setWidgets();
-        setWidgetsEvent();
+        initWidgets();
         return rootView;
     }
 
     private void init() {
-        lstMaHP = new ArrayList<LopHP>();
-        adapter = new LVTKBieuAdapter(getContext(), R.layout.lop_hp_item, lstMaHP);
+        lstMaHP = new ArrayList<>();
+        rvhPhanAdapter = new RVHPhanAdapter(getContext(), lstMaHP);
         bitmap = null;
     }
 
-    private void getWidgets() {
-        lvLopHP = (ListView)rootView.findViewById(R.id.lstHocPhan);
-        imageView = (ImageView)rootView.findViewById(R.id.imgHocPhan);
-        recognizeLayout = (CoordinatorLayout)rootView.findViewById(R.id.recognize_layout);
-        fabAdd = (FloatingActionButton)rootView.findViewById(R.id.fabAdd);
+    private void initWidgets() {
+        rvLopHP = rootView.findViewById(R.id.rvHocPhan);
+        imageView = rootView.findViewById(R.id.imgHocPhan);
+        recognizeLayout = rootView.findViewById(R.id.recognize_layout);
+        fabAdd = rootView.findViewById(R.id.fabAdd);
+
+        rvLopHP.setAdapter(rvhPhanAdapter);
+        rvLopHP.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(
+                0, ItemTouchHelper.RIGHT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvLopHP);
+
+        rvLopHP.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), rvLopHP, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                showEditMaHPDialog(position);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvLopHP.getContext(),
+                ((LinearLayoutManager)rvLopHP.getLayoutManager()).getOrientation());
+        rvLopHP.addItemDecoration(dividerItemDecoration);
+
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAddLopHPDialog();
+            }
+        });
+
     }
 
-    public void addLopHP(String maHP) {
-        LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(maHP);
+    public void addUserHP(final String id) {
+        LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(id);
         if (lopHP == null){
+            //TODO: Up error log to firebase
+            Snackbar.make(recognizeLayout, getResources().getString(R.string.add_hp_failed),
+                    Snackbar.LENGTH_LONG).show();
             return;
         }
 
         if (lstMaHP.indexOf(lopHP) == -1)  {
-            lstMaHP.add(lopHP);
-            adapter.notifyDataSetChanged();
+            rvhPhanAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
+
+            Snackbar.make(
+                    recognizeLayout,
+                    getResources().getString(R.string.add_hp_success),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(
+                            R.string.undo, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    rvhPhanAdapter.undo();
+                                }
+                            }
+                    ).show();
         }
     }
 
+    public void removeUserHP(final String id) {
+        try {
+            rvhPhanAdapter.removeItem(id);
+            Snackbar.make(
+                    recognizeLayout,
+                    getResources().getString(R.string.remove_hp_success),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.undo, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            rvhPhanAdapter.undo();
+                        }
+                    }).show();
+        } catch (AppException e) {
+            e.printStackTrace();
+            //TODO: up error log to firebase
+            Snackbar.make(recognizeLayout, e.getMessage(), Snackbar.LENGTH_LONG).show();
+        }
+    }
 
     public void showAddLopHPDialog() {
         final CustomDialogBuilderLopHP customDialogBuilderLopHP = new CustomDialogBuilderLopHP(getContext());
@@ -110,27 +180,13 @@ public class RecognizeFragment extends Fragment {
                             getResources().getString(R.string.incorrect_ma_hp), Snackbar.LENGTH_LONG).show();
                 }
                 else
-                    addLopHP(customDialogBuilderLopHP.getCurrentLopHP().getMaHP());
+                    addUserHP(customDialogBuilderLopHP.getCurrentLopHP().getMaHP());
             }
         });
 
         AlertDialog alertDialog = customDialogBuilderLopHP.create();
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
-    }
-
-    private void setWidgets() {
-        lvLopHP.setAdapter(adapter);
-        registerForContextMenu(lvLopHP);
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showAddLopHPDialog();
-            }
-        });
-    }
-
-    private void setWidgetsEvent() {
-
     }
 
     //ham de goi tu SetupActivity
@@ -145,7 +201,7 @@ public class RecognizeFragment extends Fragment {
         if(arrayList == null) {
             Toast.makeText(getActivity(), "Khong co du lieu nao!", Toast.LENGTH_SHORT).show();
             lstMaHP.clear();
-            adapter.notifyDataSetChanged();
+            rvhPhanAdapter.notifyDataSetChanged();
             return;
         }
         lstMaHP.clear();
@@ -154,9 +210,8 @@ public class RecognizeFragment extends Fragment {
             lstMaHP.add(
                     getLopHPById(i)
             );
-
         }
-        adapter.notifyDataSetChanged();
+        rvhPhanAdapter.notifyDataSetChanged();
     }
 
     public LopHP getLopHPById(String id) {
@@ -200,27 +255,18 @@ public class RecognizeFragment extends Fragment {
 
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.recognize_fragment_menu, menu);
-    }
-
     public void showEditMaHPDialog(final int itemPosition) {
         final CustomDialogBuilderEditMaHP builderEditMaHP = new CustomDialogBuilderEditMaHP(getContext());
-        builderEditMaHP.setMaHP(lstMaHP.get(itemPosition).getMaHP());
+        builderEditMaHP.setMaHP(rvhPhanAdapter.getItem(itemPosition).getMaHP());
         builderEditMaHP.setTitle(getString(R.string.edit_ma_hp));
         builderEditMaHP.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 LopHP lopHP = getLopHPById(builderEditMaHP.getMaHP());
-                lstMaHP.get(itemPosition).setMaHP(lopHP.getMaHP());
-                lstMaHP.get(itemPosition).setTkb(lopHP.getTkb());
-                lstMaHP.get(itemPosition).setTenHP(lopHP.getTenHP());
-                lstMaHP.get(itemPosition).setTenGV(lopHP.getTenGV());
 
-                adapter.notifyDataSetChanged();
+                rvhPhanAdapter.updateItem(itemPosition, lopHP);
+
+                rvhPhanAdapter.notifyDataSetChanged();
             }
         });
 
@@ -231,24 +277,9 @@ public class RecognizeFragment extends Fragment {
             }
         });
 
-        builderEditMaHP.create().show();
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int position = info.position;
-        int id = item.getItemId();
-        switch (id){
-            case R.id.menu_remove:
-                lstMaHP.remove(position);
-                adapter.notifyDataSetChanged();
-                break;
-            case R.id.menu_edit:
-                showEditMaHPDialog(position);
-                break;
-        }
-        return super.onContextItemSelected(item);
+        AlertDialog alertDialog = builderEditMaHP.create();
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        alertDialog.show();
     }
 
     //set bitmap tu SetupActivity
@@ -265,5 +296,13 @@ public class RecognizeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof RVHPhanAdapter.ViewHolder) {
+            final LopHP lopHP = rvhPhanAdapter.getItem(position);
+            removeUserHP(lopHP.getMaHP());
+        }
     }
 }
