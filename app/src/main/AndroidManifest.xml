@@ -23,6 +23,7 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
+
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -30,11 +31,13 @@
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,10 +45,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
+
         <activity android:name=".activity.login.LoginActivity" />
+
         <activity android:name=".activity.main.MainActivity">
             <intent-filter>
                 <action android:name=".activity.main.MainActivity" />
@@ -53,6 +59,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity android:name=".activity.setup.SetupActivity" />
 
         <provider
@@ -75,12 +82,12 @@
         no need for explicit permissions despite exported="true"
         -->
         <service
-            android:name=".services.MyFirebaseInstanceIdService"
-            android:exported="true">
+            android:name=".services.MyFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
         <service android:name=".services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -88,8 +95,8 @@
         </service>
 
         <!--
-     Set custom default icon. This is used when no icon is set for incoming notification messages.
-     See README(https://goo.gl/l4GJaQ) for more.
+            Set custom default icon. This is used when no icon is set for incoming notification messages.
+            See README(https://goo.gl/l4GJaQ) for more.
         -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -100,12 +107,15 @@
         -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorGreen" />
+            android:resource="@color/colorPrimary" />
 
         <activity android:name=".activity.SettingsActivity" />
+
         <activity android:name=".activity.Alarm.AlarmActivity" />
+
         <activity android:name=".activity.Alarm.AddAlarmActivity"
                     android:windowSoftInputMode="stateVisible"/>
+
         <activity android:name=".activity.Alarm.AlarmDetailsActivity" />
 
         <service
@@ -116,5 +126,4 @@
 
         <activity android:name=".activity.Alarm.EditAlarmActivity" />
     </application>
-
 </manifest>

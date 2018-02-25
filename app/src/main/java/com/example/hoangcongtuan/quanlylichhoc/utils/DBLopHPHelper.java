@@ -71,7 +71,7 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //create lop hoc phan data
-        sqLiteDatabase.execSQL("CREATE TABLE " + ALL_HOCPHAN_TABLE_NAME + "(" +
+        sqLiteDatabase.execSQL("CREATE TABLE " + ALL_HOCPHAN_TABLE_NAME + " (" +
                 ALL_HOCPHAN_COLUMN_MAHP + " TEXT PRIMARY KEY, " +
                 ALL_HOCPHAN_COLUMN_GIANG_VIEN + " TEXT, " +
                 ALL_HOCPHAN_COLUMN_LOP_HOC_PHAN + " TEXT, " +
@@ -93,7 +93,6 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         long rc;
 
         SQLiteDatabase db = getWritableDatabase();
-
         ContentValues contentValues = new ContentValues();
         contentValues.put(USER_COMLUMN_MAHP, maHP);
         rc = db.insert(USER_TABLE_NAME, null, contentValues);
@@ -113,8 +112,6 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT *    FROM " + USER_TABLE_NAME, null);
     }
-
-
 
     public ArrayList<String> getListUserMaHP() {
         ArrayList<String> lstMaHP = new ArrayList<>();
@@ -169,6 +166,11 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(ALL_HOCPHAN_TABLE_NAME, null, null);
         db.delete(USER_TABLE_NAME, null, null);
+    }
+
+    public void clear_all_hp_db() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(ALL_HOCPHAN_TABLE_NAME, null, null);
     }
 
     @Override
@@ -281,6 +283,14 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         } else {
             onCheckDB.onDBAvailable();
         }
+    }
+
+    public void download_all_hp_database() {
+        //clear old db
+        clear_all_hp_db();
+        //download db
+        onCheckDB.onStartDownload();
+        getAllMaHPFromFirebase();
     }
 
 

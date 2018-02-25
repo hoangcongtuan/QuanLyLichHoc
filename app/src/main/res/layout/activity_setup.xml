@@ -17,11 +17,12 @@
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:id="@+id/layout_setup">
 
             <include layout="@layout/layout_setup_app_bar"/>
 
-            <com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager
+            <com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager_new
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -48,7 +49,7 @@
                 android:id="@+id/btnBack"
                 android:layout_alignParentLeft="true"
                 android:text="@string/back"
-                style="@style/Widget.AppCompat.Button.Colored"/>
+                style="?android:attr/borderlessButtonStyle"/>
 
             <Button
                 android:layout_width="wrap_content"

@@ -50,13 +50,13 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
     private  final static String TOPIC_TBCHUNG = "TBChung";
 
     private RecyclerView rvHPhan;
-    private FloatingActionButton fabAdd;
+    //private FloatingActionButton fabAdd;
 
     private RVHPhanAdapter rvhPhanAdapter;
     private ArrayList<LopHP> lstLopHP;
     private ArrayList<String> lstMaHP;
 
-    private CoordinatorLayout layout_finish;
+    private CoordinatorLayout layout_setup;
 
     private OnUpLoadUserDBComplete onUpLoadUserDBComplete;
 
@@ -85,10 +85,10 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
 
     private void initWidgets(View rootView) {
 
-        layout_finish = rootView.findViewById(R.id.layout_finish);
+        layout_setup = rootView.findViewById(R.id.layout_finish);
 
         rvHPhan = rootView.findViewById(R.id.rvTKB);
-        fabAdd = (FloatingActionButton)rootView.findViewById(R.id.fabAdd);
+        //fabAdd = (FloatingActionButton)rootView.findViewById(R.id.fabAdd);
 
         rvHPhan.setAdapter(rvhPhanAdapter);
         rvHPhan.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -115,7 +115,13 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
 
         registerForContextMenu(rvHPhan);
 
-        fabAdd.setOnClickListener(this);
+        //fabAdd.setOnClickListener(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        this.layout_setup = ((SetupActivity)getActivity()).get_layout_setup();
     }
 
     @Override
@@ -229,7 +235,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
         LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(id);
         if (lopHP == null){
             //TODO: Up error log to firebase
-            Snackbar.make(layout_finish, getResources().getString(R.string.add_hp_failed),
+            Snackbar.make(layout_setup, getResources().getString(R.string.add_hp_failed),
                     Snackbar.LENGTH_LONG).show();
             return;
         }
@@ -238,7 +244,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
             rvhPhanAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
 
             Snackbar.make(
-                    layout_finish,
+                    layout_setup,
                     getResources().getString(R.string.add_hp_success),
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(
@@ -256,7 +262,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
         try {
             rvhPhanAdapter.removeItem(id);
             Snackbar.make(
-                    layout_finish,
+                    layout_setup,
                     getResources().getString(R.string.remove_hp_success),
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.undo, new View.OnClickListener() {
@@ -268,7 +274,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
         } catch (AppException e) {
             e.printStackTrace();
             //TODO: up error log to firebase
-            Snackbar.make(layout_finish, e.getMessage(), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(layout_setup, e.getMessage(), Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -295,7 +301,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
             public void onClick(DialogInterface dialogInterface, int i) {
                 LopHP lopHP = customDialogBuilderLopHP.getCurrentLopHP();
                 if (lopHP == null) {
-                    Snackbar.make(layout_finish,
+                    Snackbar.make(layout_setup,
                             getResources().getString(R.string.incorrect_ma_hp), Snackbar.LENGTH_LONG).show();
                 }
                 else

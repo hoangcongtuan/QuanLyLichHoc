@@ -1,11 +1,14 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.setup;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -29,6 +32,7 @@ import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.StepPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager;
+import com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager_new;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.login.LoginManager;
@@ -48,10 +52,12 @@ import com.google.firebase.database.ValueEventListener;
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener,
         NavigationView.OnNavigationItemSelectedListener{
     private final static String TAG = SetupActivity.class.getName();
-    private CustomViewPager viewPager;
+    private CustomViewPager_new viewPager;
     private Button btnBack;
     private Button btnNext;
     private Button btnFinish;
+    private FloatingActionButton fabAdd;
+    private CoordinatorLayout layout_setup;
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawerLayout;
@@ -65,6 +71,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private PrepareFragment prepareFragment;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
+
 
     private DatabaseReference database;
     private DatabaseReference dbUserMaHocPhan;
@@ -123,19 +130,21 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         userName = firebaseUser.getDisplayName();
 
         database = FirebaseDatabase.getInstance().getReference();
-        dbUserMaHocPhan = database.child("userInfo").child(firebaseUser.getUid()).child("listMaHocPHan");
+        dbUserMaHocPhan = database.child(LoginActivity.KEY_FIRBASE_USER).child(firebaseUser.getUid()).child(LoginActivity.KEY_FIREBASE_LIST_MAHP);
     }
 
     private void getWidgets() {
 
         //getWidgets
-        viewPager = (CustomViewPager) findViewById(R.id.viewPagerSetup);
+        viewPager = (CustomViewPager_new) findViewById(R.id.viewPagerSetup);
         btnBack = (Button)findViewById(R.id.btnBack);
         btnNext = (Button)findViewById(R.id.btnNext);
         btnFinish = (Button)findViewById(R.id.btnFinish);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
+        fabAdd = findViewById(R.id.fabAdd);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_setup);
         navigationView = (NavigationView)findViewById(R.id.setup_navigation);
+        layout_setup = findViewById(R.id.layout_setup);
         tvStep1 = (TextView)findViewById(R.id.tvStep1);
         tvStep2 = (TextView)findViewById(R.id.tvStep2);
         tvStep3 = (TextView)findViewById(R.id.tvStep3);
@@ -158,12 +167,30 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         stepperPagerAdapter.addFragment(recognizeFragment, "Recognize");
         stepperPagerAdapter.addFragment(finishFragment, "finish");
         viewPager.setAdapter(stepperPagerAdapter);
-        viewPager.setPagingEnable(false);
+        ///viewPager.setPagingEnable(false);
         viewPager.setOffscreenPageLimit(4);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         tvUserName.setText(userName);
         setStepper(currentStep);
+
+        final FabVisibilityChangedListener fabVisibilityChangedListener = new FabVisibilityChangedListener();
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                if (position == STEP_PREPARE || position == STEP_GET_IMAGE)
+                    fabAdd.hide();
+                else {
+                    if (fabAdd.isShown()) {
+                        fabVisibilityChangedListener.position = position;
+                        fabAdd.hide(fabVisibilityChangedListener);
+                    } else {
+                        changeFabState(position);
+                        fabAdd.show();
+                    }
+                }
+            }
+        });
     }
 
     private void setWidgetsEvent() {
@@ -182,14 +209,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 setStepper(currentStep);
             }
         });
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
-
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                super.onPageSelected(position);
                 switch (position) {
                     case STEP_PREPARE:
                         btnNext.setEnabled(false);
@@ -215,14 +239,10 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                         btnNext.setVisibility(View.INVISIBLE);
                         break;
                 }
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
             }
         });
+
+        viewPager.setOffscreenPageLimit(4);
 
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -252,6 +272,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
         Utils.VolleyUtils.getsInstance(getApplicationContext()).getRequestQueue().add(imageRequest);
     }
+
 
     private void checkFireBaseUser() {
         firebaseAuth = FirebaseAuth.getInstance();
@@ -379,7 +400,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.btnFinish:
                 if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
-                    finishFragment.writelstMaHPtoUserDB(dbUserMaHocPhan);
                     finishFragment.setOnUpLoadUserDBComplete(new FinishFragment.OnUpLoadUserDBComplete() {
                         @Override
                         public void onSuccess() {
@@ -393,6 +413,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                             Toast.makeText(SetupActivity.this, "Có lỗi khi upload dữ liệu!", Toast.LENGTH_LONG).show();
                         }
                     });
+                    finishFragment.writelstMaHPtoUserDB(dbUserMaHocPhan);
                 }
                 else
                     Toast.makeText(SetupActivity.this, "Không có internet, kiểm tra lại kết nôi mạng", Toast.LENGTH_LONG).show();
@@ -419,5 +440,52 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
         return true;
+    }
+
+    private void changeFabState(int position) {
+        Log.d(TAG, "changeFabState: position = " + position);
+        if (position == STEP_RECOGNIZE) {
+//            mFab.setImageResource(R.drawable.ic_add_24dp);
+//            mFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary)));
+//            mFab.setOnClickListener(v -> {
+//                Intent intent = new Intent(MainActivity.this, ChoiceCityActivity.class);
+//                intent.putExtra(C.MULTI_CHECK, true);
+//                CircularAnimUtil.startActivity(MainActivity.this, intent, mFab, R.color.colorPrimary);
+//            });
+
+            fabAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    recognizeFragment.showAddLopHPDialog();
+                    //Toast.makeText(SetupActivity.this, "Fab add clicked on recognize!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else if (position == STEP_FINISH){
+            fabAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishFragment.showAddLopHPDialog();
+                    //Toast.makeText(SetupActivity.this, "Fab add clicked on finish!", Toast.LENGTH_SHORT).show();
+                }
+            });
+//            mFab.setImageResource(R.drawable.ic_favorite);
+//            mFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.colorAccent)));
+//            mFab.setOnClickListener(v -> showShareDialog());
+        }
+    }
+
+    public CoordinatorLayout get_layout_setup() {
+        return this.layout_setup;
+    }
+
+    private class FabVisibilityChangedListener extends FloatingActionButton.OnVisibilityChangedListener {
+
+        private int position;
+
+        @Override
+        public void onHidden(FloatingActionButton fab) {
+            changeFabState(position);
+            fab.show();
+        }
     }
 }

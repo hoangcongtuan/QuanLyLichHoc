@@ -49,9 +49,9 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 
     private final static String TAG = RecognizeFragment.class.getName();
     private RVHPhanAdapter rvhPhanAdapter;
-    private CoordinatorLayout recognizeLayout;
+    private CoordinatorLayout layout_setup;
     private RecyclerView rvLopHP;
-    private FloatingActionButton fabAdd;
+    //private FloatingActionButton fabAdd;
     public ArrayList<LopHP> lstMaHP;
     private Bitmap bitmap;
     private ImageView imageView;
@@ -71,6 +71,12 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
         return rootView;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        this.layout_setup = ((SetupActivity)getActivity()).get_layout_setup();
+    }
+
     private void init() {
         lstMaHP = new ArrayList<>();
         rvhPhanAdapter = new RVHPhanAdapter(getContext(), lstMaHP);
@@ -80,8 +86,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     private void initWidgets() {
         rvLopHP = rootView.findViewById(R.id.rvHocPhan);
         imageView = rootView.findViewById(R.id.imgHocPhan);
-        recognizeLayout = rootView.findViewById(R.id.recognize_layout);
-        fabAdd = rootView.findViewById(R.id.fabAdd);
+        //fabAdd = rootView.findViewById(R.id.fabAdd);
 
         rvLopHP.setAdapter(rvhPhanAdapter);
         rvLopHP.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -106,20 +111,21 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
                 ((LinearLayoutManager)rvLopHP.getLayoutManager()).getOrientation());
         rvLopHP.addItemDecoration(dividerItemDecoration);
 
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showAddLopHPDialog();
-            }
-        });
+//        fabAdd.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showAddLopHPDialog();
+//            }
+//        });
 
     }
+
 
     public void addUserHP(final String id) {
         LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(id);
         if (lopHP == null){
             //TODO: Up error log to firebase
-            Snackbar.make(recognizeLayout, getResources().getString(R.string.add_hp_failed),
+            Snackbar.make(layout_setup, getResources().getString(R.string.add_hp_failed),
                     Snackbar.LENGTH_LONG).show();
             return;
         }
@@ -128,7 +134,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
             rvhPhanAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
 
             Snackbar.make(
-                    recognizeLayout,
+                    layout_setup,
                     getResources().getString(R.string.add_hp_success),
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(
@@ -146,7 +152,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
         try {
             rvhPhanAdapter.removeItem(id);
             Snackbar.make(
-                    recognizeLayout,
+                    layout_setup,
                     getResources().getString(R.string.remove_hp_success),
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.undo, new View.OnClickListener() {
@@ -158,7 +164,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
         } catch (AppException e) {
             e.printStackTrace();
             //TODO: up error log to firebase
-            Snackbar.make(recognizeLayout, e.getMessage(), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(layout_setup, e.getMessage(), Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -176,7 +182,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
             public void onClick(DialogInterface dialogInterface, int i) {
                 LopHP lopHP = customDialogBuilderLopHP.getCurrentLopHP();
                 if (lopHP == null) {
-                    Snackbar.make(recognizeLayout,
+                    Snackbar.make(layout_setup,
                             getResources().getString(R.string.incorrect_ma_hp), Snackbar.LENGTH_LONG).show();
                 }
                 else

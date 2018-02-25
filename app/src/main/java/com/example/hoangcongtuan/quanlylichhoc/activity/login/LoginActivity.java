@@ -78,15 +78,16 @@ public class LoginActivity extends AppCompatActivity
     private final static String TAG = LoginActivity.class.getName();
     private final static int RC_SIGN_IN = 1;
 
-    private  final static String KEY_FIRBASE_USERPROFILE = "userInfo";
-    private  final static String KEY_FIREBASE_LIST_MAHP = "listMaHocPHan";
-    private  final static String KEY_FIREBASE_FCMTOKEN = "FCMToken";
-    private  final static String KEY_FIREBASE_USERINFO = "user_info";
-    private  final static String KEY_FIREBASE_USERNAME = "name";
-    private  final static String KEY_FIREBASE_USEREMAIL = "email";
-    private  final static String KEY_FIREBASE_USERPHONE = "phone";
-    private  final static String KEY_FIREBASE_USERPROVIDER = "provider";
-    private  final static String TOPIC_TBCHUNG = "TBChung";
+    public final static String KEY_FIRBASE_USER = "user";
+    public final static String KEY_FIREBASE_LIST_MAHP = "ma_hoc_phan";
+    public final static String KEY_FIREBASE_FCMTOKEN = "FCM_token";
+    public final static String KEY_FIREBASE_USERINFO = "info";
+    public final static String KEY_FIREBASE_USERNAME = "name";
+    public final static String KEY_FIREBASE_USEREMAIL = "email";
+    public final static String KEY_FIREBASE_USERPHONE = "phone";
+    public final static String KEY_FIREBASE_USER_LATEST_ONLINE = "latest_online";
+    public final static String KEY_FIREBASE_USERPROVIDER = "provider";
+    public final static String TOPIC_TBCHUNG = "TBChung";
 
 
     private FirebaseAuth firebaseAuth;
@@ -287,12 +288,14 @@ public class LoginActivity extends AppCompatActivity
     }
 
     private void handleFirebaseLoginSuccess() {
-        //get local user db
+
         DatabaseReference firebaseDB = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference firebaseDBUserMaHP = firebaseDB.child(KEY_FIRBASE_USERPROFILE)
+
+        DatabaseReference firebaseDBUserMaHP = firebaseDB.child(KEY_FIRBASE_USER)
                 .child(firebaseUser.getUid()).child(KEY_FIREBASE_LIST_MAHP);
-        DatabaseReference firebaseUserToken = firebaseDB.child(KEY_FIREBASE_USERINFO)
-                .child(firebaseUser.getUid()).child(KEY_FIREBASE_FCMTOKEN);
+
+        //tai du lieu user ve
+        DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
         firebaseDBUserMaHP.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -301,59 +304,17 @@ public class LoginActivity extends AppCompatActivity
                     if (dataSnapshot.getChildrenCount() != 0) {
                         //co du lieu trong do
                         //save Firebase DB to local DB
-                        DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             DBLopHPHelper.getsInstance().insertUserMaHocPhan((String)snapshot.getValue());
                         }
-                        //kiem tra du lieu ve tat ca cac lop hoc phan
-                        DBLopHPHelper.getsInstance().setOnCheckDB(new DBLopHPHelper.OnCheckDB() {
-                            @Override
-                            public void onDBAvailable() {
-                                //finishAuthWithFirebase();
-                                //subscrible topics
-                                Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic(
-                                        DBLopHPHelper.getsInstance().getListUserMaHP()
-                                );
-
-                                Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic(
-                                        TOPIC_TBCHUNG
-                                );
-
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-
-                            @Override
-                            public void onDownloadFinish() {
-                                //finishAuthWithFirebase();
-                                //subscrible topics
-                                Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic(
-                                        DBLopHPHelper.getsInstance().getListUserMaHP()
-                                );
-
-                                Utils.QLLHUtils.getsInstance(LoginActivity.this).subscribeTopic(
-                                        TOPIC_TBCHUNG
-                                );
-
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-
-                            @Override
-                            public void onStartDownload() {
-
-                            }
-                        });
-
-                        DBLopHPHelper.getsInstance().checkDB();
+                        //goto MainAct
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
 
                     }
                     else {
                         //di toi man hinh setup
-                        //xoa du lieu cu trong may
-                        DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
                         //finishAuthWithFirebase();
                         Intent intent = new Intent(LoginActivity.this, SetupActivity.class);
                         startActivity(intent);
@@ -362,8 +323,6 @@ public class LoginActivity extends AppCompatActivity
                 }
                 else {
                     //di toi man hinh setup
-                    //xoa du lieu cu trong may
-                    DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
                     //finishAuthWithFirebase();
                     Intent intent = new Intent(LoginActivity.this, SetupActivity.class);
                     startActivity(intent);
@@ -390,10 +349,9 @@ public class LoginActivity extends AppCompatActivity
             }
         });
 
-        //write token FCM to firebase user
-        firebaseUserToken.setValue(FirebaseInstanceId.getInstance().getToken());
-        DatabaseReference firebaseUserNode = firebaseDB.child(KEY_FIRBASE_USERPROFILE)
+        DatabaseReference firebaseUserNode = firebaseDB.child(KEY_FIRBASE_USER)
                 .child(firebaseUser.getUid()).child(KEY_FIREBASE_USERINFO);
+
         firebaseUserNode.child(KEY_FIREBASE_USEREMAIL).setValue(
                 firebaseUser.getEmail()
         );

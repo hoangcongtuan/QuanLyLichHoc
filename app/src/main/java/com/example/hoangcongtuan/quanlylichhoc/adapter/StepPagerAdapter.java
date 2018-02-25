@@ -2,6 +2,7 @@ package com.example.hoangcongtuan.quanlylichhoc.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * Created by hoangcongtuan on 9/22/17.
  */
 
-public class StepPagerAdapter extends FragmentStatePagerAdapter {
+public class StepPagerAdapter extends FragmentPagerAdapter {
     private ArrayList<Fragment> lstFragment = new ArrayList<>();
     private ArrayList<String> lstFragmentTitle = new ArrayList<>();
 
