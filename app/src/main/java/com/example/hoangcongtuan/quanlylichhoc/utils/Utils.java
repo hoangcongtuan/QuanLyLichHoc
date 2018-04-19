@@ -35,6 +35,7 @@ public class Utils {
             return sInstance;
         }
 
+
         public void unSubscribeAllTopics(ArrayList<String> lstTopic) {
             for (String s : lstTopic) {
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(s);

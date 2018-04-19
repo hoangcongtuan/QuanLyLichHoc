@@ -16,7 +16,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     private  final static String TOPIC_TBCHUNG = "TBChung";
 
-    private Toolbar toolbar;
     private Switch swNotification;
     private SharedPreferences sharedPreferences;
 
@@ -24,8 +23,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.settings_act_title));

@@ -23,7 +23,9 @@
     <string name="menu_remove">Xóa</string>
     <string name="menu_edit">Chỉnh sửa</string>
     <string name="FIREBASE_PATH_ALL_HP">thong_tin_lop_hoc_phan</string>
-    <string name="SERVER_KEY">AAAA2IVeKMQ:APA91bHbqbUIqLiCBbWOeZkyZyvEO0rOetzwTWz8DSHuO1NVsGCnsABTtz6VEHiF8Y91xfqZiwtmsitICCd0gtsc5N6AZP5_RoLQt8mY8nK6jpWnM7P4HfzOKeDoODxjSQETt7BlsWU9</string>
+    <string name="SERVER_KEY">
+        AAAA2IVeKMQ:APA91bHbqbUIqLiCBbWOeZkyZyvEO0rOetzwTWz8DSHuO1NVsGCnsABTtz6VEHiF8Y91xfqZiwtmsitICCd0gtsc5N6AZP5_RoLQt8mY8nK6jpWnM7P4HfzOKeDoODxjSQETt7BlsWU9
+    </string>
 
 
     <string name="fb_login_failed">Đăng nhập Facebook thất bại!!</string>
@@ -108,6 +110,10 @@
     <string name="error_alarm_database_access">"Có lỗi khi truy xuất cơ sở dữ liệu</string>
     <string name="error_title">Có lỗi</string>
 
+    <string name="error_sync_topic">Có lỗi khi đồng bộ dữ liệu</string>
+
+    <string name="duplicated_lop_hp">Lớp học phần đã tồn tại</string>
+
     <string name="today">Hôm nay</string>
     <string name="tomorrow">Ngày mai</string>
     <string name="lastday">Hôm qua</string>
@@ -133,5 +139,8 @@
     <string name="check_db_version">Kiểm tra cơ sở dữ liệu</string>
     <string name="update_db">Cập nhật cơ sở dữ liệu</string>
     <string name="sync_user_db">Đồng bộ dữ liệu</string>
+    <string name="search">Search</string>
+    <string name="result">Kết quả</string>
+    <string name="search_activity">Tìm kiếm</string>
 
 </resources>

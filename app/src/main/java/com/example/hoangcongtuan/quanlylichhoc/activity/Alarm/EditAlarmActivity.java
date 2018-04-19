@@ -6,7 +6,6 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,8 +51,6 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void initWidget() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(getResources().getString(R.string.alarm_edit_act_title));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

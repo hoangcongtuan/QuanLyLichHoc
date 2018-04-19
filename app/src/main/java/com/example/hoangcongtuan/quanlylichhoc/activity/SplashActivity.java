@@ -21,6 +21,7 @@ import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.VersionInfo;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -153,7 +155,13 @@ public class SplashActivity extends AppCompatActivity {
                     .child(LoginActivity.KEY_FIRBASE_USER)
                     .child(firebaseUser.getUid()).child(LoginActivity.KEY_FIREBASE_LIST_MAHP);
 
+            //delete, unsubscribe old topic
+            ArrayList<String> list_old_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
+
             DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
+            Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeAllTopics(list_old_topic);
+            Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(LoginActivity.TOPIC_TBCHUNG);
+
             firebaseDBUserMaHP.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -166,6 +174,12 @@ public class SplashActivity extends AppCompatActivity {
                             for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 DBLopHPHelper.getsInstance().insertUserMaHocPhan((String)snapshot.getValue());
                             }
+
+                            ArrayList<String> list_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
+                            //subscribe new topic
+                            Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(list_topic);
+                            Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(LoginActivity.TOPIC_TBCHUNG);
+
                             //goto MainAct
                             Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                             startActivity(intent);

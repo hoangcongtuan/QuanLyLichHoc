@@ -26,9 +26,9 @@ import java.util.ArrayList;
  * Created by hoangcongtuan on 9/12/17.
  */
 
-public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final static String TAG = RVTBAdapter.class.getName();
+    private final static String TAG = RVPostAdapter.class.getName();
     private ArrayList<ThongBao> lstThongBao;
     private Context mContext;
 
@@ -55,7 +55,7 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //returen code when create fast alarm
     public final static int RC_FAST_ADD_ALARM = 2;
 
-    //true if new feed is loading more item
+    //true if post is loading more item
     public boolean isLoading;
 
 
@@ -65,8 +65,6 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //try to load itemloadcount item
     public int itemLoadCount;
 
-    //loaded item
-    public int itemLoaded;
 
     //thresh sold
     public int visibleThreshold = 1;
@@ -75,33 +73,30 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public boolean allItemLoaded;
 
 
-    public RVTBAdapter(final RecyclerView recyclerView, Context context) {
+    public RVPostAdapter(final RecyclerView recyclerView, Context context) {
         lstThongBao = new ArrayList<>();
         linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
         this.mContext = context;
 
         isLoading = false;
         itemLoadCount = 0;
-        itemLoaded = 0;
         allItemLoaded = false;
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                Log.d(TAG, "onScrolled: ");
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                 //itemLoaded = linearLayoutManager.getItemCount();
-                if (itemLoaded == (lastVisibleItem + visibleThreshold) && !isLoading) {
+                if (linearLayoutManager.getItemCount() <= (lastVisibleItem + visibleThreshold)
+                        && !isLoading && !allItemLoaded) {
                     //load cac thong bao tiep theo
                     if (loadMoreCallBack != null) {
-                        if (!allItemLoaded) {
                             //chua load het cac thong bao
                             isLoading = true;
                             //call back toi ham load more ben fragment
-                            Log.d(TAG, "onScrolled: ");
                             loadMoreCallBack.onLoadMore();
-                        }
-
                     }
                 }
             }
@@ -228,8 +223,8 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         lstThongBao.clear();
         isLoading = false;
         itemLoadCount = 0;
-        itemLoaded = 0;
         allItemLoaded = false;
+        notifyDataSetChanged();
     }
 
     //interface dung de call back moi khi load them thong bao

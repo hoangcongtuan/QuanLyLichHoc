@@ -202,7 +202,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
     }
 
 
-    public void writelstMaHPtoUserDB(DatabaseReference dbUserMaHocPhan) {
+    public void writelstMaHPtoUserDB (DatabaseReference dbUserMaHocPhan) {
         //write to FirebaseDB
         dbUserMaHocPhan.setValue(lstMaHP).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

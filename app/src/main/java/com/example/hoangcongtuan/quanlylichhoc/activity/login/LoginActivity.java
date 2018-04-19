@@ -1,5 +1,6 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.login;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,6 +46,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -58,11 +61,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -80,7 +86,7 @@ public class LoginActivity extends AppCompatActivity
 
     public final static String KEY_FIRBASE_USER = "user";
     public final static String KEY_FIREBASE_LIST_MAHP = "ma_hoc_phan";
-    public final static String KEY_FIREBASE_FCMTOKEN = "FCM_token";
+    public final static String KEY_FIREBASE_FCMTOKEN = "fcm_token";
     public final static String KEY_FIREBASE_USERINFO = "info";
     public final static String KEY_FIREBASE_USERNAME = "name";
     public final static String KEY_FIREBASE_USEREMAIL = "email";
@@ -100,7 +106,6 @@ public class LoginActivity extends AppCompatActivity
     private CoordinatorLayout coordinatorLayout;
     private ConstraintLayout viewgroup_login;
     private TextView tvUserName;
-    Toolbar toolbar;
 
     private CallbackManager callbackManager;
 
@@ -117,6 +122,7 @@ public class LoginActivity extends AppCompatActivity
     }
 
     private void init() {
+
         //init firebase
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -177,7 +183,6 @@ public class LoginActivity extends AppCompatActivity
 
     private void getWidgets() {
         //getwidgets
-        toolbar = findViewById(R.id.toolbar);
         progressBarLogin = findViewById(R.id.progresBar_login);
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
         viewgroup_login = findViewById(R.id.viewgroup_login);
@@ -188,7 +193,6 @@ public class LoginActivity extends AppCompatActivity
 
     private void setWidgets() {
         //setwidgets
-        setSupportActionBar(toolbar);
     }
 
     private void setWidgetsEvent() {
@@ -289,12 +293,17 @@ public class LoginActivity extends AppCompatActivity
 
     private void handleFirebaseLoginSuccess() {
 
-        DatabaseReference firebaseDB = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference firebaseDB = FirebaseDatabase.getInstance().getReference();
 
         DatabaseReference firebaseDBUserMaHP = firebaseDB.child(KEY_FIRBASE_USER)
                 .child(firebaseUser.getUid()).child(KEY_FIREBASE_LIST_MAHP);
 
         //tai du lieu user ve
+        //unsubscribe old topic
+        ArrayList<String> list_old_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
+        Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeAllTopics(list_old_topic);
+        Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(LoginActivity.TOPIC_TBCHUNG);
+        //delete old db
         DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
         firebaseDBUserMaHP.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -307,6 +316,13 @@ public class LoginActivity extends AppCompatActivity
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             DBLopHPHelper.getsInstance().insertUserMaHocPhan((String)snapshot.getValue());
                         }
+
+                        ArrayList<String> list_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
+                        //subscribe new topic
+                        Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(list_topic);
+                        Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(LoginActivity.TOPIC_TBCHUNG);
+
+
                         //goto MainAct
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -349,6 +365,7 @@ public class LoginActivity extends AppCompatActivity
             }
         });
 
+
         DatabaseReference firebaseUserNode = firebaseDB.child(KEY_FIRBASE_USER)
                 .child(firebaseUser.getUid()).child(KEY_FIREBASE_USERINFO);
 
@@ -363,6 +380,49 @@ public class LoginActivity extends AppCompatActivity
                 firebaseUser.getProviders().get(0)
         );
 
+    }
+
+    public void sync_token(final DatabaseReference node_user, final ArrayList<String> list_topic, final OnSyncToken onSyncToken) {
+        node_user.child(KEY_FIREBASE_FCMTOKEN).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String current_token = FirebaseInstanceId.getInstance().getToken();
+                String old_token = (String) dataSnapshot.getValue();
+
+                if (!current_token.equals(old_token)) {
+                    //token change
+                    //upload new token
+                    node_user.child(KEY_FIREBASE_FCMTOKEN).setValue(current_token).addOnSuccessListener(
+                            new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    //subscribe list_topic
+                                    Utils.QLLHUtils.getsInstance(getApplicationContext())
+                                            .subscribeTopic(list_topic);
+                                    //call back
+                                    onSyncToken.onSuccess();
+                                }
+                            }
+                    )
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    onSyncToken.onFailed(e);
+                                }
+                            });
+                }
+
+                else {
+                    onSyncToken.nothingTodo();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void getTopicSubcribe(String token, final String key) {
@@ -428,5 +488,11 @@ public class LoginActivity extends AppCompatActivity
                 facebookSignIn();
                 break;
         }
+    }
+
+    private interface OnSyncToken {
+        void onSuccess();
+        void onFailed(Exception e);
+        void nothingTodo();
     }
 }

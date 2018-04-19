@@ -26,7 +26,7 @@ public class LoadFeedHelper {
     private RVTBAdapter rvtbAdapter;
     private DatabaseReference firebase_ref;
     private ValueEventListener feedEvenListener;
-    private RVTBAdapter.ILoadMoreCallBack privCallBack;
+    private RVTBAdapter.ILoadMoreCallBack fragmentCallBack;
     private RVTBAdapter.ILoadMoreCallBack scrollToCallBack;
 
 
@@ -34,10 +34,10 @@ public class LoadFeedHelper {
         this.scrollToCallBack = scrollToCallBack;
     }
 
-    public LoadFeedHelper(RVTBAdapter adapter, DatabaseReference firebase_ref, RVTBAdapter.ILoadMoreCallBack privCallBack) {
+    public LoadFeedHelper(RVTBAdapter adapter, DatabaseReference firebase_ref, RVTBAdapter.ILoadMoreCallBack fragmentCallBack) {
         this.rvtbAdapter = adapter;
         this.firebase_ref = firebase_ref;
-        this.privCallBack = privCallBack;
+        this.fragmentCallBack = fragmentCallBack;
 
         init();
     }
@@ -84,7 +84,7 @@ public class LoadFeedHelper {
         };
 
         //set call back cho adapter
-        rvtbAdapter.setILoadMoreCallBack(new RVTBAdapter.ILoadMoreCallBack() {
+        rvtbAdapter.setLoadMoreCallBack(new RVTBAdapter.ILoadMoreCallBack() {
             @Override
             public void onLoadMore() {
 
@@ -104,12 +104,12 @@ public class LoadFeedHelper {
                         .limitToFirst(RVTBAdapter.LOAD_MORE_DELTA);
                 qrGetNextItemt.addListenerForSingleValueEvent(feedEvenListener);
 
-                privCallBack.onLoadMore();
+                fragmentCallBack.onLoadMore();
             }
 
             @Override
             public void onLoadMoreFinish() {
-                privCallBack.onLoadMoreFinish();
+                fragmentCallBack.onLoadMoreFinish();
             }
         });
     }
@@ -172,7 +172,7 @@ public class LoadFeedHelper {
 
     //scroll toi thong bao thu position
     private void scrollTo(final int position) {
-        setPrivCallBack(new RVTBAdapter.ILoadMoreCallBack() {
+        setFragmentCallBack(new RVTBAdapter.ILoadMoreCallBack() {
             @Override
             public void onLoadMore() {
 
@@ -183,7 +183,7 @@ public class LoadFeedHelper {
 
                 if (rvtbAdapter.allItemLoaded) {
                     Toast.makeText(rvtbAdapter.getContext(), "Khong tim thay thong bao!", Toast.LENGTH_SHORT).show();
-                    setPrivCallBack(null);
+                    setFragmentCallBack(null);
                     return;
                 }
 
@@ -199,7 +199,7 @@ public class LoadFeedHelper {
                     };
                     smoothScroller.setTargetPosition(position);
                     rvtbAdapter.getLinearLayoutManager().startSmoothScroll(smoothScroller);
-                    setPrivCallBack(null);
+                    setFragmentCallBack(null);
                 }
             }
         });
@@ -218,7 +218,7 @@ public class LoadFeedHelper {
     }
 
     //ham set call back
-    private void setPrivCallBack(RVTBAdapter.ILoadMoreCallBack privCallBack) {
-        this.privCallBack = privCallBack;
+    private void setFragmentCallBack(RVTBAdapter.ILoadMoreCallBack fragmentCallBack) {
+        this.fragmentCallBack = fragmentCallBack;
     }
 }

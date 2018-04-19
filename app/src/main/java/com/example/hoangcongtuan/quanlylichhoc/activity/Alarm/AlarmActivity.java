@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,8 +45,6 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
     }
 
     public void initWidget() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(getResources().getString(R.string.alarm_act_title));
@@ -80,7 +77,7 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(AlarmActivity.this, AddAlarmActivity.class);
-                CircularAnimUtil.startActivity(AlarmActivity.this, i, btnAddAlarm, R.color.colorPrimary);
+                CircularAnimUtil.startActivityForResult(AlarmActivity.this, i, RC_ADD, btnAddAlarm, R.color.colorPrimary);
                 //startActivityForResult(i, RC_ADD);
             }
         });

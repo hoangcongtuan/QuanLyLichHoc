@@ -43,7 +43,6 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
     private FloatingActionButton fabAdd;
     private RecyclerView rvTKB;
     private RVHPhanAdapter rvHPhanAdapter;
-    private Toolbar toolbar;
     private Boolean modified = false;
     private CoordinatorLayout editHPLayout;
 
@@ -54,8 +53,6 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_hp);
 
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.hoc_phan_act_title));

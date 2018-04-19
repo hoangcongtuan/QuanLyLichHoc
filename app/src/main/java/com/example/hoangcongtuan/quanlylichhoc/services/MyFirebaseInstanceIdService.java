@@ -2,6 +2,7 @@ package com.example.hoangcongtuan.quanlylichhoc.services;
 
 import android.util.Log;
 
+import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -32,9 +33,13 @@ public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
     }
 
     public void updateFCMTokentoFirebase(String strToken) {
-        DatabaseReference firebaseUserToken;
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        firebaseUserToken = FirebaseDatabase.getInstance().getReference().child("userInfo").child(firebaseUser.getUid()).child("FCMToken");
+        DatabaseReference firebaseUserToken = FirebaseDatabase.getInstance().getReference()
+                .child(LoginActivity.KEY_FIRBASE_USER).child(LoginActivity.KEY_FIREBASE_USERINFO)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(LoginActivity.KEY_FIREBASE_FCMTOKEN);
+
         firebaseUserToken.setValue(strToken);
+
+        Log.d(TAG, "updateFCMTokentoFirebase: new FCM Token = " + firebaseUserToken);
     }
 }

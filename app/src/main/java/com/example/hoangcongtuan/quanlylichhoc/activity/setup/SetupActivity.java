@@ -378,7 +378,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 tvStep1.setTextColor(Color.WHITE);
                 tvStep1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.background_circle));
 
-                finishFragment.processTKB(recognizeFragment.lstMaHP);
+                finishFragment.processTKB(recognizeFragment.getListMaHp());
                 break;
         }
         viewPager.setCurrentItem(stepId);
@@ -413,6 +413,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                             Toast.makeText(SetupActivity.this, "Có lỗi khi upload dữ liệu!", Toast.LENGTH_LONG).show();
                         }
                     });
+
                     finishFragment.writelstMaHPtoUserDB(dbUserMaHocPhan);
                 }
                 else

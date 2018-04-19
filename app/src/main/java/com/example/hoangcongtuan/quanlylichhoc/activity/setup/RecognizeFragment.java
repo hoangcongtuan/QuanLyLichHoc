@@ -52,7 +52,6 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     private CoordinatorLayout layout_setup;
     private RecyclerView rvLopHP;
     //private FloatingActionButton fabAdd;
-    public ArrayList<LopHP> lstMaHP;
     private Bitmap bitmap;
     private ImageView imageView;
     private View rootView;
@@ -78,9 +77,13 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     }
 
     private void init() {
-        lstMaHP = new ArrayList<>();
+        ArrayList<LopHP> lstMaHP = new ArrayList<>();
         rvhPhanAdapter = new RVHPhanAdapter(getContext(), lstMaHP);
         bitmap = null;
+    }
+
+    public ArrayList<LopHP> getListMaHp() {
+        return rvhPhanAdapter.getAllItem();
     }
 
     private void initWidgets() {
@@ -130,7 +133,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
             return;
         }
 
-        if (lstMaHP.indexOf(lopHP) == -1)  {
+        if (rvhPhanAdapter.indexOf(lopHP) == -1)  {
             rvhPhanAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
 
             Snackbar.make(
@@ -145,6 +148,8 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
                                 }
                             }
                     ).show();
+        } else {
+            Snackbar.make(layout_setup, R.string.duplicated_lop_hp, Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -206,16 +211,20 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 
         if(arrayList == null) {
             Toast.makeText(getActivity(), "Khong co du lieu nao!", Toast.LENGTH_SHORT).show();
-            lstMaHP.clear();
-            rvhPhanAdapter.notifyDataSetChanged();
+            //lstMaHP.clear();
+            rvhPhanAdapter.removeAllItem();
+            //rvhPhanAdapter.notifyDataSetChanged();
             return;
         }
-        lstMaHP.clear();
+
+        //lstMaHP.clear();
+        rvhPhanAdapter.removeAllItem();
         for (String i : arrayList) {
             i = i.replace(" ", "").replace(",", ".").replace(".", "_");
-            lstMaHP.add(
-                    getLopHPById(i)
-            );
+//            lstMaHP.add(
+//                    getLopHPById(i)
+//            );
+            rvhPhanAdapter.addItem(getLopHPById(i));
         }
         rvhPhanAdapter.notifyDataSetChanged();
     }

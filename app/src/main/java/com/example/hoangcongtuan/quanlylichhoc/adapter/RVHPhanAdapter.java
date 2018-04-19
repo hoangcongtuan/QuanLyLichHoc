@@ -74,6 +74,9 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
         return lstLopHP.get(index);
     }
 
+    public int indexOf(LopHP lopHP) {
+        return lstLopHP.indexOf(lopHP);
+    }
 
     public void addItem(LopHP lopHP) {
         lstLopHP.add(lopHP);

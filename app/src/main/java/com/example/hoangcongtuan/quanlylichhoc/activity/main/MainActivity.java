@@ -1,5 +1,6 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.main;
 
+import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -34,14 +35,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
+import com.example.hoangcongtuan.quanlylichhoc.Main2Activity;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.EditHPActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.SearchResultActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.SettingsActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.MainPagerAdapter;
@@ -63,9 +69,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,8 +82,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private final static String TAG = MainActivity.class.getName();
 
-    private  final static String TOPIC_TBCHUNG = "TBChung";
+    public final static String FIND_URL = "https://us-central1-server-dut.cloudfunctions.net/searchTBChung?text=";
+
     public final static int RC_EDITHPACT = 1;
+
+    public final static int PAGE_TB_CHUNG = 0;
+    public final static int PAGE_TB_HP = 1;
+    public final static int PAGE_TKB = 2;
 
     private MainPagerAdapter pagerAdapter;
     private ViewPager viewPager;
@@ -101,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DatabaseReference firebaseDBUserMaHP;
 
     private GoogleApiClient mGoogleApiClient;
-    private int mToolbarHeight;
 
 
     @Override
@@ -115,6 +127,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setWidgets();
         setWidgetsEvent();
         setWidgetsEvent();
+
+        //simple push to firebase
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("/push/");
+        for(int i  = 0; i < 10; i++) {
+            String key = ref.push().getKey();
+            ref.child(key).setValue(i);
+        }
     }
 
     private void init() {
@@ -134,7 +153,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         avatarUrl = user.getPhotoUrl();
 
         database = FirebaseDatabase.getInstance().getReference();
-        firebaseDBUserMaHP = database.child("userInfo").child(user.getUid()).child("listMaHocPHan");
+        firebaseDBUserMaHP = database.child(LoginActivity.KEY_FIRBASE_USER)
+                .child(user.getUid()).child(LoginActivity.KEY_FIREBASE_LIST_MAHP);
+
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
 
@@ -176,22 +200,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         );
 
-
         Utils.VolleyUtils.getsInstance(getApplicationContext()).getRequestQueue().add(avatarRequest);
     }
 
+    private void searchPost(String text) {
+        Intent intent = new Intent(MainActivity.this, SearchResultActivity.class);
+        switch (viewPager.getCurrentItem()) {
+            case PAGE_TB_CHUNG:
+                //pass param and start search activity
+                intent.putExtra("CATEGORY", PAGE_TB_CHUNG);
+                break;
+            case PAGE_TB_HP:
+                intent.putExtra("CATEGORY", PAGE_TB_HP);
+                break;
+            case PAGE_TKB:
+                intent.putExtra("CATEGORY", PAGE_TKB);
+                break;
+        }
+        intent.putExtra("TEXT", text);
+        startActivity(intent);
+    }
+
+    private void closeSearch() {
+        switch (viewPager.getCurrentItem()) {
+            case PAGE_TB_CHUNG:
+                tbChungFragment.closeSearch();
+                break;
+            case PAGE_TB_HP:
+                break;
+            case PAGE_TKB:
+                break;
+
+        }
+    }
+
     private void getTopicSubcribe(String token, final String key) {
-        JsonObjectRequest jsonRequest;
-        jsonRequest = new JsonObjectRequest(Request.Method.GET, "https://iid.googleapis.com/iid/info/" + token + "?details=true", null,
+        final JsonObjectRequest jsonRequest;
+        jsonRequest = new JsonObjectRequest(
+                Request.Method.GET, " https://iid.googleapis.com/iid/info/" + token + "?details=true", null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            Log.d(TAG, "onResponse: " + response.getJSONObject("rel").getJSONObject("topics").toString());
-                        } catch (JSONException e) {
-                            Log.d(TAG, "onResponse: Topic list null");
-                            e.printStackTrace();
-                        }
+//                        try {
+//                            //Log.d(TAG, "onResponse: " + response.getJSONObject("rel").getJSONObject("topics").toString());
+//                            Log.d(TAG, "onResponse: " + response.toString());
+//                        } catch (JSONException e) {
+//                            Log.d(TAG, "onResponse: Topic list null");
+//                            e.printStackTrace();
+//                        }
+
+                        Log.d(TAG, "onResponse: " + response.toString());
                     }
                 },
                 new Response.ErrorListener() {
@@ -278,22 +336,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewPager.setOffscreenPageLimit(3);
     }
 
-    private void hideViews() {
-        appBarLayout.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2));
-    }
-
-    private void showViews() {
-        appBarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
-    }
-
     private void logOut() {
 
+        ArrayList<String> list_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
         //unsubscrible all topics
         Utils.QLLHUtils.getsInstance(this).unSubscribeAllTopics(
-                DBLopHPHelper.getsInstance().getListUserMaHP()
+                list_topic
         );
         Utils.QLLHUtils.getsInstance(this).unSubscribeTopic(
-                TOPIC_TBCHUNG
+                LoginActivity.TOPIC_TBCHUNG
         );
 
         FirebaseAuth.getInstance().signOut();
@@ -310,38 +361,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         finish();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-        MenuItem myActionMenuItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) myActionMenuItem.getActionView();
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onClose() {
-                Toast.makeText(MainActivity.this, "Close Search View", Toast.LENGTH_SHORT).show();
-                return false;
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionExpand: ");
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionCollapse: ");
+                closeSearch();
+                return true;
             }
         });
 
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "On click search", Toast.LENGTH_SHORT).show();
-                tbChungFragment.scrollTo("5896914293f0446f65b391e51d0cf4e0");
+            public boolean onClose() {
+                Log.d(TAG, "onClose: ");
+                return true;
             }
         });
+
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // Toast like print
-                Toast.makeText(MainActivity.this, query, Toast.LENGTH_SHORT).show();
-                return false;
+                Log.d(TAG, "onQueryTextSubmit: ");
+                //Toast.makeText(MainActivity.this, query, Toast.LENGTH_SHORT).show();
+                searchPost(query);
+                searchItem.collapseActionView();
+                return true;
             }
             @Override
             public boolean onQueryTextChange(String s) {
+                Log.d(TAG, "onQueryTextChange: ");
                 // UserFeedback.show( "SearchOnQueryTextChanged: " + s);
-                return false;
+                return true;
             }
         });
         return true;
@@ -361,8 +427,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             @Override
                             public void onSuccess(Void aVoid) {
                                 //xoa du lieu local
-                                DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
+                                //unsbuscribe all topic
+                                ArrayList<String> list_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
 
+                                Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeAllTopics(list_topic);
+                                Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(LoginActivity.TOPIC_TBCHUNG);
+
+                                DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
                                 logOut();
                             }
                         }).addOnFailureListener(MainActivity.this,
@@ -378,7 +449,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                                 alerBulder.setMessage(e.getMessage());
                                                 alerBulder.create().show();
                                             }
-                                        });
+                                        })
+                                        .show();
                             }
                         });
 
@@ -430,9 +502,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         FirebaseInstanceId.getInstance().getToken(),
                         getResources().getString(R.string.SERVER_KEY)
                 );
+
+                Log.d(TAG, "onNavigationItemSelected: Token = " + FirebaseInstanceId.getInstance().getToken());
+                Log.d(TAG, "onNavigationItemSelected: Token ID = " + FirebaseInstanceId.getInstance().getId());
+                Log.d(TAG, "onNavigationItemSelected: Token ID time creation = " + FirebaseInstanceId.getInstance().getCreationTime());
                 break;
             case R.id.item_showSubscribeTopic:
-                tbHPhanFragment.scrollTo("c27bd18081c2c847b0ba3dd25c637779");
+                searchPost("Thông báo chuyển phòng học khu B");
                 break;
             case R.id.item_cat_dat:
                 Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
