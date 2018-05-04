@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -46,6 +47,9 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
     private FloatingActionButton fabTop;
     private RVPostAdapter rvPostAdapter;
     private CoordinatorLayout layout_search_result;
+
+    private ImageView img_no_result;
+    private ImageView img_empty_state;
     private LinearLayout layout_result;
     private LoadSearchPostResultHelper searchPostResultHelper;
 
@@ -56,7 +60,6 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
         init();
         initWidget();
 
-        search_first_time();
     }
 
     private void init() {
@@ -90,6 +93,9 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
             }
         });
 
+        img_empty_state = findViewById(R.id.img_empty_state);
+        img_no_result = findViewById(R.id.img_no_result);
+
         layout_search_result = findViewById(R.id.layout_search_result);
         layout_result = findViewById(R.id.layout_result);
         rvPostAdapter = new RVPostAdapter(recyclerView, SearchResultActivity.this);
@@ -114,6 +120,24 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+    }
+
+    public void show_no_result() {
+        img_no_result.setVisibility(View.VISIBLE);
+        img_empty_state.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
+    }
+
+    private void show_empty_state() {
+        img_empty_state.setVisibility(View.VISIBLE);
+        img_no_result.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
+    }
+
+    private void show_normal() {
+        recyclerView.setVisibility(View.VISIBLE);
+        img_empty_state.setVisibility(View.INVISIBLE);
+        img_no_result.setVisibility(View.INVISIBLE);
     }
 
     private void search_first_time() {
@@ -212,6 +236,13 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: ");
+        if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
+            show_normal();
+            search_first_time();
+        }
+        else
+            show_empty_state();
+
     }
 
     @Override
@@ -222,7 +253,8 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
 
     @Override
     public void onNoResult() {
-        layout_result.setVisibility(View.GONE);
+        show_no_result();
+        //layout_result.setVisibility(View.GONE);
         //layout_search_result.setBackground(getResources().getDrawable(R.drawable.no_result));
     }
 }

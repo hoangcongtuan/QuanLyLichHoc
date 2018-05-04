@@ -42,9 +42,8 @@ import java.util.Calendar;
 public class SplashActivity extends AppCompatActivity {
     private final static String TAG = SplashActivity.class.getName();
     private final static String KEY_ALL_HP_DB_VERSION = "ALL_HP_DATABASE_VERSION";
+    private final static String KEY_VERSION = "version_info";
 
-    private FirebaseAuth mAuth;
-    private final static int secondsDelayed = 0;
     private CoordinatorLayout layout_splash;
     private TextView tvLoadingInfo;
     private TextView tvVersion;
@@ -52,15 +51,15 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_splash);
 
         layout_splash = findViewById(R.id.layout_finish);
         tvLoadingInfo = findViewById(R.id.tvLoadingInfo);
         tvVersion = findViewById(R.id.tvVersion);
 
-        String version = "Phiên bản" + getResources().getString(R.string.app_version);
+        String version =  getResources().getString(R.string.version) + " " + getResources().getString(R.string.app_version);
         tvVersion.setText(version);
-        mAuth = FirebaseAuth.getInstance();
         DBLopHPHelper.init(getApplicationContext());
 
         //check google play services
@@ -127,7 +126,7 @@ public class SplashActivity extends AppCompatActivity {
             Log.d(TAG, "check_database_version: all hp db is latest");
             //dang la moi nhat
             //kiem tra dang nhap
-            check_login();
+            check_login(true);
         }
         else {
             //cap nhat db
@@ -136,7 +135,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    public void check_login() {
+    public void check_login(boolean isInternetAvailable) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null) {
             //chuyen den man hinh login
@@ -147,6 +146,67 @@ public class SplashActivity extends AppCompatActivity {
         }
         else {
             //login roi
+            if (!isInternetAvailable) {
+                //check intent
+                Intent splashIntent = getIntent();
+                if (splashIntent.getExtras() != null && splashIntent.hasExtra("screen")) {
+                    String screen = splashIntent.getStringExtra("screen");
+                    if (screen.equals("main")) {
+                        Intent main_intent = new Intent(SplashActivity.this, MainActivity.class);
+                        if (splashIntent.hasExtra("tieu_de"))
+                            main_intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
+                        else
+                            main_intent.putExtra("tieu_de", "Null");
+
+                        if (splashIntent.hasExtra("thoi_gian"))
+                            main_intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
+                        else
+                            main_intent.putExtra("thoi_gian", "Null");
+
+                        if (splashIntent.hasExtra("noi_dung"))
+                            main_intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
+                        else
+                            main_intent.putExtra("noi_dung", "Null");
+
+                        if (splashIntent.hasExtra("id"))
+                            main_intent.putExtra("id", splashIntent.getStringExtra("id"));
+                        else
+                            main_intent.putExtra("id", "Null");
+
+                        if (splashIntent.hasExtra("type"))
+                            main_intent.putExtra("type", splashIntent.getStringExtra("type"));
+                        else
+                            main_intent.putExtra("type", "Null");
+                        startActivity(main_intent);
+                        finish();
+                    }
+                    else if (screen.equals("add_alarm")) {
+                        Intent add_alarm_intent = new Intent(SplashActivity.this, AddAlarmActivity.class);
+                        if (splashIntent.hasExtra("tieu_de"))
+                            add_alarm_intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
+                        else
+                            add_alarm_intent.putExtra("tieu_de", "Null");
+
+                        if (splashIntent.hasExtra("noi_dung"))
+                            add_alarm_intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
+                        else
+                            add_alarm_intent.putExtra("noi_dung", "Null");
+                        startActivity(add_alarm_intent);
+                        finish();
+                    }
+                    else {
+                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+                else {
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+            //else, internet available
             //tai du lieu user ve
             tvLoadingInfo.setText(
                     getResources().getString(R.string.sync_user_db)
@@ -159,7 +219,6 @@ public class SplashActivity extends AppCompatActivity {
             //delete, unsubscribe old topic
             ArrayList<String> list_old_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
 
-            DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
             Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeAllTopics(list_old_topic);
             Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(LoginActivity.TOPIC_TBCHUNG);
 
@@ -170,6 +229,8 @@ public class SplashActivity extends AppCompatActivity {
                         //da thiet lap lop hoc phan
                         if (dataSnapshot.getChildrenCount() != 0) {
                             //co du lieu trong do
+                            //xoa old db
+                            DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
                             //save Firebase DB to local DB
                             Log.d(TAG, "onDataChange: override old user db, go to main act");
                             for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -314,7 +375,7 @@ public class SplashActivity extends AppCompatActivity {
                 editor.commit();
 
                 //check login
-                check_login();
+                check_login(true);
             }
 
             @Override
@@ -330,104 +391,55 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //kiem tra phien ban phan mem
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference ref_version = databaseReference.child("version_info");
+        Log.d(TAG, "onStart: ");
 
-        ref_version.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                VersionInfo latest_version_info = dataSnapshot.getValue(VersionInfo.class);
-                check_app_version(latest_version_info);
-            }
+        //check internet
+        if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
+            //kiem tra phien ban phan mem
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference ref_version = databaseReference.child(KEY_VERSION);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+            ref_version.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    VersionInfo latest_version_info = dataSnapshot.getValue(VersionInfo.class);
+                    check_app_version(latest_version_info);
+                }
 
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG, "onCancelled: Error = " + databaseError.getDetails());
+                    //TODO: need error handle here
+                }
+            });
+        }
+        else
+            showNoInternetAlert();
 
-
-//        FirebaseUser user = mAuth.getCurrentUser();
-//        if (user == null) {
-//            //chuyen den man hinh dang nhap
-//            new Handler().postDelayed(new Runnable() {
-//                public void run() {
-//                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-//                    startActivity(intent);
-//                    finish();
-//                }
-//            }, secondsDelayed * 1000);
-//
-//        }
-//        else {
-//            if(DBLopHPHelper.getsInstance().isUserLocalDBAvailable()) {
-//                //kiem tra co payload tu notification gui toi hay ko
-//                Intent splashIntent = getIntent();
-//                //Log.d(TAG, "onCreate: Intent = " + splashIntent.toString());
-//                if (splashIntent.getExtras() != null && splashIntent.hasExtra("screen")) {
-//                    //co lenh chuyen den man hinh screen
-//                    String screen = splashIntent.getStringExtra("screen");
-//                    if (screen.equals("main")) {
-//                        Intent intent = new Intent(this, MainActivity.class);
-//                        if (splashIntent.hasExtra("tieu_de"))
-//                            intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
-//                        else
-//                            intent.putExtra("tieu_de", "Null");
-//
-//                        if (splashIntent.hasExtra("thoi_gian"))
-//                            intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
-//                        else
-//                            intent.putExtra("thoi_gian", "Null");
-//
-//                        if (splashIntent.hasExtra("noi_dung"))
-//                            intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
-//                        else
-//                            intent.putExtra("noi_dung", "Null");
-//
-//                        if (splashIntent.hasExtra("id"))
-//                            intent.putExtra("id", splashIntent.getStringExtra("id"));
-//                        else
-//                            intent.putExtra("id", "Null");
-//
-//                        if (splashIntent.hasExtra("type"))
-//                            intent.putExtra("type", splashIntent.getStringExtra("type"));
-//                        else
-//                            intent.putExtra("type", "Null");
-//                        startActivity(intent);
-//                        finish();
-//                    }
-//                    else if (screen.equals("add_alarm")) {
-//                        Intent intent = new Intent(this, AddAlarmActivity.class);
-//                        if (splashIntent.hasExtra("tieu_de"))
-//                            intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
-//                        else
-//                            intent.putExtra("tieu_de", "Null");
-//
-//                        if (splashIntent.hasExtra("noi_dung"))
-//                            intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
-//                        else
-//                            intent.putExtra("noi_dung", "Null");
-//                        startActivity(intent);
-//                        finish();
-//                    }
-//                    else {
-//                        Intent intent = new Intent(this, MainActivity.class);
-//                        startActivity(intent);
-//                        finish();
-//                    }
-//                }
-//                else {
-//                    Intent intent = new Intent(this, MainActivity.class);
-//                    startActivity(intent);
-//                    finish();
-//                }
-//            }
-//            else {
-//                Intent intent = new Intent(SplashActivity.this, SetupActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        }
     }
+
+    private void showNoInternetAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
+        builder.setTitle(R.string.no_internet_connection)
+                .setMessage(R.string.need_internet_for_posts)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        check_login(false);
+                    }
+                });
+        builder.create().show();
+    }
+
+//    @Override
+//    public void onConnect() {
+//        super.onConnect();
+//        Log.d(TAG, "onConnect: ");
+//    }
+//
+//    @Override
+//    public void onDisconnect() {
+//        super.onDisconnect();
+//        Log.d(TAG, "onDisconnect: ");
+//    }
 }

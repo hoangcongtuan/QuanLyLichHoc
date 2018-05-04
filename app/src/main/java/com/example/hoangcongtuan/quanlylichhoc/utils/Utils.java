@@ -65,9 +65,6 @@ public class Utils {
         return toolbarHeight;
     }
 
-    public static int getTabsHeight(Context context) {
-        return (int) context.getResources().getDimension(R.dimen.tabsHeight);
-    }
 
     public static class VolleyUtils {
         private static final String TAG = Volley.class.getName();
@@ -101,6 +98,8 @@ public class Utils {
         });
     }
 
+
+
     public static class InternetUitls {
         private final static String TAG = InternetUitls.class.getName();
         private static InternetUitls sInstance;
@@ -120,16 +119,13 @@ public class Utils {
             ConnectivityManager cm =
                     (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = cm.getActiveNetworkInfo();
-            if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-                return true;
-            }
-            return false;
+            return (netInfo != null && netInfo.isConnectedOrConnecting());
         }
 
 
         public boolean isInternetAvailable() {
             try {
-                InetAddress ipAddr = InetAddress.getByName("google.com"); //You can replace it with your name
+                InetAddress ipAddr = InetAddress.getByName("https://www.google.com"); //You can replace it with your name
                 return !ipAddr.equals("");
 
             } catch (Exception e) {

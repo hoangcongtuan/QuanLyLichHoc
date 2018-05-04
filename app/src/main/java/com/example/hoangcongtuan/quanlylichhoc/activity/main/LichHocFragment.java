@@ -47,8 +47,6 @@ public class LichHocFragment extends Fragment {
         init();
     }
 
-
-
     private void init() {
         lstLopHP = new ArrayList<>(DBLopHPHelper.getsInstance().getListUserLopHP());
         rvTKBieuAdapter = new RVHPhanAdapter(getActivity(), lstLopHP);

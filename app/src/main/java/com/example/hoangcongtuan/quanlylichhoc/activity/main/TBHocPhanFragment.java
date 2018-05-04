@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
@@ -31,8 +32,11 @@ public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMore
     private RecyclerView recyclerView;
     private LoadFeedHelper loadFeedHelper;
 
+    private ImageView img_empty_state;
+
     private String hash;
     private boolean isScrollTo = false;
+    private boolean isEmptyState = false;
 
 
     @Override
@@ -52,6 +56,8 @@ public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMore
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         hocPhanAdapter = new RVTBAdapter(recyclerView, getContext());
+
+        img_empty_state = rootView.findViewById(R.id.img_empty_state);
 
         recyclerView.setAdapter(hocPhanAdapter);
 
@@ -78,6 +84,24 @@ public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMore
             loadFeedHelper.scrollTo(hash);
             isScrollTo = false;
         }
+
+        if (isEmptyState) {
+            img_empty_state.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+        }
+        else {
+            img_empty_state.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    // must use flag variable because this function would be called on mainActivity, when this fragment not created yet
+    public void show_empty_state() {
+        isEmptyState = true;
+    }
+
+    public void hide_empty_state() {
+        isEmptyState = false;
     }
 
     public void scrollTo(String hash) {

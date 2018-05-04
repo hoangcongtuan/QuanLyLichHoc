@@ -207,6 +207,8 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
         dbUserMaHocPhan.setValue(lstMaHP).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                //delete old db
+                DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
                 for (String s : lstMaHP) {
                     DBLopHPHelper.getsInstance().insertUserMaHocPhan(s);
                 }

@@ -8,10 +8,21 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/no_result"/>
+            android:src="@drawable/empty_state"
+            android:layout_margin="64dp"
+            android:id="@+id/img_empty_state"
+            android:visibility="invisible"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/no_result"
+            android:visibility="invisible"
+            android:id="@+id/img_no_result"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

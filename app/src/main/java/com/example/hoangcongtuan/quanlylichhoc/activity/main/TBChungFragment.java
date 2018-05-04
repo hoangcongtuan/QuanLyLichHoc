@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -40,12 +41,13 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
     private static final String TAG = TBChungFragment.class.getName();
     private RecyclerView recyclerView;
     private RVTBAdapter tbChungAdapter;
-    private RVTBAdapter searchPostAdapter;
+    private ImageView img_empty_state;
     private LoadSearchPostResultHelper searchPostResultHelper;
     private LoadFeedHelper loadFeedHelper;
     //if hash not null, scroll to new feed has hashkey == hash
     private String hash;
     private boolean isScrollTo = false;
+    private boolean isEmptyState = false;
 
     @Nullable
     @Override
@@ -63,6 +65,15 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
             isScrollTo = false;
         }
 
+        if (isEmptyState) {
+            img_empty_state.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+        }
+        else {
+            img_empty_state.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
@@ -76,7 +87,6 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
         loadFeedHelper = new LoadFeedHelper(tbChungAdapter, tbChungRef, this);
         loadFeedHelper.loadFirstTime();
 
-
     }
 
     private void setupWidget() {
@@ -85,6 +95,9 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        img_empty_state = getView().findViewById(R.id.img_empty_state);
+
+
         tbChungAdapter = new RVTBAdapter(recyclerView, getContext());
         recyclerView.setAdapter(tbChungAdapter);
     }
@@ -92,6 +105,15 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
     public void scrollTo(String hash) {
         this.hash = hash;
         this.isScrollTo = true;
+    }
+
+    // must use flag variable because this function would be called on mainActivity, when this fragment not created yet
+    public void show_empty_state() {
+        isEmptyState = true;
+    }
+
+    public void hide_empty_state() {
+        isEmptyState = false;
     }
 
 

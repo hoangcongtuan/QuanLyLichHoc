@@ -442,21 +442,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = getIntent();
-        Log.d(TAG, "onCreate: Intent = " + intent.toString());
-        if (intent.getExtras() != null && intent.hasExtra("tieu_de")) {
-            Log.d(TAG, "setWidgetsEvent: key = " + intent.getStringExtra("id"));
-            String tbType = intent.getStringExtra("type");
-            if (tbType.compareTo("tbc") == 0) {
-                viewPager.setCurrentItem(0);
-                tbChungFragment.scrollTo(intent.getStringExtra("id"));
-            }
-            else {
-                viewPager.setCurrentItem(1);
-                tbHPhanFragment.scrollTo(intent.getStringExtra("id"));
-            }
 
+        if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
+            tbChungFragment.hide_empty_state();
+            tbHPhanFragment.hide_empty_state();
+            Intent intent = getIntent();
+            Log.d(TAG, "onCreate: Intent = " + intent.toString());
+            if (intent.getExtras() != null && intent.hasExtra("tieu_de")) {
+                Log.d(TAG, "setWidgetsEvent: key = " + intent.getStringExtra("id"));
+                String tbType = intent.getStringExtra("type");
+                if (tbType.compareTo("tbc") == 0) {
+                    viewPager.setCurrentItem(0);
+                    tbChungFragment.scrollTo(intent.getStringExtra("id"));
+                }
+                else {
+                    viewPager.setCurrentItem(1);
+                    tbHPhanFragment.scrollTo(intent.getStringExtra("id"));
+                }
+            }
         }
+        else {
+            tbChungFragment.show_empty_state();
+            tbHPhanFragment.show_empty_state();
+        }
+
+
 //        viewPager.setCurrentItem(0);
 //                tbChungFragment.scrollTo("8a31f36bfdaaf8d590d2a705cb2bd728");
     }

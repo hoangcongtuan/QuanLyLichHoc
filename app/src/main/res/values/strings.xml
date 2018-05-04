@@ -145,5 +145,8 @@
     <string name="search_for">Kết quả cho </string>
     <string name="no_data">Không có dữ liệu nào</string>
     <string name="not_support_vision">Thiết bị này không hỗ trợ chức năng nhận dạng!</string>
+    <string name="version">Phiên bản</string>
+    <string name="no_internet_connection">Không có Internet</string>
+    <string name="need_internet_for_posts">Ứng dụng cần internet để cập nhật các thông báo, hãy bật kết nối internet trên thiết bị của bạn</string>
 
 </resources>
