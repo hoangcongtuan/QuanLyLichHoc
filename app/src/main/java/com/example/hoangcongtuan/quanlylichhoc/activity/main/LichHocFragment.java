@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVRecogHPhanAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVHPhanAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
@@ -26,7 +26,7 @@ public class LichHocFragment extends Fragment {
 
     private View rootView;
     private RecyclerView rvTKB;
-    private RVRecogHPhanAdapter rvTKBieuAdapter;
+    private RVHPhanAdapter rvTKBieuAdapter;
     private ArrayList<LopHP> lstLopHP;
 
     @Nullable
@@ -51,7 +51,7 @@ public class LichHocFragment extends Fragment {
 
     private void init() {
         lstLopHP = new ArrayList<>(DBLopHPHelper.getsInstance().getListUserLopHP());
-        rvTKBieuAdapter = new RVRecogHPhanAdapter(getActivity(), lstLopHP);
+        rvTKBieuAdapter = new RVHPhanAdapter(getActivity(), lstLopHP);
     }
 
     private void getWidgets() {
@@ -82,7 +82,7 @@ public class LichHocFragment extends Fragment {
             rvTKBieuAdapter.addItem(hp);
         }
 
-        Utils.sortLHP(lstLopHP);
+        //Utils.sortLHP(lstLopHP);
         rvTKBieuAdapter.notifyDataSetChanged();
     }
 }

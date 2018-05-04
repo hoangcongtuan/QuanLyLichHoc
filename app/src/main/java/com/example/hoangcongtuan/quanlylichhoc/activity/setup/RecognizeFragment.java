@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
@@ -54,6 +55,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     //private FloatingActionButton fabAdd;
     private Bitmap bitmap;
     private ImageView imageView;
+    private ProgressBar progressBar;
     private View rootView;
 
     @Override
@@ -89,6 +91,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     private void initWidgets() {
         rvLopHP = rootView.findViewById(R.id.rvHocPhan);
         imageView = rootView.findViewById(R.id.imgHocPhan);
+        progressBar = rootView.findViewById(R.id.progress_bar_recog);
         //fabAdd = rootView.findViewById(R.id.fabAdd);
 
         rvLopHP.setAdapter(rvhPhanAdapter);
@@ -120,6 +123,9 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 //                showAddLopHPDialog();
 //            }
 //        });
+
+        rvLopHP.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
 
     }
 
@@ -209,8 +215,12 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
         ArrayList<String> arrayList;
         arrayList = processImage(bitmap);
 
+        rvLopHP.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+
         if(arrayList == null) {
-            Toast.makeText(getActivity(), "Khong co du lieu nao!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Khong co du lieu nao!", Toast.LENGTH_SHORT).show();
+            Snackbar.make(layout_setup, R.string.no_data, Snackbar.LENGTH_INDEFINITE).show();
             //lstMaHP.clear();
             rvhPhanAdapter.removeAllItem();
             //rvhPhanAdapter.notifyDataSetChanged();
@@ -224,9 +234,10 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 //            lstMaHP.add(
 //                    getLopHPById(i)
 //            );
-            rvhPhanAdapter.addItem(getLopHPById(i));
+            rvhPhanAdapter.addItemWithoutSort(getLopHPById(i));
+
         }
-        rvhPhanAdapter.notifyDataSetChanged();
+        //rvhPhanAdapter.notifyDataSetChanged();
     }
 
     public LopHP getLopHPById(String id) {
@@ -245,7 +256,8 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     public ArrayList<String> processImage(Bitmap bitmap) throws NullPointerException{
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity()).build();
         if(!textRecognizer.isOperational()) {
-            Toast.makeText(getActivity(), "Vision Err", Toast.LENGTH_LONG).show();
+            Snackbar.make(layout_setup, R.string.not_support_vision, Snackbar.LENGTH_INDEFINITE).show();
+            //Toast.makeText(getActivity(), "Vision Err", Toast.LENGTH_LONG).show();
             return null;
         }
 

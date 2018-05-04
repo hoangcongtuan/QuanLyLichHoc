@@ -94,9 +94,6 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
         this.isScrollTo = true;
     }
 
-    public void closeSearch() {
-        recyclerView.setAdapter(tbChungAdapter);
-    }
 
     public void searchPost(String text) {
 //        JsonRequest jsonRequest = new JsonArrayRequest(MainActivity.FIND_URL + text, new Response.Listener<JSONArray>() {

@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -39,6 +40,14 @@ import java.util.ArrayList;
 
 public class EditHPActivity extends AppCompatActivity implements View.OnClickListener
         , RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
+
+    private static final String TAG = EditHPActivity.class.getName();
+
+    private final static String KEY_USER = "user";
+    private final static String KEY_INFO = "info";
+    private final static String KEY_MA_HP = "ma_hoc_phan";
+
+
 
     private FloatingActionButton fabAdd;
     private RecyclerView rvTKB;
@@ -67,7 +76,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
     private void init() {
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        dbUserMaHocPhan = database.child("userInfo").child(user.getUid()).child("listMaHocPHan");
+        dbUserMaHocPhan = database.child(KEY_USER).child(user.getUid()).child(KEY_MA_HP);
         ArrayList<LopHP> lstLopHP = DBLopHPHelper.getsInstance().getListUserLopHP();
         rvHPhanAdapter = new RVHPhanAdapter(this, lstLopHP);
     }
@@ -152,6 +161,17 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (modified)
+            setResult(RESULT_OK);
+        else
+            setResult(RESULT_CANCELED);
+
+        super.onBackPressed();
+
     }
 
     public void addUserHP(final String id) {
@@ -321,6 +341,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         }).addOnFailureListener(this, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull final Exception e) {
+                Log.d(TAG, "onFailure: " + e.getMessage());
                 Snackbar.make(
                         editHPLayout,
                         getResources().getString(R.string.remove_hp_failed),

@@ -6,8 +6,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
-import com.example.hoangcongtuan.quanlylichhoc.models.ThongBaoObj;
+import com.example.hoangcongtuan.quanlylichhoc.models.Post;
+import com.example.hoangcongtuan.quanlylichhoc.models.PostObj;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,21 +47,21 @@ public class LoadFeedHelper {
         feedEvenListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ThongBaoObj tbObj;
+                PostObj tbObj;
                 Iterable<DataSnapshot> lstThongBao;
                 lstThongBao = dataSnapshot.getChildren();
-                ArrayList<ThongBao> lstTmp = new ArrayList<>();
+                ArrayList<Post> lstTmp = new ArrayList<>();
 
                 rvtbAdapter.removeLast();
                 rvtbAdapter.removeLast();
                 int count = 0;
                 for (DataSnapshot dtSnapShot :
                         lstThongBao) {
-                    tbObj = dtSnapShot.getValue(ThongBaoObj.class);
-                    lstTmp.add(new ThongBao(tbObj.day, tbObj.event, tbObj.content, tbObj.key));
+                    tbObj = dtSnapShot.getValue(PostObj.class);
+                    lstTmp.add(new Post(tbObj.day, tbObj.event, tbObj.content, tbObj.key));
                     count++;
                 }
-                for(ThongBao tb : lstTmp) {
+                for(Post tb : lstTmp) {
                     rvtbAdapter.addThongBao(tb);
                 }
 
@@ -137,10 +137,10 @@ public class LoadFeedHelper {
             //sau khi load them du lieu
             @Override
             public void onLoadMoreFinish() {
-                ArrayList<ThongBao> lstTBChung;
-                lstTBChung = rvtbAdapter.getLstThongBao();
+                ArrayList<Post> lstTBChung;
+                lstTBChung = rvtbAdapter.getLstPost();
 
-                for(ThongBao tb : lstTBChung) {
+                for(Post tb : lstTBChung) {
                     if (hash.compareTo(tb.getKey()) == 0) {
                         RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(rvtbAdapter.getContext()) {
                             @Override
@@ -188,7 +188,7 @@ public class LoadFeedHelper {
                 }
 
 
-                if (rvtbAdapter.getLstThongBao().size() - 1 < position)
+                if (rvtbAdapter.getLstPost().size() - 1 < position)
                     loadMore();
                 else {
                     RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(rvtbAdapter.getContext()) {

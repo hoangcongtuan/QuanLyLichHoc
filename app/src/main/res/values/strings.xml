@@ -142,5 +142,8 @@
     <string name="search">Search</string>
     <string name="result">Kết quả</string>
     <string name="search_activity">Tìm kiếm</string>
+    <string name="search_for">Kết quả cho </string>
+    <string name="no_data">Không có dữ liệu nào</string>
+    <string name="not_support_vision">Thiết bị này không hỗ trợ chức năng nhận dạng!</string>
 
 </resources>

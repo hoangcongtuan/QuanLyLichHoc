@@ -1,11 +1,9 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.main;
 
-import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -25,25 +23,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.example.hoangcongtuan.quanlylichhoc.Main2Activity;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.EditHPActivity;
@@ -52,7 +41,6 @@ import com.example.hoangcongtuan.quanlylichhoc.activity.SettingsActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.MainPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.listener.HidingScrollListener;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.login.LoginManager;
@@ -69,8 +57,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -82,9 +68,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private final static String TAG = MainActivity.class.getName();
 
-    public final static String FIND_URL = "https://us-central1-server-dut.cloudfunctions.net/searchTBChung?text=";
+    public final static String FIND_URL = "https://us-central1-server-dut.cloudfunctions.net/searchPost?category=%s&text=%s";
+    public final static String CATE_CHUNG = "chung";
+    public final static String CATE_HOC_PHAN = "hocphan";
 
-    public final static int RC_EDITHPACT = 1;
+    public final static int RC_EDIT_HP_ACT = 1;
 
     public final static int PAGE_TB_CHUNG = 0;
     public final static int PAGE_TB_HP = 1;
@@ -95,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TabLayout tabLayout;
     private String[] strTabs;
     private Toolbar toolbar;
-    private LinearLayout appBarLayout;
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -108,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TBHocPhanFragment tbHPhanFragment;
     private LichHocFragment lichHocFragment;
     private CoordinatorLayout main_content_layout;
-
 
     private DatabaseReference database;
     private DatabaseReference firebaseDBUserMaHP;
@@ -127,13 +113,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setWidgets();
         setWidgetsEvent();
         setWidgetsEvent();
-
-        //simple push to firebase
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("/push/");
-        for(int i  = 0; i < 10; i++) {
-            String key = ref.push().getKey();
-            ref.child(key).setValue(i);
-        }
     }
 
     private void init() {
@@ -164,27 +143,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void getWidgets() {
         //getWidgets
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
-        appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        viewPager = (ViewPager)findViewById(R.id.viewPager);
+        toolbar = findViewById(R.id.toolbar);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        viewPager = findViewById(R.id.viewPager);
 
         tbChungFragment = new TBChungFragment();
         tbHPhanFragment = new TBHocPhanFragment();
         lichHocFragment = new LichHocFragment();
 
-        main_content_layout = (CoordinatorLayout) findViewById(R.id.main_content_layout);
+        main_content_layout = findViewById(R.id.main_content_layout);
 
-        tabLayout = (TabLayout)findViewById(R.id.tabs);
-        navigationView = (NavigationView)findViewById(R.id.navigaionView);
-        tvUserName = (TextView)navigationView.getHeaderView(0).findViewById(R.id.tvUserName);
-        tvEmail = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tvEmail);
+        tabLayout = findViewById(R.id.tabs);
+        navigationView = findViewById(R.id.navigaionView);
+        tvUserName = navigationView.getHeaderView(0).findViewById(R.id.tvUserName);
+        tvEmail =  navigationView.getHeaderView(0).findViewById(R.id.tvEmail);
 
         ImageRequest avatarRequest = new ImageRequest(avatarUrl.toString(),
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap response) {
-                        ImageView imageView = (ImageView)navigationView.getHeaderView(0).findViewById(R.id.imgAvatar);
+                        ImageView imageView = navigationView.getHeaderView(0).findViewById(R.id.imgAvatar);
                         imageView.setImageBitmap(response);
                     }
                 },
@@ -214,24 +192,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.putExtra("CATEGORY", PAGE_TB_HP);
                 break;
             case PAGE_TKB:
-                intent.putExtra("CATEGORY", PAGE_TKB);
-                break;
+                return;
+                //intent.putExtra("CATEGORY", PAGE_TKB);
+                //break;
         }
         intent.putExtra("TEXT", text);
         startActivity(intent);
-    }
-
-    private void closeSearch() {
-        switch (viewPager.getCurrentItem()) {
-            case PAGE_TB_CHUNG:
-                tbChungFragment.closeSearch();
-                break;
-            case PAGE_TB_HP:
-                break;
-            case PAGE_TKB:
-                break;
-
-        }
     }
 
     private void getTopicSubcribe(String token, final String key) {
@@ -241,14 +207,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-//                        try {
-//                            //Log.d(TAG, "onResponse: " + response.getJSONObject("rel").getJSONObject("topics").toString());
-//                            Log.d(TAG, "onResponse: " + response.toString());
-//                        } catch (JSONException e) {
-//                            Log.d(TAG, "onResponse: Topic list null");
-//                            e.printStackTrace();
-//                        }
-
                         Log.d(TAG, "onResponse: " + response.toString());
                     }
                 },
@@ -256,10 +214,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, "onErrorResponse: ");
-
                     }
-                }) {
-
+                })
+        {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> headers = new HashMap<String, String>();
@@ -277,10 +234,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
 
-//        int paddingTop = Utils.getToolbarHeight(MainActivity.this) + Utils.getTabsHeight(MainActivity.this);
-//        viewPager.setPadding(viewPager.getPaddingLeft(), paddingTop, viewPager.getPaddingRight(), viewPager.getPaddingBottom());
-
-
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
         drawerLayout.addDrawerListener(toggle);
 
@@ -294,38 +247,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
-
     private void setWidgetsEvent() {
 
     }
 
 
     private void setupViewPager(ViewPager viewPager) {
-
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                //show toolbar when move to new page
-                //hidingScrollListener_tbChung.showToolbar();
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-//        tbChungFragment.setOnHidingScrollListener(hidingScrollListener_tbChung);
-//
-//        tbHPhanFragment.setOnHidingScrollListener(hidingScrollListener_tbHPhan);
 
         pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(tbChungFragment, strTabs[0]);
@@ -348,14 +275,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         );
 
         FirebaseAuth.getInstance().signOut();
-
+        LoginManager.getInstance().logOut();
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
+
             }
         });
 
-        LoginManager.getInstance().logOut();
+
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
@@ -369,7 +297,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final MenuItem searchItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) searchItem.getActionView();
 
-
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
@@ -380,19 +307,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 Log.d(TAG, "onMenuItemActionCollapse: ");
-                closeSearch();
                 return true;
             }
         });
-
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                Log.d(TAG, "onClose: ");
-                return true;
-            }
-        });
-
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -453,7 +370,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         .show();
                             }
                         });
-
             }
         });
 
@@ -466,7 +382,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-
     }
 
     @Override
@@ -495,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.item_thay_doi_HP:
                 Intent intent = new Intent(MainActivity.this, EditHPActivity.class);
-                startActivityForResult(intent, RC_EDITHPACT);
+                startActivityForResult(intent, RC_EDIT_HP_ACT);
                 break;
             case R.id.item_showFCMDetails:
                 getTopicSubcribe(
@@ -536,7 +451,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 viewPager.setCurrentItem(0);
                 tbChungFragment.scrollTo(intent.getStringExtra("id"));
             }
-
             else {
                 viewPager.setCurrentItem(1);
                 tbHPhanFragment.scrollTo(intent.getStringExtra("id"));
@@ -551,7 +465,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case RC_EDITHPACT:
+            case RC_EDIT_HP_ACT:
                 if (resultCode == RESULT_OK) {
                     lichHocFragment.updateUI();
                 }

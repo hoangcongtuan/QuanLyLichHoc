@@ -8,11 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -33,14 +36,17 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class SearchResultActivity extends AppCompatActivity implements RVTBAdapter.ILoadMoreCallBack {
+public class SearchResultActivity extends AppCompatActivity implements RVTBAdapter.ILoadMoreCallBack, LoadSearchPostResultHelper.SearchPostCallBack{
 
     private final static String TAG = SearchResultActivity.class.getName();
+    private final static int SHOW_BTN_TOP_THRESHOLD = 3;
     private TextView tvNumResult;
+    private TextView tvResult;
     private RecyclerView recyclerView;
     private FloatingActionButton fabTop;
     private RVPostAdapter rvPostAdapter;
     private CoordinatorLayout layout_search_result;
+    private LinearLayout layout_result;
     private LoadSearchPostResultHelper searchPostResultHelper;
 
     @Override
@@ -63,11 +69,45 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        tvResult = findViewById(R.id.tvResult);
+
         fabTop = findViewById(R.id.fab_top);
+        fabTop.setVisibility(View.INVISIBLE);
+
+
+        fabTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getApplicationContext()) {
+                    @Override
+                    protected int getVerticalSnapPreference() {
+                        return LinearSmoothScroller.SNAP_TO_START;
+                    }
+                };
+
+                smoothScroller.setTargetPosition(0);
+                ((LinearLayoutManager)recyclerView.getLayoutManager()).startSmoothScroll(smoothScroller);
+            }
+        });
+
         layout_search_result = findViewById(R.id.layout_search_result);
+        layout_result = findViewById(R.id.layout_result);
         rvPostAdapter = new RVPostAdapter(recyclerView, SearchResultActivity.this);
 
         recyclerView.setAdapter(rvPostAdapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (((LinearLayoutManager)recyclerView.getLayoutManager())
+                        .findFirstVisibleItemPosition() > 0)
+                    fabTop.show();
+                else if (((LinearLayoutManager)recyclerView.getLayoutManager())
+                        .findFirstVisibleItemPosition() == 0)
+                    fabTop.hide();
+            }
+        });
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(getResources().getString(R.string.search_activity));
@@ -81,21 +121,34 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
         Intent intent = getIntent();
         int category = intent.getIntExtra("CATEGORY", 0);
         String text = intent.getStringExtra("TEXT");
+//        if (getSupportActionBar() != null)
+//            getSupportActionBar().setTitle(getResources().getString(R.string.search_for).concat(" \"").concat(text).concat("\""));
+        tvResult.setText(getResources().getString(R.string.search_for).concat(" \"").concat(text).concat("\""));
         searchPost(text, category);
         Log.d(TAG, "onCreate: ");
     }
 
-    public void searchPost(String text, int category) {
+    public void searchPost(String text, final int category) {
         String url = "";
         switch (category) {
             case MainActivity.PAGE_TB_CHUNG:
-                url = MainActivity.FIND_URL + text;
+                url = String.format(MainActivity.FIND_URL, MainActivity.CATE_CHUNG, text);
+                //url = MainActivity.FIND_URL + text;
                 break;
             case MainActivity.PAGE_TB_HP:
+                url = String.format(MainActivity.FIND_URL, MainActivity.CATE_HOC_PHAN, text);
                 break;
             case MainActivity.PAGE_TKB:
+                //url = String.format(MainActivity.FIND_URL, MainActivity.CATE_CHUNG, text);
                 break;
         }
+
+        Log.d(TAG, "searchPost: " + url);
+
+        rvPostAdapter.addThongBao(null);
+        rvPostAdapter.notifyItemInserted(rvPostAdapter.getItemCount() - 1);
+        rvPostAdapter.addThongBao(null);
+        rvPostAdapter.notifyItemInserted(rvPostAdapter.getItemCount() - 1);
 
         JsonRequest jsonRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
@@ -112,11 +165,15 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
                 }
                 finally {
                     DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-                    DatabaseReference tbChungRef = database.child("chung/data/");
+                    DatabaseReference postRef = FirebaseDatabase.getInstance().getReference();
+                    if (category == MainActivity.PAGE_TB_CHUNG)
+                        postRef = database.child("chung/data/");
+                    else if (category == MainActivity.PAGE_TB_HP)
+                        postRef = database.child("lop_hoc_phan/data/");
 
                     tvNumResult.setText(String.valueOf(arr_post_key.size()));
                     searchPostResultHelper = new LoadSearchPostResultHelper(rvPostAdapter,
-                            tbChungRef, SearchResultActivity.this, arr_post_key);
+                            postRef, SearchResultActivity.this, SearchResultActivity.this, arr_post_key);
                     searchPostResultHelper.loadFirstTime();
                 }
 
@@ -161,5 +218,11 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume: ");
+    }
+
+    @Override
+    public void onNoResult() {
+        layout_result.setVisibility(View.GONE);
+        //layout_search_result.setBackground(getResources().getDrawable(R.drawable.no_result));
     }
 }

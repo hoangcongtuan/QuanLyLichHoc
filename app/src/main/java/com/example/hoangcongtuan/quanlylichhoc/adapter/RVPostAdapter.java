@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AddAlarmActivity;
-import com.example.hoangcongtuan.quanlylichhoc.models.ThongBao;
+import com.example.hoangcongtuan.quanlylichhoc.models.Post;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final static String TAG = RVPostAdapter.class.getName();
-    private ArrayList<ThongBao> lstThongBao;
+    private ArrayList<Post> lstPost;
     private Context mContext;
 
     public Context getContext() {
@@ -45,6 +45,8 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     //load more callback
     private ILoadMoreCallBack loadMoreCallBack;
 
+    private RecyclerView recyclerView;
+
     //type of item
     private final static int ITEM_LOADED = 0;
     private final static int ITEM_LOADING = 1;
@@ -58,14 +60,6 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     //true if post is loading more item
     public boolean isLoading;
 
-
-    //last visible item in recycle view
-    private int lastVisibleItem;
-
-    //try to load itemloadcount item
-    public int itemLoadCount;
-
-
     //thresh sold
     public int visibleThreshold = 1;
 
@@ -74,12 +68,12 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 
     public RVPostAdapter(final RecyclerView recyclerView, Context context) {
-        lstThongBao = new ArrayList<>();
+        lstPost = new ArrayList<>();
         linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
         this.mContext = context;
 
+        this.recyclerView = recyclerView;
         isLoading = false;
-        itemLoadCount = 0;
         allItemLoaded = false;
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -87,7 +81,7 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 Log.d(TAG, "onScrolled: ");
-                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                 //itemLoaded = linearLayoutManager.getItemCount();
                 if (linearLayoutManager.getItemCount() <= (lastVisibleItem + visibleThreshold)
                         && !isLoading && !allItemLoaded) {
@@ -159,9 +153,9 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if(holder instanceof ThongBaoHolder) {
             //neu la holder cua thong bao da load xong
             final ThongBaoHolder tbHolder = (ThongBaoHolder) holder;
-            tbHolder.tvTBTieuDe.setText(lstThongBao.get(position).getTittle());
-            tbHolder.tvTBThoiGian.setText(lstThongBao.get(position).getStrDate());
-            tbHolder.tvThongBaoNoiDung.setText(Html.fromHtml(lstThongBao.get(position).getContent()));
+            tbHolder.tvTBTieuDe.setText(lstPost.get(position).getTittle());
+            tbHolder.tvTBThoiGian.setText(lstPost.get(position).getStrDate());
+            tbHolder.tvThongBaoNoiDung.setText(Html.fromHtml(lstPost.get(position).getContent()));
             tbHolder.btnDots.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -181,8 +175,8 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 switch (item.getItemId()) {
                     case R.id.item_nhac_toi:
                         Intent addAlarmIntent = new Intent(mContext, AddAlarmActivity.class);
-                        addAlarmIntent.putExtra("tieu_de", lstThongBao.get(position).getTittle());
-                        addAlarmIntent.putExtra("noi_dung", Html.fromHtml(lstThongBao.get(position).getContent()).toString());
+                        addAlarmIntent.putExtra("tieu_de", lstPost.get(position).getTittle());
+                        addAlarmIntent.putExtra("noi_dung", Html.fromHtml(lstPost.get(position).getContent()).toString());
                         ((Activity)mContext).startActivityForResult(addAlarmIntent, RC_FAST_ADD_ALARM);
                         break;
 
@@ -200,29 +194,28 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return lstThongBao.size();
+        return lstPost.size();
     }
 
-    public void setLstThongBao(ArrayList<ThongBao> lstThongBao) {
-        this.lstThongBao = lstThongBao;
+    public void setLstPost(ArrayList<Post> lstPost) {
+        this.lstPost = lstPost;
     }
 
-    public ArrayList<ThongBao> getLstThongBao() {
-        return lstThongBao;
+    public ArrayList<Post> getLstPost() {
+        return lstPost;
     }
 
     public void removeLast() {
-        lstThongBao.remove(lstThongBao.size() - 1);
+        lstPost.remove(lstPost.size() - 1);
     }
 
-    public void addThongBao(ThongBao tb) {
-        lstThongBao.add(tb);
+    public void addThongBao(Post tb) {
+        lstPost.add(tb);
     }
 
     public void removeAll() {
-        lstThongBao.clear();
+        lstPost.clear();
         isLoading = false;
-        itemLoadCount = 0;
         allItemLoaded = false;
         notifyDataSetChanged();
     }
@@ -238,6 +231,10 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     //tra ve trang thai cua thong bao, tu do xac dinh dung viewholder nao
     @Override
     public int getItemViewType(int position) {
-        return lstThongBao.get(position) == null ? ITEM_LOADING : ITEM_LOADED;
+        return lstPost.get(position) == null ? ITEM_LOADING : ITEM_LOADED;
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
     }
 }

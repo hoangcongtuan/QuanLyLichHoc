@@ -51,9 +51,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_chat_white_24dp)
-                .setContentTitle(msg.getNotification().getTitle())
+                .setContentTitle(msg.getData().get("title"))
                 .setAutoCancel(true)
-                .setContentText(msg.getNotification().getBody())
+                .setContentText(msg.getData().get("body"))
                 .setSound(notificationSound)
                 .setColor(ContextCompat.getColor(this, R.color.colorGreen));
 

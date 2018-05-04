@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AddAlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
@@ -180,11 +181,69 @@ public class SplashActivity extends AppCompatActivity {
                             Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(list_topic);
                             Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(LoginActivity.TOPIC_TBCHUNG);
 
-                            //goto MainAct
-                            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
 
+                            //check intent
+                            Intent splashIntent = getIntent();
+                            if (splashIntent.getExtras() != null && splashIntent.hasExtra("screen")) {
+                                String screen = splashIntent.getStringExtra("screen");
+                                if (screen.equals("main")) {
+                                    Intent main_intent = new Intent(SplashActivity.this, MainActivity.class);
+                                    if (splashIntent.hasExtra("tieu_de"))
+                                        main_intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
+                                    else
+                                        main_intent.putExtra("tieu_de", "Null");
+
+                                    if (splashIntent.hasExtra("thoi_gian"))
+                                        main_intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
+                                    else
+                                        main_intent.putExtra("thoi_gian", "Null");
+
+                                    if (splashIntent.hasExtra("noi_dung"))
+                                        main_intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
+                                    else
+                                        main_intent.putExtra("noi_dung", "Null");
+
+                                    if (splashIntent.hasExtra("id"))
+                                        main_intent.putExtra("id", splashIntent.getStringExtra("id"));
+                                    else
+                                        main_intent.putExtra("id", "Null");
+
+                                    if (splashIntent.hasExtra("type"))
+                                        main_intent.putExtra("type", splashIntent.getStringExtra("type"));
+                                    else
+                                        main_intent.putExtra("type", "Null");
+                                    startActivity(main_intent);
+                                    finish();
+                                }
+                                else if (screen.equals("add_alarm")) {
+                                    Intent add_alarm_intent = new Intent(SplashActivity.this, AddAlarmActivity.class);
+                                    if (splashIntent.hasExtra("tieu_de"))
+                                        add_alarm_intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
+                                    else
+                                        add_alarm_intent.putExtra("tieu_de", "Null");
+
+                                    if (splashIntent.hasExtra("noi_dung"))
+                                        add_alarm_intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
+                                    else
+                                        add_alarm_intent.putExtra("noi_dung", "Null");
+                                    startActivity(add_alarm_intent);
+                                    finish();
+                                }
+                                else {
+                                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }
+                            else {
+                                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+//                            //goto MainAct
+//                            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+//                            startActivity(intent);
+//                            finish();
                         }
                         else {
                             //chua co du lieu lop hoc phan

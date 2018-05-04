@@ -21,7 +21,6 @@ import java.util.ArrayList;
  */
 
 public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHolder> {
-
     private final static int ACTION_ADD = 0;
     private final static int ACTION_REMOVE = 1;
     private ArrayList<LopHP> lstLopHP;
@@ -30,7 +29,6 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
     private LopHP undo_LopHP;
     private int undo_position;
     private int last_action;
-
 
 
     public RVHPhanAdapter(Context context, ArrayList<LopHP> arrayList) {
@@ -55,7 +53,7 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
         LopHP lopHP = lstLopHP.get(position);
         holder.tvMaHP.setText(lopHP.getMaHP());
         holder.tvTenHP.setText(lopHP.getTenHP());
-        holder.tvIndex.setText(position + "");
+        holder.tvIndex.setText(position + 1 + "");
         holder.tvTenGV.setText(lopHP.getTenGV());
         holder.tvTkb.setText(lopHP.getTkb());
     }
@@ -79,18 +77,39 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
     }
 
     public void addItem(LopHP lopHP) {
-        lstLopHP.add(lopHP);
-        this.notifyItemInserted(lstLopHP.size() - 1);
+        //find proper position
+        int i;
+        for(i = 0; i < lstLopHP.size(); i++) {
+            if (lstLopHP.get(i).getTkb().compareTo(lopHP.getTkb()) > 0)
+                break;
+        }
+
+        lstLopHP.add(i, lopHP);
+
+        //lstLopHP.add(lopHP);
+        this.notifyItemInserted(i);
+        notifyItemRangeChanged(i, lstLopHP.size() - 1);
 
         undo_LopHP = lopHP;
-        undo_position = lstLopHP.size() - 1;
+        undo_position = i;
         last_action = ACTION_ADD;
+        //sortItem();
+    }
+
+    public void addItemWithoutSort(LopHP lopHP) {
+        lstLopHP.add(lopHP);
+        notifyItemInserted(lstLopHP.size() - 1);
         //sortItem();
     }
 
     public void insertItem(int position, LopHP lopHP) {
         lstLopHP.add(position, lopHP);
         this.notifyItemInserted(position);
+        this.notifyItemRangeChanged(position, lstLopHP.size() - 1);
+
+        undo_LopHP = lopHP;
+        undo_position = position;
+        last_action = ACTION_ADD;
     }
 
     public void removeItem(int position) {
@@ -99,11 +118,11 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
 
         lstLopHP.remove(position);
         this.notifyItemRemoved(position);
+        notifyItemRangeChanged(position, lstLopHP.size() - 1);
         last_action = ACTION_REMOVE;
     }
 
     public void removeItem(String id) throws AppException {
-
         int index = getIndexOf(id);
 
         undo_LopHP = lstLopHP.get(index);
@@ -112,6 +131,8 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
 
         lstLopHP.remove(index);
         this.notifyItemRemoved(index);
+        notifyItemRangeChanged(index, lstLopHP.size() - 1);
+        //this.notifyDataSetChanged();
     }
 
     public int getIndexOf(String id) throws AppException {
