@@ -1,4 +1,4 @@
-package com.example.hoangcongtuan.quanlylichhoc.activity.Alarm;
+package com.example.hoangcongtuan.quanlylichhoc.activity.alarm;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;

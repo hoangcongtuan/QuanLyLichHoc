@@ -19,6 +19,8 @@
     <color name="colorStepperText">#2255a2</color>
     <color name="colorGreen">#4CAF50</color>
 
+    <color name="blueGrey">#607D8B</color>
+
     <color name="colorPrimaryText">#D9000000</color>
     <color name="colorSecondaryText">#F44336</color>
     <color name="colorLinkText">#3F51B5</color>

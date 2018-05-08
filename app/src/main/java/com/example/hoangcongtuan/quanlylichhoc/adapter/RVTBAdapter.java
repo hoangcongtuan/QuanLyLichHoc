@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AddAlarmActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.alarm.AddAlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Post;
 
 import java.util.ArrayList;
@@ -44,6 +44,8 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     //load more callback
     private ILoadMoreCallBack loadMoreCallBack;
+
+    private RecyclerView recyclerView;
 
     //type of item
     private final static int ITEM_LOADED = 0;
@@ -84,6 +86,8 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         itemLoadCount = 0;
         itemLoaded = 0;
         allItemLoaded = false;
+
+        this.recyclerView = recyclerView;
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -244,5 +248,9 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         return lstPost.get(position) == null ? ITEM_LOADING : ITEM_LOADED;
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
     }
 }

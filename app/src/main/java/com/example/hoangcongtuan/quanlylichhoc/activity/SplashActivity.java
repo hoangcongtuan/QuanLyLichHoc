@@ -15,8 +15,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AddAlarmActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.alarm.AddAlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
@@ -30,10 +35,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Kiem tra trang thai dang nhap, neu da dang nhap thi toi man hinh chinh, con ko thi toi man hinh dang nhap
@@ -217,10 +230,10 @@ public class SplashActivity extends AppCompatActivity {
                     .child(firebaseUser.getUid()).child(LoginActivity.KEY_FIREBASE_LIST_MAHP);
 
             //delete, unsubscribe old topic
-            ArrayList<String> list_old_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
+//            final ArrayList<String> list_old_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
 
-            Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeAllTopics(list_old_topic);
-            Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(LoginActivity.TOPIC_TBCHUNG);
+//            Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeAllTopics(list_old_topic);
+//            Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(LoginActivity.TOPIC_TBCHUNG);
 
             firebaseDBUserMaHP.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -238,69 +251,15 @@ public class SplashActivity extends AppCompatActivity {
                             }
 
                             ArrayList<String> list_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
-                            //subscribe new topic
-                            Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(list_topic);
-                            Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(LoginActivity.TOPIC_TBCHUNG);
+
+                            syncTopic(FirebaseInstanceId.getInstance().getToken(),
+                                    getResources().getString(R.string.SERVER_KEY), list_topic);
 
 
-                            //check intent
-                            Intent splashIntent = getIntent();
-                            if (splashIntent.getExtras() != null && splashIntent.hasExtra("screen")) {
-                                String screen = splashIntent.getStringExtra("screen");
-                                if (screen.equals("main")) {
-                                    Intent main_intent = new Intent(SplashActivity.this, MainActivity.class);
-                                    if (splashIntent.hasExtra("tieu_de"))
-                                        main_intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
-                                    else
-                                        main_intent.putExtra("tieu_de", "Null");
+//                            //subscribe new topic
+//                            Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(list_topic);
+//                            Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(LoginActivity.TOPIC_TBCHUNG);
 
-                                    if (splashIntent.hasExtra("thoi_gian"))
-                                        main_intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
-                                    else
-                                        main_intent.putExtra("thoi_gian", "Null");
-
-                                    if (splashIntent.hasExtra("noi_dung"))
-                                        main_intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
-                                    else
-                                        main_intent.putExtra("noi_dung", "Null");
-
-                                    if (splashIntent.hasExtra("id"))
-                                        main_intent.putExtra("id", splashIntent.getStringExtra("id"));
-                                    else
-                                        main_intent.putExtra("id", "Null");
-
-                                    if (splashIntent.hasExtra("type"))
-                                        main_intent.putExtra("type", splashIntent.getStringExtra("type"));
-                                    else
-                                        main_intent.putExtra("type", "Null");
-                                    startActivity(main_intent);
-                                    finish();
-                                }
-                                else if (screen.equals("add_alarm")) {
-                                    Intent add_alarm_intent = new Intent(SplashActivity.this, AddAlarmActivity.class);
-                                    if (splashIntent.hasExtra("tieu_de"))
-                                        add_alarm_intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
-                                    else
-                                        add_alarm_intent.putExtra("tieu_de", "Null");
-
-                                    if (splashIntent.hasExtra("noi_dung"))
-                                        add_alarm_intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
-                                    else
-                                        add_alarm_intent.putExtra("noi_dung", "Null");
-                                    startActivity(add_alarm_intent);
-                                    finish();
-                                }
-                                else {
-                                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            }
-                            else {
-                                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
 //                            //goto MainAct
 //                            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
 //                            startActivity(intent);
@@ -353,6 +312,144 @@ public class SplashActivity extends AppCompatActivity {
                     .child(LoginActivity.KEY_FIREBASE_USERINFO).child(LoginActivity.KEY_FIREBASE_USER_LATEST_ONLINE);
             ref_user_online.setValue(latest_online);
         }
+    }
+
+    private void check_intent() {
+        //check intent
+        Intent splashIntent = getIntent();
+        if (splashIntent.getExtras() != null && splashIntent.hasExtra("screen")) {
+            String screen = splashIntent.getStringExtra("screen");
+            if (screen.equals("main")) {
+                Intent main_intent = new Intent(SplashActivity.this, MainActivity.class);
+                if (splashIntent.hasExtra("tieu_de"))
+                    main_intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
+                else
+                    main_intent.putExtra("tieu_de", "Null");
+
+                if (splashIntent.hasExtra("thoi_gian"))
+                    main_intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
+                else
+                    main_intent.putExtra("thoi_gian", "Null");
+
+                if (splashIntent.hasExtra("noi_dung"))
+                    main_intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
+                else
+                    main_intent.putExtra("noi_dung", "Null");
+
+                if (splashIntent.hasExtra("id"))
+                    main_intent.putExtra("id", splashIntent.getStringExtra("id"));
+                else
+                    main_intent.putExtra("id", "Null");
+
+                if (splashIntent.hasExtra("type"))
+                    main_intent.putExtra("type", splashIntent.getStringExtra("type"));
+                else
+                    main_intent.putExtra("type", "Null");
+                startActivity(main_intent);
+                finish();
+            }
+            else if (screen.equals("add_alarm")) {
+                Intent add_alarm_intent = new Intent(SplashActivity.this, AddAlarmActivity.class);
+                if (splashIntent.hasExtra("tieu_de"))
+                    add_alarm_intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
+                else
+                    add_alarm_intent.putExtra("tieu_de", "Null");
+
+                if (splashIntent.hasExtra("noi_dung"))
+                    add_alarm_intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
+                else
+                    add_alarm_intent.putExtra("noi_dung", "Null");
+                startActivity(add_alarm_intent);
+                finish();
+            }
+            else {
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
+        else {
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    public void syncTopic(String token, final String key, final ArrayList<String> lst_user_hp) {
+
+        JsonObjectRequest jsonRequest;
+        jsonRequest = new JsonObjectRequest(
+                Request.Method.GET, " https://iid.googleapis.com/iid/info/" + token + "?details=true", null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject json_topics = response.getJSONObject("rel").getJSONObject("topics");
+                            Log.d(TAG, "onResponse: " + json_topics.toString());
+
+                            Iterator<String> keys = json_topics.keys();
+                            ArrayList<String> sub_list = new ArrayList<>();
+                            String key = "";
+
+                            //remove unsubscribe topic
+                            while(keys.hasNext()) {
+                                key = keys.next();
+                                sub_list.add(key);
+                                if (lst_user_hp.indexOf(key.trim()) == -1 && (!key.equals(LoginActivity.TOPIC_TBCHUNG))) {
+                                    //user is not subscribe to this topic, unsub it
+                                    FirebaseMessaging.getInstance().unsubscribeFromTopic(key);
+                                    Log.d(TAG, "onResponse: Unsubscribe topic = " + key);
+                                }
+
+                                Log.d(TAG, "onResponse: " + key);
+                            }
+
+                            //check TBChung is subscribe ?
+                            if (sub_list.indexOf(LoginActivity.TOPIC_TBCHUNG) == -1) {
+                                //TBChung was not subscribe yet!, subscribe it now
+                                FirebaseMessaging.getInstance().subscribeToTopic(LoginActivity.TOPIC_TBCHUNG);
+
+                                Log.d(TAG, "onResponse: Subscribe topic = " + LoginActivity.TOPIC_TBCHUNG);
+                            }
+
+
+                            //subscribe topic
+                            for(String str: lst_user_hp) {
+                                if (sub_list.indexOf(str) == -1)
+                                    //this topics was not subscribed yet, subscribe it now
+                                    FirebaseMessaging.getInstance().subscribeToTopic(str);
+                            }
+
+                            //sync topic complete
+
+                            //TODO: action after sync topic
+                            check_intent();
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //TODO: need error handle here
+                        Log.d(TAG, "onErrorResponse: ");
+                    }
+                }
+
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "key=" + key);
+                return headers;
+            }
+        };
+
+        Utils.VolleyUtils.getsInstance(this).getRequestQueue().add(jsonRequest);
+
     }
 
     public void download_all_hp_database(final VersionInfo versionInfo) {

@@ -52,8 +52,7 @@ public class LoadFeedHelper {
                 lstThongBao = dataSnapshot.getChildren();
                 ArrayList<Post> lstTmp = new ArrayList<>();
 
-                rvtbAdapter.removeLast();
-                rvtbAdapter.removeLast();
+
                 int count = 0;
                 for (DataSnapshot dtSnapShot :
                         lstThongBao) {
@@ -61,11 +60,18 @@ public class LoadFeedHelper {
                     lstTmp.add(new Post(tbObj.day, tbObj.event, tbObj.content, tbObj.key));
                     count++;
                 }
+
+                rvtbAdapter.removeLast();
+                rvtbAdapter.notifyItemRemoved(rvtbAdapter.getItemCount());
+                rvtbAdapter.removeLast();
+                rvtbAdapter.notifyItemRemoved(rvtbAdapter.getItemCount());
+
                 for(Post tb : lstTmp) {
                     rvtbAdapter.addThongBao(tb);
+                    rvtbAdapter.notifyItemInserted(rvtbAdapter.getItemCount() - 1);
                 }
 
-                rvtbAdapter.notifyDataSetChanged();
+                //rvtbAdapter.notifyDataSetChanged();
 
                 if (count < RVTBAdapter.LOAD_MORE_DELTA)
                     //load het roi
@@ -91,9 +97,23 @@ public class LoadFeedHelper {
                 Log.d(TAG, "onLoadMore: ");
                 //add empty new feed such as facebook new feed
                 rvtbAdapter.addThongBao(null);
-                rvtbAdapter.addThongBao(null);
 
-                rvtbAdapter.notifyDataSetChanged();
+                rvtbAdapter.getRecyclerView().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        rvtbAdapter.notifyItemInserted(rvtbAdapter.getItemCount() - 1);
+                    }
+                });
+
+                rvtbAdapter.addThongBao(null);
+                rvtbAdapter.getRecyclerView().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        rvtbAdapter.notifyItemInserted(rvtbAdapter.getItemCount() - 1);
+                    }
+                });
+
+                //rvtbAdapter.notifyDataSetChanged();
 
 
                 //will load .. item
@@ -118,7 +138,10 @@ public class LoadFeedHelper {
     private void loadMore() {
         //called when call scroll to
         rvtbAdapter.addThongBao(null);
+        rvtbAdapter.notifyItemInserted(rvtbAdapter.getItemCount() - 1);
         rvtbAdapter.addThongBao(null);
+        rvtbAdapter.notifyItemInserted(rvtbAdapter.getItemCount() - 1);
+
         rvtbAdapter.itemLoadCount += RVTBAdapter.LOAD_MORE_DELTA;
         Query qrGetNextItemt = firebase_ref.orderByKey().startAt(rvtbAdapter.itemLoaded + "")
                 .limitToFirst(RVTBAdapter.LOAD_MORE_DELTA);
@@ -209,8 +232,10 @@ public class LoadFeedHelper {
     //load du lieu lan dau
     public void loadFirstTime() {
         rvtbAdapter.addThongBao(null);
+        rvtbAdapter.notifyItemInserted(rvtbAdapter.getItemCount() - 1);
         rvtbAdapter.addThongBao(null);
-        rvtbAdapter.notifyDataSetChanged();
+        rvtbAdapter.notifyItemInserted(rvtbAdapter.getItemCount() - 1);
+
         rvtbAdapter.itemLoadCount = RVTBAdapter.LOAD_MORE_DELTA;
         Query qrGetNextItemt = firebase_ref.orderByKey().startAt(rvtbAdapter.itemLoaded + "")
                 .limitToFirst(RVTBAdapter.LOAD_MORE_DELTA);

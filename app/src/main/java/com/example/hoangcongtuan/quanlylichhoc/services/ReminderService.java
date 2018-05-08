@@ -14,7 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AlarmDetailsActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.alarm.AlarmDetailsActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDatabase;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;

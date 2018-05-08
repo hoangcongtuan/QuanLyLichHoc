@@ -131,7 +131,7 @@
     <string name="action_settings">Settings</string>
 
 
-    <string name="app_version">1.0a</string>
+    <string name="app_version">0.1a</string>
     <string name="update">Cập nhật</string>
     <string name="later">Để sau</string>
     <string name="team_name">ArrowE team</string>
@@ -148,5 +148,7 @@
     <string name="version">Phiên bản</string>
     <string name="no_internet_connection">Không có Internet</string>
     <string name="need_internet_for_posts">Ứng dụng cần internet để cập nhật các thông báo, hãy bật kết nối internet trên thiết bị của bạn</string>
+    <string name="or">or</string>
+    <string name="app_name_vi">QUẢN LÝ LỊCH HỌC</string>
 
 </resources>

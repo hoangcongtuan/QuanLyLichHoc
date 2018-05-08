@@ -12,10 +12,10 @@
         android:id="@+id/item_xoa_du_lieu"
         android:title="@string/remove_du_lieu"
         android:icon="@drawable/ic_delete_black_24dp"/>
-    <item
-        android:id="@+id/item_cat_dat"
-        android:title="@string/settings"
-        android:icon="@drawable/ic_settings_black_24dp"/>
+    <!--<item-->
+        <!--android:id="@+id/item_cat_dat"-->
+        <!--android:title="@string/settings"-->
+        <!--android:icon="@drawable/ic_settings_black_24dp"/>-->
     <item
         android:title="Other">
         <menu>

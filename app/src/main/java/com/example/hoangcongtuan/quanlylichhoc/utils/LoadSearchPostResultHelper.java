@@ -73,8 +73,10 @@ public class LoadSearchPostResultHelper {
                     //add post on retrievePost to recycleview
                     for(Post post: retrievePosts) {
                         rvPostAdapter.addThongBao(post);
-                        rvPostAdapter.notifyItemInserted(rvPostAdapter.getItemCount() - 1);
+
                     }
+                    rvPostAdapter.notifyItemRangeInserted(rvPostAdapter.getItemCount() - post_loaded_count,
+                            rvPostAdapter.getItemCount() - 1);
                     //loadmore finish
 
                    // rvPostAdapter.notifyDataSetChanged();
@@ -91,8 +93,11 @@ public class LoadSearchPostResultHelper {
                     //add post on retrievePost to recycleview
                     for(Post post: retrievePosts) {
                         rvPostAdapter.addThongBao(post);
-                        rvPostAdapter.notifyItemInserted(rvPostAdapter.getItemCount() - 1);
+                        //rvPostAdapter.notifyItemInserted(rvPostAdapter.getItemCount() - 1);
                     }
+
+                    rvPostAdapter.notifyItemRangeInserted(rvPostAdapter.getItemCount() - post_loaded_count,
+                            rvPostAdapter.getItemCount() - 1);
                     //already load all search result post
 
                     rvPostAdapter.allItemLoaded = true;

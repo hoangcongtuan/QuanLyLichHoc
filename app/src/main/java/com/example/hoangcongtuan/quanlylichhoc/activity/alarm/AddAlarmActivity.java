@@ -1,4 +1,4 @@
-package com.example.hoangcongtuan.quanlylichhoc.activity.Alarm;
+package com.example.hoangcongtuan.quanlylichhoc.activity.alarm;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.constant.Constant;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDatabase;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;

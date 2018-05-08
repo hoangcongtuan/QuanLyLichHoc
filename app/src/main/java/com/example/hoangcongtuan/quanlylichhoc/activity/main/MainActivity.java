@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -24,7 +23,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -34,10 +32,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.activity.Alarm.AlarmActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.alarm.AlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.EditHPActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.SearchResultActivity;
-import com.example.hoangcongtuan.quanlylichhoc.activity.SettingsActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.MainPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
@@ -134,10 +131,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         database = FirebaseDatabase.getInstance().getReference();
         firebaseDBUserMaHP = database.child(LoginActivity.KEY_FIRBASE_USER)
                 .child(user.getUid()).child(LoginActivity.KEY_FIREBASE_LIST_MAHP);
-
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
 
@@ -219,8 +212,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> headers = new HashMap<String, String>();
-                headers.put("Authorization","key=" + key);
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", "key=" + key);
                 return headers;
             }
 
@@ -418,17 +411,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         getResources().getString(R.string.SERVER_KEY)
                 );
 
-                Log.d(TAG, "onNavigationItemSelected: Token = " + FirebaseInstanceId.getInstance().getToken());
-                Log.d(TAG, "onNavigationItemSelected: Token ID = " + FirebaseInstanceId.getInstance().getId());
-                Log.d(TAG, "onNavigationItemSelected: Token ID time creation = " + FirebaseInstanceId.getInstance().getCreationTime());
+//                Log.d(TAG, "onNavigationItemSelected: Token = " + FirebaseInstanceId.getInstance().getToken());
+//                Log.d(TAG, "onNavigationItemSelected: Token ID = " + FirebaseInstanceId.getInstance().getId());
+//                Log.d(TAG, "onNavigationItemSelected: Token ID time creation = " + FirebaseInstanceId.getInstance().getCreationTime());
                 break;
             case R.id.item_showSubscribeTopic:
                 searchPost("Thông báo chuyển phòng học khu B");
                 break;
-            case R.id.item_cat_dat:
-                Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intentSettings);
-                break;
+//            case R.id.item_cat_dat:
+//                Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+//                startActivity(intentSettings);
+//                break;
             case R.id.item_nhac_nho:
                 Intent intentAlarm = new Intent(MainActivity.this, AlarmActivity.class);
                 startActivity(intentAlarm);

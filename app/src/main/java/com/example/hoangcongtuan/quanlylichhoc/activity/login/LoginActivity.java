@@ -300,19 +300,22 @@ public class LoginActivity extends AppCompatActivity
 
         //tai du lieu user ve
         //unsubscribe old topic
-        ArrayList<String> list_old_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
-        Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeAllTopics(list_old_topic);
-        Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(LoginActivity.TOPIC_TBCHUNG);
-        //delete old db
-        DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
+//        ArrayList<String> list_old_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
+//        Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeAllTopics(list_old_topic);
+//        Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(LoginActivity.TOPIC_TBCHUNG);
         firebaseDBUserMaHP.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     //da thiet lap lop hoc phan
+
                     if (dataSnapshot.getChildrenCount() != 0) {
                         //co du lieu trong do
                         //save Firebase DB to local DB
+
+                        //delete old db
+                        DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
+
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             DBLopHPHelper.getsInstance().insertUserMaHocPhan((String)snapshot.getValue());
                         }
