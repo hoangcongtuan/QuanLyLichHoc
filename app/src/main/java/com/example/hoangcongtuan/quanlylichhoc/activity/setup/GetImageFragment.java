@@ -1,18 +1,22 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.setup;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +40,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class GetImageFragment extends Fragment implements View.OnClickListener {
 
     private final static String TAG = GetImageFragment.class.getName();
+
+    public final static int RQ_PER_CAMERA = 0;
 
     private static final int REQUEST_IMAGE_PICK = 0;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -110,10 +116,10 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
 
     private void openGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(Intent.createChooser(galleryIntent,"Chọn hình ảnh từ thư viện"),REQUEST_IMAGE_PICK);
+        startActivityForResult(Intent.createChooser(galleryIntent, "Chọn hình ảnh từ thư viện"), REQUEST_IMAGE_PICK);
     }
 
-    private void openCamera() throws AppException, IOException {
+    private void reallyOpenCamera() throws IOException, AppException {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             File photoFile = null;
@@ -136,6 +142,46 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
         }
         else {
             throw new AppException(getResources().getString(R.string.cannot_open_cam));
+        }
+    }
+
+    private void openCamera() throws IOException, AppException {
+        //check permission
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            //permission is not granted, request permission
+            //show explaination
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
+
+            }
+            else {
+                ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA}, RQ_PER_CAMERA);
+            }
+        }
+        else {
+           reallyOpenCamera();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case RQ_PER_CAMERA: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        reallyOpenCamera();
+                    } catch (AppException e) {
+                        e.printStackTrace();
+                        Utils.QLLHUtils.getsInstance(getApplicationContext()).showErrorMessage(getActivity(), e.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Utils.QLLHUtils.getsInstance(getApplicationContext()).showErrorMessage(getActivity(), e.getMessage());
+                    }
+                }
+
+                break;
+            }
         }
     }
 
