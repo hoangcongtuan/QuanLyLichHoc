@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
+import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
@@ -88,7 +91,15 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnPickCamera:
-                openCamera();
+                try {
+                    openCamera();
+                } catch (AppException e) {
+                    e.printStackTrace();
+                    Utils.QLLHUtils.getsInstance(getApplicationContext()).showErrorMessage(getActivity(), e.getMessage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Utils.QLLHUtils.getsInstance(getApplicationContext()).showErrorMessage(getActivity(), e.getMessage());
+                }
 
                 break;
             case R.id.btnPickGallery:
@@ -102,42 +113,54 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
         startActivityForResult(Intent.createChooser(galleryIntent,"Chọn hình ảnh từ thư viện"),REQUEST_IMAGE_PICK);
     }
 
-    private void openCamera() {
+    private void openCamera() throws AppException, IOException {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-
-            }
+            photoFile = createImageFile();
 
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(getActivity(),
                         getApplicationContext().getPackageName() + ".fileprovider",
                         photoFile);
+                //grant permission for photoURI, help camera can access to uri
+                //get camera package
+                String camera_package = cameraIntent.resolveActivity(getActivity().getPackageManager()).getPackageName();
+                getContext().grantUriPermission(camera_package, photoURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
             }
+            else
+                throw  new AppException(getResources().getString(R.string.cannot_open_cam));
+        }
+        else {
+            throw new AppException(getResources().getString(R.string.cannot_open_cam));
         }
     }
 
-    private File createImageFile() throws IOException {
+    private File createImageFile() throws IOException, AppException {
         String imageFileName = "HocPhan";
         File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+        if (storageDir != null) {
+            File image = File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",         /* suffix */
+                    storageDir      /* directory */
+            );
 
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
+            mCurrentPhotoPath = image.getAbsolutePath();
+            return image;
+        }
+        else {
+            throw new AppException("Can't create image file!");
+        }
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        //super.onActivityResult(requestCode, resultCode, data);
         if(resultCode != Activity.RESULT_OK) {
             return;
         }

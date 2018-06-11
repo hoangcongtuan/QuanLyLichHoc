@@ -166,7 +166,8 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
                 //url = String.format(MainActivity.FIND_URL, MainActivity.CATE_CHUNG, text);
                 break;
         }
-
+        //replace space with %20
+        url = url.replaceAll(" ", "%20");
         Log.d(TAG, "searchPost: " + url);
 
         rvPostAdapter.addThongBao(null);

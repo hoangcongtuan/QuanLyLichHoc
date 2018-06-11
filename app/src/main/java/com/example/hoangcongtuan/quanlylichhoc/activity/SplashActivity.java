@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -383,52 +384,61 @@ public class SplashActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.d(TAG, "onResponse: " + response.toString());
+                        JSONObject json_topics = null;
                         try {
-                            JSONObject json_topics = response.getJSONObject("rel").getJSONObject("topics");
-                            Log.d(TAG, "onResponse: " + json_topics.toString());
-
-                            Iterator<String> keys = json_topics.keys();
-                            ArrayList<String> sub_list = new ArrayList<>();
-                            String key = "";
-
-                            //remove unsubscribe topic
-                            while(keys.hasNext()) {
-                                key = keys.next();
-                                sub_list.add(key);
-                                if (lst_user_hp.indexOf(key.trim()) == -1 && (!key.equals(LoginActivity.TOPIC_TBCHUNG))) {
-                                    //user is not subscribe to this topic, unsub it
-                                    FirebaseMessaging.getInstance().unsubscribeFromTopic(key);
-                                    Log.d(TAG, "onResponse: Unsubscribe topic = " + key);
-                                }
-
-                                Log.d(TAG, "onResponse: " + key);
-                            }
-
-                            //check TBChung is subscribe ?
-                            if (sub_list.indexOf(LoginActivity.TOPIC_TBCHUNG) == -1) {
-                                //TBChung was not subscribe yet!, subscribe it now
-                                FirebaseMessaging.getInstance().subscribeToTopic(LoginActivity.TOPIC_TBCHUNG);
-
-                                Log.d(TAG, "onResponse: Subscribe topic = " + LoginActivity.TOPIC_TBCHUNG);
-                            }
-
-
-                            //subscribe topic
-                            for(String str: lst_user_hp) {
-                                if (sub_list.indexOf(str) == -1)
-                                    //this topics was not subscribed yet, subscribe it now
-                                    FirebaseMessaging.getInstance().subscribeToTopic(str);
-                            }
-
-                            //sync topic complete
-
-                            //TODO: action after sync topic
-                            check_intent();
-
-
+                            json_topics = new JSONObject("{}");
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            //TODO: Error here
+                            Toast.makeText(SplashActivity.this, R.string.error_sync_topic, Toast.LENGTH_LONG).show();
+                            check_intent();
                         }
+                        try {
+                            json_topics = response.getJSONObject("rel").getJSONObject("topics");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+
+                        }
+                        Log.d(TAG, "onResponse: " + json_topics.toString());
+
+                        Iterator<String> keys = json_topics.keys();
+                        ArrayList<String> sub_list = new ArrayList<>();
+                        String key = "";
+
+                        //remove unsubscribe topic
+                        while(keys.hasNext()) {
+                            key = keys.next();
+                            sub_list.add(key);
+                            if (lst_user_hp.indexOf(key.trim()) == -1 && (!key.equals(LoginActivity.TOPIC_TBCHUNG))) {
+                                //user is not subscribe to this topic, unsub it
+                                FirebaseMessaging.getInstance().unsubscribeFromTopic(key);
+                                Log.d(TAG, "onResponse: Unsubscribe topic = " + key);
+                            }
+
+                            Log.d(TAG, "onResponse: " + key);
+                        }
+
+                        //check TBChung is subscribe ?
+                        if (sub_list.indexOf(LoginActivity.TOPIC_TBCHUNG) == -1) {
+                            //TBChung was not subscribe yet!, subscribe it now
+                            FirebaseMessaging.getInstance().subscribeToTopic(LoginActivity.TOPIC_TBCHUNG);
+
+                            Log.d(TAG, "onResponse: Subscribe topic = " + LoginActivity.TOPIC_TBCHUNG);
+                        }
+
+
+                        //subscribe topic
+                        for(String str: lst_user_hp) {
+                            if (sub_list.indexOf(str) == -1)
+                                //this topics was not subscribed yet, subscribe it now
+                                FirebaseMessaging.getInstance().subscribeToTopic(str);
+                        }
+
+                        //sync topic complete
+
+                        //TODO: action after sync topic
+                        check_intent();
                     }
                 },
                 new Response.ErrorListener() {

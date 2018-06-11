@@ -1,6 +1,8 @@
 package com.example.hoangcongtuan.quanlylichhoc.utils;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -40,6 +42,21 @@ public class Utils {
             for (String s : lstTopic) {
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(s);
             }
+        }
+
+        public void showErrorMessage(Context context, String message) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(R.string.error_title);
+            builder.setMessage(message);
+
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+
+            builder.create().show();
         }
 
         public void subscribeTopic(ArrayList<String> lstTopic) {

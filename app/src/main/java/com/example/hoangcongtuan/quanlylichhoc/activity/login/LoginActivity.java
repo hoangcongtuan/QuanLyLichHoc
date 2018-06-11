@@ -177,6 +177,8 @@ public class LoginActivity extends AppCompatActivity
                 Snackbar snackbar = Snackbar.make(coordinatorLayout,
                         getResources().getString(R.string.fb_login_failed), Snackbar.LENGTH_INDEFINITE);
                 snackbar.show();
+                Log.d(TAG, "onError: = " + error.toString());
+                LoginManager.getInstance().logOut();
             }
         });
     }

@@ -105,7 +105,7 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        //super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_DETAIL || requestCode == RC_ADD) {
             //update alarm list
             reminderAdapter.removeAllReminder();

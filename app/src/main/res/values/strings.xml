@@ -150,5 +150,6 @@
     <string name="need_internet_for_posts">Ứng dụng cần internet để cập nhật các thông báo, hãy bật kết nối internet trên thiết bị của bạn</string>
     <string name="or">or</string>
     <string name="app_name_vi">QUẢN LÝ LỊCH HỌC</string>
+    <string name="cannot_open_cam">Can\'t open Camera</string>
 
 </resources>
