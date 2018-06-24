@@ -279,7 +279,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 }
         );
 
-        Utils.VolleyUtils.getsInstance(getApplicationContext()).getRequestQueue().add(imageRequest);
+        Utils.getsInstance(getApplicationContext()).getRequestQueue().add(imageRequest);
     }
 
 
@@ -416,7 +416,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.btnFinish:
-                if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
+                if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
                     finishFragment.setOnUpLoadUserDBComplete(new FinishFragment.OnUpLoadUserDBComplete() {
                         @Override
                         public void onSuccess() {
@@ -449,10 +449,10 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                         getImageFragment.reallyOpenCamera();
                     } catch (AppException e) {
                         e.printStackTrace();
-                        Utils.QLLHUtils.getsInstance(getApplicationContext()).showErrorMessage(this, e.getMessage());
+                        Utils.getsInstance(getApplicationContext()).showErrorMessage(this, e.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Utils.QLLHUtils.getsInstance(getApplicationContext()).showErrorMessage(this, e.getMessage());
+                        Utils.getsInstance(getApplicationContext()).showErrorMessage(this, e.getMessage());
                     }
                 }
 

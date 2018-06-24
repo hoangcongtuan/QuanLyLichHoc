@@ -23,90 +23,61 @@ import java.util.Comparator;
  */
 
 public class Utils {
-    public static class QLLHUtils {
-        private final static String TAG = QLLHUtils.class.getName();
-        private static QLLHUtils sInstance;
 
-        private QLLHUtils(Context context) {
+    private RequestQueue requestQueue;
+    private static Utils sInstance;
 
+    private Utils(Context context) {
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context);
         }
+    }
 
-        public static QLLHUtils getsInstance(Context context) {
-            if (sInstance == null)
-                sInstance = new QLLHUtils(context);
-            return sInstance;
+    public static Utils getsInstance(Context context) {
+        if (sInstance == null)
+            sInstance = new Utils(context);
+        return sInstance;
+    }
+
+    public void unSubscribeAllTopics(ArrayList<String> lstTopic) {
+        for (String s : lstTopic) {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(s);
         }
+    }
 
+    public void showErrorMessage(Context context, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.error_title);
+        builder.setMessage(message);
 
-        public void unSubscribeAllTopics(ArrayList<String> lstTopic) {
-            for (String s : lstTopic) {
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(s);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
             }
-        }
+        });
 
-        public void showErrorMessage(Context context, String message) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle(R.string.error_title);
-            builder.setMessage(message);
-
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            });
-
-            builder.create().show();
-        }
-
-        public void subscribeTopic(ArrayList<String> lstTopic) {
-            for (String s : lstTopic)
-                FirebaseMessaging.getInstance().subscribeToTopic(s);
-        }
-
-        public void unSubscribeTopic(String topic) {
-            FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
-        }
-
-        public void subscribeTopic(String topic) {
-            FirebaseMessaging.getInstance().subscribeToTopic(topic);
-        }
+        builder.create().show();
     }
 
-    public static int getToolbarHeight(Context context) {
-        final TypedArray styledAttributes = context.getTheme().obtainStyledAttributes(
-                new int[]{R.attr.actionBarSize});
-        int toolbarHeight = (int) styledAttributes.getDimension(0, 0);
-        styledAttributes.recycle();
-
-        return toolbarHeight;
+    public void subscribeTopic(ArrayList<String> lstTopic) {
+        for (String s : lstTopic)
+            FirebaseMessaging.getInstance().subscribeToTopic(s);
     }
 
-
-    public static class VolleyUtils {
-        private static final String TAG = Volley.class.getName();
-        private static VolleyUtils sInstance;
-        private RequestQueue requestQueue;
-
-        private VolleyUtils(Context context) {
-            if (requestQueue == null) {
-                requestQueue = Volley.newRequestQueue(context);
-            }
-        }
-
-        public static synchronized VolleyUtils getsInstance(Context context) {
-            if (sInstance == null)
-                sInstance = new VolleyUtils(context);
-            return  sInstance;
-        }
-
-        public RequestQueue getRequestQueue() {
-            return requestQueue;
-        }
+    public void unSubscribeTopic(String topic) {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
     }
 
+    public void subscribeTopic(String topic) {
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+    }
 
-    public static void sortLHP(ArrayList<LopHP> lstLopHP) {
+    public RequestQueue getRequestQueue() {
+        return requestQueue;
+    }
+
+    public void sortLHP(ArrayList<LopHP> lstLopHP) {
         Collections.sort(lstLopHP, new Comparator<LopHP>() {
             @Override
             public int compare(LopHP lopHP, LopHP lopHP2) {
@@ -115,40 +86,21 @@ public class Utils {
         });
     }
 
+    public boolean isNetworkConnected(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return (netInfo != null && netInfo.isConnectedOrConnecting());
+    }
 
+    public boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("https://www.google.com"); //You can replace it with your name
+            return !ipAddr.equals("");
 
-    public static class InternetUitls {
-        private final static String TAG = InternetUitls.class.getName();
-        private static InternetUitls sInstance;
-        private Context mContext;
-
-        private InternetUitls(Context context) {
-            this.mContext = context;
+        } catch (Exception e) {
+            return false;
         }
 
-        public static InternetUitls getsInstance(Context context) {
-            if (sInstance == null)
-                sInstance = new InternetUitls(context);
-            return sInstance;
-        }
-
-        public boolean isNetworkConnected() {
-            ConnectivityManager cm =
-                    (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo netInfo = cm.getActiveNetworkInfo();
-            return (netInfo != null && netInfo.isConnectedOrConnecting());
-        }
-
-
-        public boolean isInternetAvailable() {
-            try {
-                InetAddress ipAddr = InetAddress.getByName("https://www.google.com"); //You can replace it with your name
-                return !ipAddr.equals("");
-
-            } catch (Exception e) {
-                return false;
-            }
-
-        }
     }
 }

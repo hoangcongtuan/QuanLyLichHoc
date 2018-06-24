@@ -104,10 +104,10 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
                     openCamera();
                 } catch (AppException e) {
                     e.printStackTrace();
-                    Utils.QLLHUtils.getsInstance(getApplicationContext()).showErrorMessage(getActivity(), e.getMessage());
+                    Utils.getsInstance(getApplicationContext()).showErrorMessage(getActivity(), e.getMessage());
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Utils.QLLHUtils.getsInstance(getApplicationContext()).showErrorMessage(getActivity(), e.getMessage());
+                    Utils.getsInstance(getApplicationContext()).showErrorMessage(getActivity(), e.getMessage());
                 }
                 break;
             case R.id.btnPickGallery:
@@ -180,10 +180,10 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
                         reallyOpenCamera();
                     } catch (AppException e) {
                         e.printStackTrace();
-                        Utils.QLLHUtils.getsInstance(getApplicationContext()).showErrorMessage(getActivity(), e.getMessage());
+                        Utils.getsInstance(getApplicationContext()).showErrorMessage(getActivity(), e.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Utils.QLLHUtils.getsInstance(getApplicationContext()).showErrorMessage(getActivity(), e.getMessage());
+                        Utils.getsInstance(getApplicationContext()).showErrorMessage(getActivity(), e.getMessage());
                     }
                 }
 

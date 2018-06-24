@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
-import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDatabase;
+import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 
 import java.text.ParseException;
@@ -73,7 +73,7 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
         if (intent.hasExtra(ReminderManager.KEY_REMINDER_ID)) {
             remiderId = intent.getIntExtra(ReminderManager.KEY_REMINDER_ID, 0);
             if (remiderId != 0) {
-                reminder = ReminderDatabase.getsInstance(getApplicationContext()).getReminder(remiderId);
+                reminder = ReminderDBHelper.getsInstance(getApplicationContext()).getReminder(remiderId);
                 //show remider to UI
                 edtTitle.setText(reminder.getTitle());
                 edtContent.setText(reminder.getContent());
@@ -178,7 +178,7 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
         String mType = "none";
         reminder = new Reminder(mTitle, mContent, mDate, mTime, mRepeat, mType);
         reminder.setId(remiderId);
-        ReminderDatabase.getsInstance(getApplicationContext()).updateReminder(reminder);
+        ReminderDBHelper.getsInstance(getApplicationContext()).updateReminder(reminder);
         ReminderManager.getsInstance(getApplicationContext()).setReminder(reminder.getId(), mCalendar);
     }
 

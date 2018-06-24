@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
-import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDatabase;
+import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 
 import java.text.ParseException;
@@ -72,7 +72,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
         if (i.hasExtra(ReminderManager.KEY_REMINDER_ID)) {
             reminderId = i.getIntExtra(ReminderManager.KEY_REMINDER_ID, 0);
 
-            Reminder reminder = ReminderDatabase.getsInstance(getApplicationContext()).getReminder(reminderId);
+            Reminder reminder = ReminderDBHelper.getsInstance(getApplicationContext()).getReminder(reminderId);
             tvTitle.setText(reminder.getTitle());
             tvContent.setText(reminder.getContent());
             @SuppressLint("SimpleDateFormat")
@@ -174,7 +174,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
 
     private void deleteAlarm() {
         ReminderManager.getsInstance(getApplicationContext()).deleteReminder(reminderId);
-        ReminderDatabase.getsInstance(getApplicationContext()).deleteReminder(reminderId);
+        ReminderDBHelper.getsInstance(getApplicationContext()).deleteReminder(reminderId);
     }
 
     @Override
@@ -182,7 +182,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
         if (requestCode == RC_EDIT && resultCode == RESULT_OK) {
             if (data.hasExtra(ReminderManager.KEY_REMINDER_ID)) {
                 //Update UI proper to new Alarm
-                Reminder reminder = ReminderDatabase.getsInstance(getApplicationContext()).getReminder(
+                Reminder reminder = ReminderDBHelper.getsInstance(getApplicationContext()).getReminder(
                         data.getIntExtra(ReminderManager.KEY_REMINDER_ID, 0)
                 );
                 tvTitle.setText(reminder.getTitle());

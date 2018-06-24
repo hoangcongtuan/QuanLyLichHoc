@@ -177,7 +177,7 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
     }
 
     public void sortItem() {
-        Utils.sortLHP(lstLopHP);
+        Utils.getsInstance(mContext).sortLHP(lstLopHP);
         this.notifyDataSetChanged();
     }
 

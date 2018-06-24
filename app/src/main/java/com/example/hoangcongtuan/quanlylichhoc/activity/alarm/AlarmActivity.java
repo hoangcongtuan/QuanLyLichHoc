@@ -19,7 +19,7 @@ import com.example.hoangcongtuan.quanlylichhoc.adapter.ReminderAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.CircularAnimUtil;
-import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDatabase;
+import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 
 import java.text.ParseException;
@@ -61,7 +61,7 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
                 0, ItemTouchHelper.RIGHT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvAlarm);
 
-        ArrayList<Reminder> listReminders = ReminderDatabase.getsInstance(getApplicationContext()).getAllReminders();
+        ArrayList<Reminder> listReminders = ReminderDBHelper.getsInstance(getApplicationContext()).getAllReminders();
         reminderAdapter = new ReminderAdapter(this, listReminders);
         rvAlarm.setAdapter(reminderAdapter);
         reminderAdapter.setClickListener(this);
@@ -109,7 +109,7 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
         if (requestCode == RC_DETAIL || requestCode == RC_ADD) {
             //update alarm list
             reminderAdapter.removeAllReminder();
-            ArrayList<Reminder> lstReminder = ReminderDatabase.getsInstance(getApplicationContext()).getAllReminders();
+            ArrayList<Reminder> lstReminder = ReminderDBHelper.getsInstance(getApplicationContext()).getAllReminders();
             for(Reminder r : lstReminder)
                 reminderAdapter.addReminder(r);
             reminderAdapter.notifyDataSetChanged();
@@ -134,7 +134,7 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            ReminderDatabase.getsInstance(getApplicationContext()).deleteReminder(deleteReminder.getId());
+            ReminderDBHelper.getsInstance(getApplicationContext()).deleteReminder(deleteReminder.getId());
             ReminderManager.getsInstance(getApplicationContext()).deleteReminder(deleteReminder.getId());
             reminderAdapter.removeReminder(viewHolder.getAdapterPosition());
             //reminderAdapter.notifyDataSetChanged();
@@ -143,7 +143,7 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
                         @Override
                         public void onClick(View view) {
                             reminderAdapter.restoreReminder(deleteReminder, deletePosition);
-                            ReminderDatabase.getsInstance(getApplicationContext()).addReminder(deleteReminder);
+                            ReminderDBHelper.getsInstance(getApplicationContext()).addReminder(deleteReminder);
                             ReminderManager.getsInstance(getApplicationContext()).setReminder(deleteReminder.getId(), calendar);
                         }
                     })

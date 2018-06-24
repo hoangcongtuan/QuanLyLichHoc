@@ -132,7 +132,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                     Snackbar.make(editHPLayout,
                              getResources().getString(R.string.incorrect_ma_hp), Snackbar.LENGTH_LONG).show();
                 }
-                else if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
+                else if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
                     addUserHP(lopHPCustomDialogBuilder.getCurrentLopHP().getMaHP());
                 }
                 else
@@ -198,7 +198,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 DBLopHPHelper.getsInstance().insertUserMaHocPhan(id);
 
                 //subscrible topic
-                Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(id);
+                Utils.getsInstance(getApplicationContext()).subscribeTopic(id);
 
                 modified = true;
 
@@ -239,7 +239,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 DBLopHPHelper.getsInstance().deleteUserMaHocPhan(id);
 
                 //unbsubscrible topic
-                Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(id);
+                Utils.getsInstance(getApplicationContext()).unSubscribeTopic(id);
 
                 //update flag
                 modified = true;
@@ -279,7 +279,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 DBLopHPHelper.getsInstance().insertUserMaHocPhan(id);
 
                 //subscrible topic
-                Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(id);
+                Utils.getsInstance(getApplicationContext()).subscribeTopic(id);
 
                 modified = true;
 
@@ -322,7 +322,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 DBLopHPHelper.getsInstance().deleteUserMaHocPhan(id);
 
                 //unbsubscrible topic
-                Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(id);
+                Utils.getsInstance(getApplicationContext()).unSubscribeTopic(id);
 
                 //update flag
                 modified = true;
@@ -371,7 +371,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof RVHPhanAdapter.ViewHolder) {
-            if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
+            if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
                 final LopHP lopHP = rvHPhanAdapter.getItem(position);
                 removeUserHP(lopHP.getMaHP());
             }

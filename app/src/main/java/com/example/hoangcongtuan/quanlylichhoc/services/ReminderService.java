@@ -16,7 +16,7 @@ import android.util.Log;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.alarm.AlarmDetailActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
-import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDatabase;
+import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 /**
  * Created by huuthangit on 2017-10-25.
@@ -41,7 +41,7 @@ public class ReminderService extends IntentService {
                 Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         //Get reminder from database
-        Reminder reminder = ReminderDatabase.getsInstance(getApplicationContext()).getReminder(idReceived);
+        Reminder reminder = ReminderDBHelper.getsInstance(getApplicationContext()).getReminder(idReceived);
 
 
         PendingIntent pi = PendingIntent.getActivity(this, 0, detailIntent, PendingIntent.FLAG_UPDATE_CURRENT);

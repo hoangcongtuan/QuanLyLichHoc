@@ -215,7 +215,7 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
             }
         });
 
-        Utils.VolleyUtils.getsInstance(getApplicationContext()).getRequestQueue().add(jsonRequest);
+        Utils.getsInstance(getApplicationContext()).getRequestQueue().add(jsonRequest);
     }
 
     @Override
@@ -242,7 +242,7 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: ");
-        if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
+        if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
             show_normal();
             search_first_time();
         }

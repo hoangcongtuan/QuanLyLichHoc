@@ -205,14 +205,14 @@ public class LoginActivity extends AppCompatActivity
 
     public void googleSignIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected())
+        if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext()))
             startActivityForResult(signInIntent, RC_SIGN_IN);
         else
             showNoInternetMessage();
     }
 
     public void facebookSignIn() {
-        if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected())
+        if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext()))
             LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
         else
             showNoInternetMessage();
@@ -324,8 +324,8 @@ public class LoginActivity extends AppCompatActivity
 
                         ArrayList<String> list_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
                         //subscribe new topic
-                        Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(list_topic);
-                        Utils.QLLHUtils.getsInstance(getApplicationContext()).subscribeTopic(LoginActivity.TOPIC_TBCHUNG);
+                        Utils.getsInstance(getApplicationContext()).subscribeTopic(list_topic);
+                        Utils.getsInstance(getApplicationContext()).subscribeTopic(LoginActivity.TOPIC_TBCHUNG);
 
 
                         //goto MainAct
@@ -402,7 +402,7 @@ public class LoginActivity extends AppCompatActivity
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     //subscribe list_topic
-                                    Utils.QLLHUtils.getsInstance(getApplicationContext())
+                                    Utils.getsInstance(getApplicationContext())
                                             .subscribeTopic(list_topic);
                                     //call back
                                     onSyncToken.onSuccess();
@@ -458,7 +458,7 @@ public class LoginActivity extends AppCompatActivity
             }
 
         };
-        Utils.VolleyUtils.getsInstance(this).getRequestQueue().add(jsonRequest);
+        Utils.getsInstance(this).getRequestQueue().add(jsonRequest);
     }
 
 

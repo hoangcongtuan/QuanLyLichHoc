@@ -480,7 +480,7 @@ public class SplashActivity extends AppCompatActivity {
             }
         };
 
-        Utils.VolleyUtils.getsInstance(this).getRequestQueue().add(jsonRequest);
+        Utils.getsInstance(this).getRequestQueue().add(jsonRequest);
 
     }
 
@@ -524,7 +524,7 @@ public class SplashActivity extends AppCompatActivity {
         createNotificationChannel();
 
         //check internet
-        if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
+        if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
             //kiem tra phien ban phan mem
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
             DatabaseReference ref_version = databaseReference.child(KEY_VERSION);

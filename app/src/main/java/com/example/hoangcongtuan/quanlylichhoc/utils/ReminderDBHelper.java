@@ -14,11 +14,11 @@ import java.util.ArrayList;
  * Created by huuthangit on 2017-10-25.
  */
 
-public class ReminderDatabase extends SQLiteOpenHelper{
-    private static final String TAG = ReminderDatabase.class.getName();
+public class ReminderDBHelper extends SQLiteOpenHelper{
+    private static final String TAG = ReminderDBHelper.class.getName();
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "ReminderDatabase";
+    private static final String DATABASE_NAME = "ReminderDBHelper";
     private static final String TABLE_REMINDERS = "ReminderTable";
 
     private static final String KEY_ID = "id";
@@ -31,15 +31,15 @@ public class ReminderDatabase extends SQLiteOpenHelper{
 
     private Context mContext;
 
-    private static ReminderDatabase sInstance;
+    private static ReminderDBHelper sInstance;
 
-    public static ReminderDatabase getsInstance(Context context) {
+    public static ReminderDBHelper getsInstance(Context context) {
         if (sInstance == null)
-            sInstance = new ReminderDatabase(context);
+            sInstance = new ReminderDBHelper(context);
         return sInstance;
     }
 
-    private ReminderDatabase(Context context) {
+    private ReminderDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.mContext = context;
     }

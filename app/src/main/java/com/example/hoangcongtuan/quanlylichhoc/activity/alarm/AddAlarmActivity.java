@@ -17,7 +17,7 @@ import android.widget.TimePicker;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
-import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDatabase;
+import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 
 import java.text.SimpleDateFormat;
@@ -105,7 +105,7 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
         int mRepeat = 0;
         String mType = "none";
         reminder = new Reminder(reminderTitle, reminderContent, date, time, mRepeat, mType);
-        ReminderDatabase.getsInstance(getApplicationContext()).addReminder(reminder);
+        ReminderDBHelper.getsInstance(getApplicationContext()).addReminder(reminder);
 
         ReminderManager.getsInstance(getApplicationContext()).setReminder(reminder.getId(), calendar);
     }

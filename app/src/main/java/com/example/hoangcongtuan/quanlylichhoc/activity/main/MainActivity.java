@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         );
 
-        Utils.VolleyUtils.getsInstance(getApplicationContext()).getRequestQueue().add(avatarRequest);
+        Utils.getsInstance(getApplicationContext()).getRequestQueue().add(avatarRequest);
     }
 
     private void searchPost(String text) {
@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         };
-        Utils.VolleyUtils.getsInstance(this).getRequestQueue().add(jsonRequest);
+        Utils.getsInstance(this).getRequestQueue().add(jsonRequest);
     }
 
     private void setWidgets() {
@@ -264,10 +264,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         ArrayList<String> list_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
         //unsubscrible all topics
-        Utils.QLLHUtils.getsInstance(this).unSubscribeAllTopics(
+        Utils.getsInstance(this).unSubscribeAllTopics(
                 list_topic
         );
-        Utils.QLLHUtils.getsInstance(this).unSubscribeTopic(
+        Utils.getsInstance(this).unSubscribeTopic(
                 LoginActivity.TOPIC_TBCHUNG
         );
 
@@ -344,8 +344,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 //unsbuscribe all topic
                                 ArrayList<String> list_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
 
-                                Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeAllTopics(list_topic);
-                                Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(LoginActivity.TOPIC_TBCHUNG);
+                                Utils.getsInstance(getApplicationContext()).unSubscribeAllTopics(list_topic);
+                                Utils.getsInstance(getApplicationContext()).unSubscribeTopic(LoginActivity.TOPIC_TBCHUNG);
 
                                 DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
                                 logOut();
@@ -388,7 +388,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 logOut();
                 break;
             case R.id.item_xoa_du_lieu:
-                if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
+                if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
                     showDeleteUserDBDialog();
                 }
                 else {
@@ -440,7 +440,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
 
-        if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {
+        if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
             tbChungFragment.hide_empty_state();
             tbHPhanFragment.hide_empty_state();
             Intent intent = getIntent();

@@ -59,14 +59,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void unSubscribe() {
-        Utils.QLLHUtils.getsInstance(this).unSubscribeAllTopics(DBLopHPHelper.getsInstance().getListUserMaHP());
-        Utils.QLLHUtils.getsInstance(this).unSubscribeTopic(
+        Utils.getsInstance(this).unSubscribeAllTopics(DBLopHPHelper.getsInstance().getListUserMaHP());
+        Utils.getsInstance(this).unSubscribeTopic(
                 TOPIC_TBCHUNG);
     }
 
     private void subscribe() {
-        Utils.QLLHUtils.getsInstance(this).subscribeTopic(DBLopHPHelper.getsInstance().getListUserMaHP());
-        Utils.QLLHUtils.getsInstance(this).subscribeTopic(
+        Utils.getsInstance(this).subscribeTopic(DBLopHPHelper.getsInstance().getListUserMaHP());
+        Utils.getsInstance(this).subscribeTopic(
                 TOPIC_TBCHUNG
         );
     }
