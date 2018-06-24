@@ -321,16 +321,16 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             case STEP_PREPARE:
                 tvStep1Label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTextDisable));
                 tvStep1.setTextColor(Color.WHITE);
-                tvStep1.setBackgroundResource(R.drawable.background_circle);
+                tvStep1.setBackgroundResource(R.drawable.shape_circle);
 
 
                 tvStep2Label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTextDisable));
                 tvStep2.setTextColor(Color.WHITE);
-                tvStep2.setBackgroundResource(R.drawable.background_circle);
+                tvStep2.setBackgroundResource(R.drawable.shape_circle);
 
                 tvStep3Label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTextDisable));
                 tvStep3.setTextColor(Color.WHITE);
-                tvStep3.setBackgroundResource(R.drawable.background_circle);
+                tvStep3.setBackgroundResource(R.drawable.shape_circle);
 
                 btnNext.setEnabled(false);
                 btnBack.setEnabled(false);
@@ -339,16 +339,16 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             case STEP_GET_IMAGE:
                 tvStep1.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorStepperText));
                 tvStep1Label.setTextColor(Color.WHITE);
-                tvStep1.setBackgroundResource(R.drawable.background_circle_white);
+                tvStep1.setBackgroundResource(R.drawable.shape_circle_white);
 
 
                 tvStep2Label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTextDisable));
                 tvStep2.setTextColor(Color.WHITE);
-                tvStep2.setBackgroundResource(R.drawable.background_circle);
+                tvStep2.setBackgroundResource(R.drawable.shape_circle);
 
                 tvStep3Label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTextDisable));
                 tvStep3.setTextColor(Color.WHITE);
-                tvStep3.setBackgroundResource(R.drawable.background_circle);
+                tvStep3.setBackgroundResource(R.drawable.shape_circle);
 
 
                 break;
@@ -356,16 +356,16 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
                 tvStep2.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorStepperText));
                 tvStep2Label.setTextColor(Color.WHITE);
-                tvStep2.setBackgroundResource(R.drawable.background_circle_white);
+                tvStep2.setBackgroundResource(R.drawable.shape_circle_white);
 
 
                 tvStep1Label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTextDisable));
                 tvStep1.setTextColor(Color.WHITE);
-                tvStep1.setBackgroundResource(R.drawable.background_circle);
+                tvStep1.setBackgroundResource(R.drawable.shape_circle);
 
                 tvStep3Label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTextDisable));
                 tvStep3.setTextColor(Color.WHITE);
-                tvStep3.setBackgroundResource(R.drawable.background_circle);
+                tvStep3.setBackgroundResource(R.drawable.shape_circle);
 
                 recognizeFragment.setBitmap(
                         getImageFragment.bitmap
@@ -376,16 +376,16 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             case STEP_FINISH:
                 tvStep3.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorStepperText));
                 tvStep3Label.setTextColor(Color.WHITE);
-                tvStep3.setBackgroundResource(R.drawable.background_circle_white);
+                tvStep3.setBackgroundResource(R.drawable.shape_circle_white);
 
 
                 tvStep2Label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTextDisable));
                 tvStep2.setTextColor(Color.WHITE);
-                tvStep2.setBackgroundResource(R.drawable.background_circle);
+                tvStep2.setBackgroundResource(R.drawable.shape_circle);
 
                 tvStep1Label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTextDisable));
                 tvStep1.setTextColor(Color.WHITE);
-                tvStep1.setBackgroundResource(R.drawable.background_circle);
+                tvStep1.setBackgroundResource(R.drawable.shape_circle);
 
                 finishFragment.processTKB(recognizeFragment.getListMaHp());
                 break;

@@ -183,7 +183,7 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //menu xuat hien khi nhan button ... tren bang tin
     public void showPopupNewFeed(final View view, final int position) {
         PopupMenu popupMenu = new PopupMenu(mContext, view);
-        popupMenu.inflate(R.menu.menu_new_feed);
+        popupMenu.inflate(R.menu.menu_post);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

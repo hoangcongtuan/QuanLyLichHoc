@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:src="@drawable/crop_guide"
+        android:src="@drawable/img_crop_guide"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="0dp"
         app:layout_constraintLeft_toLeftOf="parent"

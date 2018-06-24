@@ -39,7 +39,7 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_alarm);
+        setContentView(R.layout.activity_alarm_edit);
 
         init();
         initWidget();

@@ -43,7 +43,7 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
     @Override
     public RVHPhanAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.item_hphan_with_background, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_item_hphan_with_background, parent, false);
         RVHPhanAdapter.ViewHolder viewHolder = new RVHPhanAdapter.ViewHolder(view);
         return viewHolder;
     }

@@ -51,7 +51,7 @@ public class LopHPCustomDialogBuilder extends AlertDialog.Builder {
     private void init() {
         setTitle(getContext().getResources().getString(R.string.lop_hoc_phan));
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        rootView = inflater.inflate(R.layout.dialog_them_hphan, null);
+        rootView = inflater.inflate(R.layout.layout_them_hphan_dialog, null);
         lstMaHP = DBLopHPHelper.getsInstance().getListMaHP();
         lstTenHP = DBLopHPHelper.getsInstance().getListTenHP();
 

@@ -33,7 +33,7 @@ public class EditMaHPCustomDialogBuilder extends AlertDialog.Builder {
 
     private void init() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        rootView = inflater.inflate(R.layout.dialog_edit_ma_hp, null);
+        rootView = inflater.inflate(R.layout.layout_edit_ma_hp_dialog, null);
 
     }
 

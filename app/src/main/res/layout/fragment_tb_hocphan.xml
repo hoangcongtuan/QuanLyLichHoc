@@ -6,7 +6,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/empty_state"
+        android:src="@drawable/img_no_internet"
         android:layout_margin="64dp"
         android:id="@+id/img_empty_state"
         android:visibility="invisible"/>

@@ -13,5 +13,5 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <include layout="@layout/stepper_bar"/>
+    <include layout="@layout/layout_stepper_bar"/>
 </android.support.design.widget.AppBarLayout>

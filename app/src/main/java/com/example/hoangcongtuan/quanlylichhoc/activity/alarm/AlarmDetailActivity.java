@@ -61,7 +61,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_alarm_detail, menu);
         return true;
     }
 

@@ -78,7 +78,7 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
         alertBuilder.setTitle(getResources().getString(R.string.crop_dialog_title));
         alertBuilder.setMessage(getResources().getString(R.string.crop_dialog_message));
         LayoutInflater inflater1 = getActivity().getLayoutInflater();
-        View dialogView = inflater1.inflate(R.layout.crop_guide_dialog_layout, null);
+        View dialogView = inflater1.inflate(R.layout.layout_crop_guide_dialog, null);
         alertBuilder.setView(dialogView);
         alertBuilder.setPositiveButton(getResources().getString(R.string.understand), new DialogInterface.OnClickListener() {
             @Override

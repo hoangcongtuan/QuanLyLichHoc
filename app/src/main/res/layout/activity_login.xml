@@ -15,7 +15,7 @@
             android:id="@+id/layout_login"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/login_background_1">
+            android:background="@drawable/img_login_background">
 
             <ImageView
                 android:id="@+id/imageView4"
@@ -24,7 +24,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="48dp"
-                android:src="@drawable/icon"
+                android:src="@drawable/ic_app"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -61,7 +61,7 @@
                     android:layout_height="50dp"
                     android:layout_marginLeft="32dp"
                     android:layout_marginRight="32dp"
-                    android:background="@drawable/fb_login_shape"
+                    android:background="@drawable/shape_fb_login_button"
                     android:drawableLeft="@drawable/ic_facebook"
                     android:drawableStart="@drawable/ic_facebook"
                     android:text="@string/login_with_facebook"
@@ -79,7 +79,7 @@
                     android:layout_marginLeft="32dp"
                     android:layout_marginRight="32dp"
                     android:layout_marginTop="32dp"
-                    android:background="@drawable/gg_login_shape"
+                    android:background="@drawable/shape_gg_login"
                     android:drawableLeft="@drawable/ic_google"
                     android:drawableStart="@drawable/ic_google"
                     android:text="@string/login_with_google"
