@@ -22,7 +22,7 @@
 
             <include layout="@layout/layout_setup_app_bar"/>
 
-            <com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager_new
+            <com.example.hoangcongtuan.quanlylichhoc.customview.NoSwipeCustomViewPager
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -69,6 +69,7 @@
                 android:text="@string/next"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_alignParentEnd="true"/>
+
         </RelativeLayout>
     </LinearLayout>
 

@@ -98,7 +98,7 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
     @Override
     public void onClick(View view, int position, boolean isLongClick) {
         Reminder reminder = reminderAdapter.getReminder(position);
-        Intent i = new Intent(AlarmActivity.this, AlarmDetailsActivity.class);
+        Intent i = new Intent(AlarmActivity.this, AlarmDetailActivity.class);
         i.putExtra(ReminderManager.KEY_REMINDER_ID, reminder.getId());
         startActivityForResult(i, RC_DETAIL);
     }

@@ -151,5 +151,13 @@
     <string name="or">or</string>
     <string name="app_name_vi">QUẢN LÝ LỊCH HỌC</string>
     <string name="cannot_open_cam">Can\'t open Camera</string>
+    <string name="skip">Bỏ qua</string>
+    <string name="add_manually">Thêm thủ công</string>
+
+    <string name="APP_CHANNEL_ID">QLLH_CHANNEL_ID</string>
+    <string name="APP_CHANNEL_NAME">QLLH_CHANNEL_NAME</string>
+    <string name="APP_CHANNEL_DESCRIPTION">Description about quan ly lich hoc notification channel</string>
+    <string name="sample_title">Thông báo đến lớp: [14.Nh25] Tuốc bin</string>
+    <string name="sample_content">Thầy/Cô nhắn: Lớp NGHỈ HỌC (Tiết:7-8) ngày: 07/09/2017</string>
 
 </resources>

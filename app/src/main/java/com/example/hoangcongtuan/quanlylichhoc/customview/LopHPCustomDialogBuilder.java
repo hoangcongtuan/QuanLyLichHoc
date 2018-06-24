@@ -20,9 +20,9 @@ import java.util.ArrayList;
  * Created by hoangcongtuan on 10/15/17.
  */
 
-public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
+public class LopHPCustomDialogBuilder extends AlertDialog.Builder {
 
-    private final static String TAG = CustomDialogBuilderLopHP.class.getName();
+    private final static String TAG = LopHPCustomDialogBuilder.class.getName();
 
     private View rootView;
     private AutoCompleteTextView autoMaHP;
@@ -37,7 +37,7 @@ public class CustomDialogBuilderLopHP extends AlertDialog.Builder {
 
     private LopHP currentLopHP;
 
-    public CustomDialogBuilderLopHP(@NonNull Context context) {
+    public LopHPCustomDialogBuilder(@NonNull Context context) {
         super(context);
 
         init();

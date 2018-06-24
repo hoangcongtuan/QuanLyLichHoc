@@ -1,10 +1,13 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
@@ -60,7 +63,6 @@ public class SplashActivity extends AppCompatActivity {
 
     private CoordinatorLayout layout_splash;
     private TextView tvLoadingInfo;
-    private TextView tvVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,7 @@ public class SplashActivity extends AppCompatActivity {
 
         layout_splash = findViewById(R.id.layout_finish);
         tvLoadingInfo = findViewById(R.id.tvLoadingInfo);
-        tvVersion = findViewById(R.id.tvVersion);
+        TextView tvVersion = findViewById(R.id.tvVersion);
 
         String version =  getResources().getString(R.string.version) + " " + getResources().getString(R.string.app_version);
         tvVersion.setText(version);
@@ -315,6 +317,26 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channel_id = getResources().getString(R.string.APP_CHANNEL_ID);
+            String channel_name = getResources().getString(R.string.APP_CHANNEL_NAME);
+            String channel_description = getResources().getString(R.string.APP_CHANNEL_DESCRIPTION);
+
+            int important = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(channel_id, channel_name, important);
+            channel.setDescription(channel_description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if (notificationManager != null)
+                notificationManager.createNotificationChannel(channel);
+            else
+                Log.d(TAG, "createNotificationChannel: Failed to get Notificatoin manager");
+                //TODO: Error handle here
+        }
+    }
+
+
     private void check_intent() {
         //check intent
         Intent splashIntent = getIntent();
@@ -479,7 +501,7 @@ public class SplashActivity extends AppCompatActivity {
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString(KEY_ALL_HP_DB_VERSION,versionInfo.database_version);
-                editor.commit();
+                editor.apply();
 
                 //check login
                 check_login(true);
@@ -499,6 +521,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: ");
+        createNotificationChannel();
 
         //check internet
         if (Utils.InternetUitls.getsInstance(getApplicationContext()).isNetworkConnected()) {

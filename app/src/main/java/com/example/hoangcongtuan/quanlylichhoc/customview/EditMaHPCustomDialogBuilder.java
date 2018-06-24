@@ -13,14 +13,14 @@ import com.example.hoangcongtuan.quanlylichhoc.R;
  * Created by hoangcongtuan on 10/15/17.
  */
 
-public class CustomDialogBuilderEditMaHP extends AlertDialog.Builder {
+public class EditMaHPCustomDialogBuilder extends AlertDialog.Builder {
 
-    private final static String TAG = CustomDialogBuilderEditMaHP.class.getName();
+    private final static String TAG = EditMaHPCustomDialogBuilder.class.getName();
 
     private View rootView;
     private EditText edtMaHP;
 
-    public CustomDialogBuilderEditMaHP(@NonNull Context context) {
+    public EditMaHPCustomDialogBuilder(@NonNull Context context) {
         super(context);
 
         init();

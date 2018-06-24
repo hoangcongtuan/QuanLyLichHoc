@@ -25,9 +25,8 @@ import java.util.Calendar;
 
 public class AddAlarmActivity extends AppCompatActivity implements View.OnClickListener{
 
-
-    public static final String extraTieuDe = "tieu_de";
-    public static final String extraNoiDung = "noi_dung";
+    public static final String EXTRA_TIEU_DE = "tieu_de";
+    public static final String EXTRA_NOI_DUNG = "noi_dung";
 
     private Calendar calendar;
     private String time;
@@ -40,7 +39,6 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alarm);
-
         initWidget();
     }
 
@@ -84,9 +82,9 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
     protected void onStart() {
         super.onStart();
         Intent intent = getIntent();
-        if (intent.hasExtra(extraTieuDe)) {
-            String title = intent.getStringExtra(extraTieuDe);
-            String content = intent.getStringExtra(extraNoiDung);
+        if (intent.hasExtra(EXTRA_TIEU_DE)) {
+            String title = intent.getStringExtra(EXTRA_TIEU_DE);
+            String content = intent.getStringExtra(EXTRA_NOI_DUNG);
             edtTitle.setText(title);
             edtContent.setText(content);
         }

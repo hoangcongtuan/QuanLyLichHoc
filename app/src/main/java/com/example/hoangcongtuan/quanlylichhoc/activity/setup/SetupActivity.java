@@ -1,7 +1,7 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.setup;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -31,8 +31,8 @@ import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.StepPagerAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager;
-import com.example.hoangcongtuan.quanlylichhoc.customview.CustomViewPager_new;
+import com.example.hoangcongtuan.quanlylichhoc.customview.NoSwipeCustomViewPager;
+import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.login.LoginManager;
@@ -49,10 +49,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener,
         NavigationView.OnNavigationItemSelectedListener{
     private final static String TAG = SetupActivity.class.getName();
-    private CustomViewPager_new viewPager;
+    private NoSwipeCustomViewPager viewPager;
     private Button btnBack;
     private Button btnNext;
     private Button btnFinish;
@@ -83,6 +85,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private ImageView imgAvatar;
 
     private GoogleApiClient mGoogleApiClient;
+
+    private boolean manuallyMode = false;
 
 
     private final static int STEP_PREPARE = 0;
@@ -134,9 +138,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void getWidgets() {
-
         //getWidgets
-        viewPager = (CustomViewPager_new) findViewById(R.id.viewPagerSetup);
+        viewPager = (NoSwipeCustomViewPager) findViewById(R.id.viewPagerSetup);
         btnBack = (Button)findViewById(R.id.btnBack);
         btnNext = (Button)findViewById(R.id.btnNext);
         btnFinish = (Button)findViewById(R.id.btnFinish);
@@ -195,10 +198,16 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
     private void setWidgetsEvent() {
         //setWidgetsEvent
-        getImageFragment.setWelcomeFragInterface(new GetImageFragment.WelcomeFragInterface() {
+        getImageFragment.setCallBack(new GetImageFragment.CallBack() {
             @Override
             public void onBitmapAvailable() {
                 btnNext.setEnabled(true);
+                manuallyMode = false;
+            }
+
+            @Override
+            public void onAddManually() {
+                manuallyMode = true;
             }
         });
 
@@ -388,9 +397,17 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnBack:
-                if (currentStep > STEP_GET_IMAGE)
+                if (manuallyMode) {
+                    if (currentStep == STEP_FINISH) {
+                        currentStep = STEP_GET_IMAGE;
+                        setStepper(currentStep);
+                        break;
+                    }
+                }
+                else if (currentStep > STEP_GET_IMAGE) {
                     currentStep--;
-                setStepper(currentStep);
+                    setStepper(currentStep);
+                }
                 break;
             case R.id.btnNext:
                 if(currentStep < STEP_FINISH){
@@ -419,6 +436,28 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 else
                     Toast.makeText(SetupActivity.this, "Không có internet, kiểm tra lại kết nôi mạng", Toast.LENGTH_LONG).show();
                 break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case GetImageFragment.RQ_PER_CAMERA: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        getImageFragment.reallyOpenCamera();
+                    } catch (AppException e) {
+                        e.printStackTrace();
+                        Utils.QLLHUtils.getsInstance(getApplicationContext()).showErrorMessage(this, e.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Utils.QLLHUtils.getsInstance(getApplicationContext()).showErrorMessage(this, e.getMessage());
+                    }
+                }
+
+                break;
+            }
         }
     }
 

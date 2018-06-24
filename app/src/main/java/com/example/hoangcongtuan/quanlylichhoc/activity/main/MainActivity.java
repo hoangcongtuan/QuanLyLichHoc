@@ -50,6 +50,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -128,7 +129,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .build();
         mGoogleApiClient.connect();
         user = firebaseAuth.getCurrentUser();
-        avatarUrl = user.getPhotoUrl();
+        avatarUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+        Log.d(TAG, "init: avatarurl = " + avatarUrl);
 
         database = FirebaseDatabase.getInstance().getReference();
         firebaseDBUserMaHP = database.child(LoginActivity.KEY_FIRBASE_USER)

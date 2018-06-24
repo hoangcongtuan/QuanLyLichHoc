@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -25,8 +24,8 @@ import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVHPhanAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.customview.CustomDialogBuilderEditMaHP;
-import com.example.hoangcongtuan.quanlylichhoc.customview.CustomDialogBuilderLopHP;
+import com.example.hoangcongtuan.quanlylichhoc.customview.EditMaHPCustomDialogBuilder;
+import com.example.hoangcongtuan.quanlylichhoc.customview.LopHPCustomDialogBuilder;
 import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
 import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
 import com.example.hoangcongtuan.quanlylichhoc.listener.RecyclerTouchListener;
@@ -147,7 +146,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
     }
 
     public void showEditMaHPDialog(final int itemPosition) {
-        final CustomDialogBuilderEditMaHP builderEditMaHP = new CustomDialogBuilderEditMaHP(getContext());
+        final EditMaHPCustomDialogBuilder builderEditMaHP = new EditMaHPCustomDialogBuilder(getContext());
         builderEditMaHP.setMaHP(rvhPhanAdapter.getItem(itemPosition).getMaHP());
         builderEditMaHP.setTitle(getString(R.string.edit_ma_hp));
         builderEditMaHP.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -290,28 +289,28 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
     }
 
     public void showAddLopHPDialog() {
-        final CustomDialogBuilderLopHP customDialogBuilderLopHP = new CustomDialogBuilderLopHP(getContext());
-        customDialogBuilderLopHP.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        final LopHPCustomDialogBuilder lopHPCustomDialogBuilder = new LopHPCustomDialogBuilder(getContext());
+        lopHPCustomDialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
         });
 
-        customDialogBuilderLopHP.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
+        lopHPCustomDialogBuilder.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                LopHP lopHP = customDialogBuilderLopHP.getCurrentLopHP();
+                LopHP lopHP = lopHPCustomDialogBuilder.getCurrentLopHP();
                 if (lopHP == null) {
                     Snackbar.make(layout_setup,
                             getResources().getString(R.string.incorrect_ma_hp), Snackbar.LENGTH_LONG).show();
                 }
                 else
-                    addUserHP(customDialogBuilderLopHP.getCurrentLopHP().getMaHP());
+                    addUserHP(lopHPCustomDialogBuilder.getCurrentLopHP().getMaHP());
             }
         });
 
-        AlertDialog alertDialog = customDialogBuilderLopHP.create();
+        AlertDialog alertDialog = lopHPCustomDialogBuilder.create();
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
     }

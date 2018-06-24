@@ -175,9 +175,13 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
         rvPostAdapter.addThongBao(null);
         rvPostAdapter.notifyItemInserted(rvPostAdapter.getItemCount() - 1);
 
+        final long startTime = System.nanoTime();
+
         JsonRequest jsonRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                long duration = System.nanoTime() - startTime;
+                Log.d(TAG, "onResponse: Time Execute = " + duration / 1e9f);
                 //Log.d(TAG, "onResponse: JSON = " + response.toString());
                 //json array to array list
                 ArrayList<String> arr_post_key = new ArrayList<>();
@@ -210,6 +214,7 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
                 Log.d(TAG, "onErrorResponse: " + error.getMessage());
             }
         });
+
         Utils.VolleyUtils.getsInstance(getApplicationContext()).getRequestQueue().add(jsonRequest);
     }
 

@@ -14,7 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.activity.alarm.AlarmDetailsActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.alarm.AlarmDetailActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDatabase;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
@@ -35,7 +35,7 @@ public class ReminderService extends IntentService {
 
         int idReceived = intent.getIntExtra(ReminderManager.KEY_REMINDER_ID, -1);
 
-        Intent detailIntent = new Intent(this, AlarmDetailsActivity.class);
+        Intent detailIntent = new Intent(this, AlarmDetailActivity.class);
         detailIntent.putExtra(ReminderManager.KEY_REMINDER_ID, idReceived);
         detailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                 Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -47,7 +47,8 @@ public class ReminderService extends IntentService {
         PendingIntent pi = PendingIntent.getActivity(this, 0, detailIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        String channel_id = getResources().getString(R.string.APP_CHANNEL_ID);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, channel_id);
         mBuilder.setAutoCancel(true)
                 .setSmallIcon(R.drawable.ic_alarm_white_24dp)
                 .setContentTitle(reminder.getTitle())
@@ -55,7 +56,8 @@ public class ReminderService extends IntentService {
                 .setLights(Color.BLUE, 1000, 1000)
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                 .setSound(notification)
-                .setColor(ContextCompat.getColor(this, R.color.colorGreen));
+                .setAutoCancel(true)
+                .setColor(ContextCompat.getColor(this, R.color.colorPrimary));
 
         mBuilder.setContentIntent(pi);
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);

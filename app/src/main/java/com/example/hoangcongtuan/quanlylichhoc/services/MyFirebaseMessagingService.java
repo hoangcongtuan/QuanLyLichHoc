@@ -49,13 +49,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.putExtra("type", msg.getData().get("type"));
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+        String app_channel_id = getResources().getString(R.string.APP_CHANNEL_ID);
+        NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this, app_channel_id)
                 .setSmallIcon(R.drawable.ic_chat_white_24dp)
                 .setContentTitle(msg.getData().get("title"))
                 .setAutoCancel(true)
                 .setContentText(msg.getData().get("body"))
                 .setSound(notificationSound)
-                .setColor(ContextCompat.getColor(this, R.color.colorGreen));
+                .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .setStyle(new NotificationCompat.BigTextStyle()
+                    .bigText(msg.getData().get("body")))
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
         taskStackBuilder.addParentStack(SplashActivity.class);

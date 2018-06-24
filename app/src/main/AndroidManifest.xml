@@ -7,10 +7,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <!--<uses-permission android:name="android.permission.CAMERA"/>-->
 
-    <uses-feature android:name="android.hardware.camera2"
-        android:required="true"/>
+    <!--<uses-feature android:name="android.hardware.camera2"-->
+        <!--android:required="true"/>-->
 
     <application
         android:allowBackup="true"
@@ -76,7 +76,7 @@
         <activity
             android:name=".activity.alarm.AddAlarmActivity"
             android:windowSoftInputMode="stateVisible" />
-        <activity android:name=".activity.alarm.AlarmDetailsActivity" />
+        <activity android:name=".activity.alarm.AlarmDetailActivity" />
 
         <activity android:name=".activity.alarm.EditAlarmActivity" />
 

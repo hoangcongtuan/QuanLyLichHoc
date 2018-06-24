@@ -1,6 +1,5 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,26 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonRequest;
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.activity.SearchResultActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.listener.HidingScrollListener;
 import com.example.hoangcongtuan.quanlylichhoc.utils.LoadFeedHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.LoadSearchPostResultHelper;
-import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.ArrayList;
 
 /**
  * Created by hoangcongtuan on 9/6/17.

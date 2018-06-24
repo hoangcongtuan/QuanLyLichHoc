@@ -14,13 +14,13 @@ import java.lang.reflect.Field;
  * disable tinh nang slide
  */
 
-public class CustomViewPager_new extends ViewPager {
-    public CustomViewPager_new(Context context) {
+public class NoSwipeCustomViewPager extends ViewPager {
+    public NoSwipeCustomViewPager(Context context) {
         super(context);
         setMyScroller();
     }
 
-    public CustomViewPager_new(Context context, AttributeSet attrs) {
+    public NoSwipeCustomViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         setMyScroller();
     }

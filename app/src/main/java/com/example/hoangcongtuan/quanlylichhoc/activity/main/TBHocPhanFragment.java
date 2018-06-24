@@ -13,9 +13,7 @@ import android.widget.ImageView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.listener.HidingScrollListener;
 import com.example.hoangcongtuan.quanlylichhoc.utils.LoadFeedHelper;
-import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
