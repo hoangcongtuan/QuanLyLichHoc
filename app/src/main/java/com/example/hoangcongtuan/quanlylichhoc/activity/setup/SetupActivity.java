@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,6 +33,7 @@ import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.StepPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.NoSwipeCustomViewPager;
+import com.example.hoangcongtuan.quanlylichhoc.customview.ProgressDialogBuilderCustom;
 import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
@@ -52,7 +54,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.IOException;
 
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener,
-        NavigationView.OnNavigationItemSelectedListener{
+        NavigationView.OnNavigationItemSelectedListener, RecognizeFragment.OnRecognize{
     private final static String TAG = SetupActivity.class.getName();
     private NoSwipeCustomViewPager viewPager;
     private Button btnBack;
@@ -73,7 +75,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private PrepareFragment prepareFragment;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-
+    private ProgressDialogBuilderCustom progressDialogBuilderCustom;
+    private AlertDialog pr_dialog;
 
     private DatabaseReference database;
     private DatabaseReference dbUserMaHocPhan;
@@ -87,7 +90,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private GoogleApiClient mGoogleApiClient;
 
     private boolean manuallyMode = false;
-
 
     private final static int STEP_PREPARE = 0;
     private final static int STEP_GET_IMAGE = 1;
@@ -112,6 +114,12 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         recognizeFragment = new RecognizeFragment();
         prepareFragment = new PrepareFragment();
         finishFragment = new FinishFragment();
+
+        //create progress dialog
+        progressDialogBuilderCustom = new ProgressDialogBuilderCustom(this);
+        progressDialogBuilderCustom.setText(R.string.processing);
+
+        pr_dialog = progressDialogBuilderCustom.create();
 
         //init google sign in
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -317,6 +325,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
 
     public void setStepper(int stepId) {
+
+        viewPager.setCurrentItem(stepId);
         switch (stepId) {
             case STEP_PREPARE:
                 tvStep1Label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTextDisable));
@@ -390,7 +400,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 finishFragment.processTKB(recognizeFragment.getListMaHp());
                 break;
         }
-        viewPager.setCurrentItem(stepId);
     }
 
     @Override
@@ -420,6 +429,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     finishFragment.setOnUpLoadUserDBComplete(new FinishFragment.OnUpLoadUserDBComplete() {
                         @Override
                         public void onSuccess() {
+                            pr_dialog.dismiss();
                             Intent intent = new Intent(SetupActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
@@ -427,10 +437,12 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
                         @Override
                         public void onFailed() {
+                            pr_dialog.dismiss();
                             Toast.makeText(SetupActivity.this, "Có lỗi khi upload dữ liệu!", Toast.LENGTH_LONG).show();
                         }
                     });
 
+                    pr_dialog.show();
                     finishFragment.writelstMaHPtoUserDB(dbUserMaHocPhan);
                 }
                 else
@@ -518,6 +530,16 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         return this.layout_setup;
     }
 
+    @Override
+    public void startRecognize() {
+        pr_dialog.show();
+    }
+
+    @Override
+    public void endRecognize() {
+        pr_dialog.dismiss();
+    }
+
     private class FabVisibilityChangedListener extends FloatingActionButton.OnVisibilityChangedListener {
 
         private int position;
@@ -528,5 +550,4 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             fab.show();
         }
     }
-
 }

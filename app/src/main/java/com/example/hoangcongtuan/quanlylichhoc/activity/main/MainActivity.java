@@ -38,6 +38,7 @@ import com.example.hoangcongtuan.quanlylichhoc.activity.SearchResultActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.MainPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.customview.ProgressDialogBuilderCustom;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.login.LoginManager;
@@ -95,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TBHocPhanFragment tbHPhanFragment;
     private LichHocFragment lichHocFragment;
     private CoordinatorLayout main_content_layout;
+    private ProgressDialogBuilderCustom progressDialogBuilderCustom;
+    private AlertDialog pr_dialog;
 
     private DatabaseReference database;
     private DatabaseReference firebaseDBUserMaHP;
@@ -135,6 +138,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         database = FirebaseDatabase.getInstance().getReference();
         firebaseDBUserMaHP = database.child(LoginActivity.KEY_FIRBASE_USER)
                 .child(user.getUid()).child(LoginActivity.KEY_FIREBASE_LIST_MAHP);
+
+        //create progress dialog
+        progressDialogBuilderCustom = new ProgressDialogBuilderCustom(this);
+        progressDialogBuilderCustom.setTitle(R.string.processing);
+
+        pr_dialog = progressDialogBuilderCustom.create();
     }
 
 
@@ -335,6 +344,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.setPositiveButton(getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                //show progress dialog
+                pr_dialog.show();
+
                 //xoa du lieu tren firebase
                 firebaseDBUserMaHP.setValue(null).addOnSuccessListener(MainActivity.this,
                         new OnSuccessListener<Void>() {
@@ -348,12 +360,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 Utils.getsInstance(getApplicationContext()).unSubscribeTopic(LoginActivity.TOPIC_TBCHUNG);
 
                                 DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
+                                pr_dialog.dismiss();
                                 logOut();
                             }
                         }).addOnFailureListener(MainActivity.this,
                         new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull final Exception e) {
+                                pr_dialog.dismiss();
                                 Snackbar.make(main_content_layout, getResources().getString(R.string.error), Snackbar.LENGTH_LONG)
                                         .setAction(getResources().getString(R.string.details), new View.OnClickListener() {
                                             @Override

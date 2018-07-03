@@ -1,8 +1,10 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.setup;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -52,6 +54,8 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     private ProgressBar progressBar;
     private View rootView;
 
+    private OnRecognize onRecognize;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +74,14 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         this.layout_setup = ((SetupActivity)getActivity()).get_layout_setup();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof OnRecognize)
+            onRecognize = (OnRecognize)context;
     }
 
     private void init() {
@@ -202,12 +214,14 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 
     //ham de goi tu SetupActivity
     public void recognize() {
-        recognizeMaHP(this.bitmap);
+        onRecognize.startRecognize();
+        recognizeMaHP(RecognizeFragment.this.bitmap);
     }
 
     public void recognizeMaHP(Bitmap bitmap) {
         ArrayList<String> arrayList;
         arrayList = processImage(bitmap);
+
 
         rvLopHP.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
@@ -218,6 +232,8 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
             //lstMaHP.clear();
             rvhPhanAdapter.removeAllItem();
             //rvhPhanAdapter.notifyDataSetChanged();
+            //callback to SetupAct
+            onRecognize.endRecognize();
             return;
         }
 
@@ -232,6 +248,9 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 
         }
         //rvhPhanAdapter.notifyDataSetChanged();
+
+        //callback to SetupAct
+        onRecognize.endRecognize();
     }
 
     public LopHP getLopHPById(String id) {
@@ -325,5 +344,10 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
             final LopHP lopHP = rvhPhanAdapter.getItem(position);
             removeUserHP(lopHP.getMaHP());
         }
+    }
+
+    public interface OnRecognize {
+        public void startRecognize();
+        public void endRecognize();
     }
 }
