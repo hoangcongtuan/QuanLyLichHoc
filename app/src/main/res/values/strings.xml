@@ -159,5 +159,6 @@
     <string name="APP_CHANNEL_DESCRIPTION">Description about quan ly lich hoc notification channel</string>
     <string name="sample_title">Thông báo đến lớp: [14.Nh25] Tuốc bin</string>
     <string name="sample_content">Thầy/Cô nhắn: Lớp NGHỈ HỌC (Tiết:7-8) ngày: 07/09/2017</string>
+    <string name="processing">Đang xử lý ...</string>
 
 </resources>

@@ -108,7 +108,7 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         return rc;
     }
 
-    public Cursor getAllUserMaHocPhan() {
+    private Cursor getAllUserMaHocPhan() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT *    FROM " + USER_TABLE_NAME, null);
     }
@@ -118,10 +118,8 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         Cursor cursor  = getAllUserMaHocPhan();
 
         if(cursor.moveToFirst()) {
-            do {
+            do
                 lstMaHP.add(cursor.getString(cursor.getColumnIndex(USER_COMLUMN_MAHP)));
-
-            }
             while (cursor.moveToNext());
         }
         return lstMaHP;
@@ -179,7 +177,7 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public long insertLopHocPhan(SQLiteDatabase db, LopHP lopHP) {
+    private long insertLopHocPhan(SQLiteDatabase db, LopHP lopHP) {
         long rc;
         ContentValues contentValues = new ContentValues();
         contentValues.put(ALL_HOCPHAN_COLUMN_MAHP, lopHP.maHP);

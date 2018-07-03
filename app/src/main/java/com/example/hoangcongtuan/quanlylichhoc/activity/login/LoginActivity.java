@@ -1,8 +1,6 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.login;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -11,11 +9,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,6 +23,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
+import com.example.hoangcongtuan.quanlylichhoc.customview.ProgressDialogBuilderCustom;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.AccessToken;
@@ -36,7 +32,6 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -61,13 +56,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -107,6 +99,9 @@ public class LoginActivity extends AppCompatActivity
     private ConstraintLayout viewgroup_login;
     private TextView tvUserName;
 
+    private ProgressDialogBuilderCustom pr_dialog_login_builder;
+    private AlertDialog pr_login;
+
     private CallbackManager callbackManager;
 
 
@@ -141,6 +136,7 @@ public class LoginActivity extends AppCompatActivity
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
+                pr_login.dismiss();
                 GraphRequest graphRequest = GraphRequest.newMeRequest(
                         loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
@@ -155,11 +151,9 @@ public class LoginActivity extends AppCompatActivity
                                             getResources().getString(R.string.fb_login_failed), Snackbar.LENGTH_INDEFINITE)
                                             .show();
                                 }
-
                             }
                         }
                 );
-
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id, name, link");
                 graphRequest.setParameters(parameters);
@@ -169,11 +163,12 @@ public class LoginActivity extends AppCompatActivity
 
             @Override
             public void onCancel() {
-
+                pr_login.dismiss();
             }
 
             @Override
             public void onError(FacebookException error) {
+                pr_login.dismiss();
                 Snackbar snackbar = Snackbar.make(coordinatorLayout,
                         getResources().getString(R.string.fb_login_failed), Snackbar.LENGTH_INDEFINITE);
                 snackbar.show();
@@ -181,6 +176,12 @@ public class LoginActivity extends AppCompatActivity
                 LoginManager.getInstance().logOut();
             }
         });
+
+        //create login progress dialog
+        pr_dialog_login_builder = new ProgressDialogBuilderCustom(this);
+        pr_dialog_login_builder.setText(R.string.processing);
+
+        pr_login = pr_dialog_login_builder.create();
     }
 
     private void getWidgets() {
@@ -205,15 +206,24 @@ public class LoginActivity extends AppCompatActivity
 
     public void googleSignIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext()))
+        if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
             startActivityForResult(signInIntent, RC_SIGN_IN);
+            //show progress dialog
+            pr_login.show();
+
+        }
         else
             showNoInternetMessage();
     }
 
     public void facebookSignIn() {
-        if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext()))
+        if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
             LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
+
+            //show progress dialog
+            pr_login.show();
+        }
+
         else
             showNoInternetMessage();
     }
@@ -249,11 +259,12 @@ public class LoginActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        //super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RC_SIGN_IN:
                 GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                pr_login.dismiss();
                 handleGgSignInResult(googleSignInResult);
                 break;
         }
