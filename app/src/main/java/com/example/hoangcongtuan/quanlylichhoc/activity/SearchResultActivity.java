@@ -245,17 +245,6 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
         return true;
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: ");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume: ");
-    }
 
     @Override
     public void onNoResult() {

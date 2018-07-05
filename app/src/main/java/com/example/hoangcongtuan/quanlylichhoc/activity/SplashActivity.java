@@ -78,7 +78,32 @@ public class SplashActivity extends AppCompatActivity {
         tvVersion.setText(version);
         DBLopHPHelper.init(getApplicationContext());
 
-        //check google play services
+
+        Log.d(TAG, "onStart: ");
+        createNotificationChannel();
+
+        //check internet
+        if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
+            //kiem tra phien ban phan mem
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference ref_version = databaseReference.child(KEY_VERSION);
+
+            ref_version.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    VersionInfo latest_version_info = dataSnapshot.getValue(VersionInfo.class);
+                    check_app_version(latest_version_info);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG, "onCancelled: Error = " + databaseError.getDetails());
+                    //TODO: need error handle here
+                }
+            });
+        }
+        else
+            showNoInternetAlert();
     }
 
     private void check_app_version(final VersionInfo latest_version) {
@@ -514,38 +539,6 @@ public class SplashActivity extends AppCompatActivity {
         });
 
         DBLopHPHelper.getsInstance().download_all_hp_database();
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: ");
-        createNotificationChannel();
-
-        //check internet
-        if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
-            //kiem tra phien ban phan mem
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference ref_version = databaseReference.child(KEY_VERSION);
-
-            ref_version.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    VersionInfo latest_version_info = dataSnapshot.getValue(VersionInfo.class);
-                    check_app_version(latest_version_info);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d(TAG, "onCancelled: Error = " + databaseError.getDetails());
-                    //TODO: need error handle here
-                }
-            });
-        }
-        else
-            showNoInternetAlert();
-
     }
 
     private void showNoInternetAlert() {

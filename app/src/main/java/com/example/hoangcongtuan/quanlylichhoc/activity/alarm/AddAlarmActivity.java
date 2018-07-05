@@ -40,6 +40,14 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_add);
         initWidget();
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_TIEU_DE)) {
+            String title = intent.getStringExtra(EXTRA_TIEU_DE);
+            String content = intent.getStringExtra(EXTRA_NOI_DUNG);
+            edtTitle.setText(title);
+            edtContent.setText(content);
+        }
     }
 
     @Override
@@ -75,18 +83,6 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
             case R.id.tvTime:
                 showTimePickerDialog();
                 break;
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Intent intent = getIntent();
-        if (intent.hasExtra(EXTRA_TIEU_DE)) {
-            String title = intent.getStringExtra(EXTRA_TIEU_DE);
-            String content = intent.getStringExtra(EXTRA_NOI_DUNG);
-            edtTitle.setText(title);
-            edtContent.setText(content);
         }
     }
 

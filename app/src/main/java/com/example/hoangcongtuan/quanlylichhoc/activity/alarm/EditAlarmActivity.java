@@ -43,32 +43,8 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
 
         init();
         initWidget();
-    }
 
-
-    private void init() {
-        mCalendar = Calendar.getInstance();
-    }
-
-    public void initWidget() {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(getResources().getString(R.string.alarm_edit_act_title));
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-
-        edtTitle = findViewById(R.id.edtReminderTitle);
-        edtContent = findViewById(R.id.edtReminderContent);
-        tvDate = findViewById(R.id.tvDate);
-        tvTime = findViewById(R.id.tvTime);
-
-        tvDate.setOnClickListener(this);
-        tvTime.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+        //get reminder to edit
         Intent intent = getIntent();
         if (intent.hasExtra(ReminderManager.KEY_REMINDER_ID)) {
             remiderId = intent.getIntExtra(ReminderManager.KEY_REMINDER_ID, 0);
@@ -120,7 +96,27 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
             Toast.makeText(this,
                     getResources().getString(R.string.error_alarm_database_access), Toast.LENGTH_LONG).show();
         }
+    }
 
+
+    private void init() {
+        mCalendar = Calendar.getInstance();
+    }
+
+    public void initWidget() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getResources().getString(R.string.alarm_edit_act_title));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        edtTitle = findViewById(R.id.edtReminderTitle);
+        edtContent = findViewById(R.id.edtReminderContent);
+        tvDate = findViewById(R.id.tvDate);
+        tvTime = findViewById(R.id.tvTime);
+
+        tvDate.setOnClickListener(this);
+        tvTime.setOnClickListener(this);
     }
 
     @Override

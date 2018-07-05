@@ -39,35 +39,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
 
         initWidget();
 
-    }
-
-    public void init() {
-        calendar = Calendar.getInstance();
-    }
-
-    public void initWidget() {
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setTitle(getResources().getString(R.string.alarm_detail_act_title));
-        }
-
-        tvDate = findViewById(R.id.tvDate);
-        tvTime = findViewById(R.id.tvTime);
-        tvTitle = findViewById(R.id.tvReminderTitle);
-        tvContent = findViewById(R.id.tvReminderContent);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_alarm_detail, menu);
-        return true;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+        //get reminder
         Intent i = getIntent();
         if (i.hasExtra(ReminderManager.KEY_REMINDER_ID)) {
             reminderId = i.getIntExtra(ReminderManager.KEY_REMINDER_ID, 0);
@@ -119,6 +91,30 @@ public class AlarmDetailActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    public void init() {
+        calendar = Calendar.getInstance();
+    }
+
+    public void initWidget() {
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle(getResources().getString(R.string.alarm_detail_act_title));
+        }
+
+        tvDate = findViewById(R.id.tvDate);
+        tvTime = findViewById(R.id.tvTime);
+        tvTitle = findViewById(R.id.tvReminderTitle);
+        tvContent = findViewById(R.id.tvReminderContent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_alarm_detail, menu);
+        return true;
     }
 
     private void showDeleteDialog() {
