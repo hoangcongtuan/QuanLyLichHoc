@@ -191,6 +191,7 @@ public class LoadSearchPostResultHelper {
         fragmentCallBack.onLoadMore();
     }
 
+
     //ham set call back
     private void setFragmentCallBack(RVTBAdapter.ILoadMoreCallBack fragmentCallBack) {
         this.fragmentCallBack = fragmentCallBack;

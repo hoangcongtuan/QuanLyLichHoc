@@ -60,6 +60,13 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
         init();
         initWidget();
 
+        if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
+            show_normal();
+            search_first_time();
+        }
+        else
+            show_empty_state();
+
     }
 
     private void init() {
@@ -242,13 +249,6 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: ");
-        if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
-            show_normal();
-            search_first_time();
-        }
-        else
-            show_empty_state();
-
     }
 
     @Override
