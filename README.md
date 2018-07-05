@@ -1,5 +1,5 @@
 # QuanLyLichHoc
-Help student of Da Nang University of Science and Technology receive notificationf rom Academic Affairs easierE
+Help student of Da Nang University of Science and Technology receive notification from Academic Affairs easier
 
 ## Feature
 
