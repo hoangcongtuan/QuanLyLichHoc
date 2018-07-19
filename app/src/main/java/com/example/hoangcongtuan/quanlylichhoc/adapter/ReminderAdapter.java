@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHolder> {
@@ -53,14 +54,14 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         holder.tvContent.setText(reduceString(
                 reminder.getContent())
         );
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
         try {
             mCalendar.setTime(
                     sdf.parse(reminder.getDate())
             );
 
-            SimpleDateFormat sdfDate = new SimpleDateFormat("EEEE dd/MM/yyyy");
-            SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
+            SimpleDateFormat sdfDate = new SimpleDateFormat("EEEE dd/MM/yyyy", Locale.US);
+            SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a", Locale.US);
 
             holder.tvDate.setText(
                     sdfDate.format(mCalendar.getTime())

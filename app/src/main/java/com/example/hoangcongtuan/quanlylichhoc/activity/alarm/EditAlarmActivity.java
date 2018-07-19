@@ -23,6 +23,7 @@ import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class EditAlarmActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -55,20 +56,20 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
                 edtContent.setText(reminder.getContent());
 
                 @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
                 try {
                     mCalendar.setTime(
                             sdf.parse(reminder.getDate())
                     );
 
                     @SuppressLint("SimpleDateFormat")
-                    SimpleDateFormat sdfDate = new SimpleDateFormat("EEEE dd/MM/yyyy");
+                    SimpleDateFormat sdfDate = new SimpleDateFormat("EEEE dd/MM/yyyy", Locale.US);
 
                     tvDate.setText(
                             sdfDate.format(mCalendar.getTime())
                     );
                     @SuppressLint("SimpleDateFormat")
-                    SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
+                    SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a", Locale.US);
 
                     tvTime.setText(
                             sdfTime.format(mCalendar.getTime())
@@ -162,11 +163,11 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
 
     private void updateRemider() {
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
         String mDate = sdfDate.format(mCalendar.getTime());
 
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a", Locale.US);
         String mTime = sdfTime.format(mCalendar.getTime());
         String mTitle = edtTitle.getText().toString();
         String mContent = edtContent.getText().toString();
@@ -187,7 +188,7 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
                         mCalendar.get(Calendar.DATE),
                         hour, minute);
                 @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
+                SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a", Locale.US);
                 tvTime.setText(
                         sdfTime.format(mCalendar.getTime())
                 );
@@ -203,7 +204,7 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 mCalendar.set(year, month, day);
                 @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd/MM/yyyy");
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd/MM/yyyy", Locale.US);
                 tvDate.setText(
                         sdf.format(mCalendar.getTime())
                 );

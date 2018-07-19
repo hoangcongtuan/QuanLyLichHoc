@@ -18,6 +18,7 @@ import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class AlarmDetailActivity extends AppCompatActivity {
 
@@ -48,20 +49,20 @@ public class AlarmDetailActivity extends AppCompatActivity {
             tvTitle.setText(reminder.getTitle());
             tvContent.setText(reminder.getContent());
             @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
             try {
                 calendar.setTime(
                         sdf.parse(reminder.getDate())
                 );
 
                 @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat sdfDate = new SimpleDateFormat("EEEE dd/MM/yyyy");
+                SimpleDateFormat sdfDate = new SimpleDateFormat("EEEE dd/MM/yyyy", Locale.US);
 
                 tvDate.setText(
                         sdfDate.format(calendar.getTime())
                 );
                 @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
+                SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a", Locale.US);
 
                 tvTime.setText(
                         sdfTime.format(calendar.getTime())

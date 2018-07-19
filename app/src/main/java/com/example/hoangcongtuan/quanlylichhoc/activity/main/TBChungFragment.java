@@ -31,7 +31,6 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
     private ImageView img_empty_state;
     private LoadSearchPostResultHelper searchPostResultHelper;
     private LoadFeedHelper loadFeedHelper;
-    private SwipeRefreshLayout swipeRefreshLayout;
     //if hash not null, scroll to new feed has hashkey == hash
     private String hash;
     private boolean isScrollTo = false;
@@ -88,16 +87,6 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
 
         tbChungAdapter = new RVTBAdapter(recyclerView, getContext());
         recyclerView.setAdapter(tbChungAdapter);
-
-        swipeRefreshLayout = getView().findViewById(R.id.swipe_refresh);
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Log.d(TAG, "onRefresh: Need to refresh");
-
-            }
-        });
     }
 
     public void scrollTo(String hash) {

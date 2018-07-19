@@ -27,6 +27,7 @@ public class Utils {
     private RequestQueue requestQueue;
     private static Utils sInstance;
 
+
     private Utils(Context context) {
         if (requestQueue == null) {
             requestQueue = Volley.newRequestQueue(context);

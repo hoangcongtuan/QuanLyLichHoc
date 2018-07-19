@@ -22,15 +22,16 @@ import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class AddAlarmActivity extends AppCompatActivity implements View.OnClickListener{
 
     public static final String EXTRA_TIEU_DE = "tieu_de";
     public static final String EXTRA_NOI_DUNG = "noi_dung";
 
-    private Calendar calendar;
-    private String time;
-    private String date;
+    private Calendar mCalendar;
+    private String mTime;
+    private String mDate;
     private EditText edtTitle, edtContent;
     private TextView tvDate, tvTime;
     private Reminder reminder;
@@ -88,38 +89,38 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
 
     private void saveReminder() {
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-        date = sdfDate.format(calendar.getTime());
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
+        mDate = sdfDate.format(mCalendar.getTime());
 
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
-        time = sdfTime.format(calendar.getTime());
+        SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a", Locale.US);
+        mTime = sdfTime.format(mCalendar.getTime());
 
         String reminderTitle = edtTitle.getText().toString();
         String reminderContent = edtContent.getText().toString();
 
         int mRepeat = 0;
         String mType = "none";
-        reminder = new Reminder(reminderTitle, reminderContent, date, time, mRepeat, mType);
+        reminder = new Reminder(reminderTitle, reminderContent, mDate, mTime, mRepeat, mType);
         ReminderDBHelper.getsInstance(getApplicationContext()).addReminder(reminder);
 
-        ReminderManager.getsInstance(getApplicationContext()).setReminder(reminder.getId(), calendar);
+        ReminderManager.getsInstance(getApplicationContext()).setReminder(reminder.getId(), mCalendar);
     }
 
     private void showTimePickerDialog() {
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                calendar.set(calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DATE),
+                mCalendar.set(mCalendar.get(Calendar.YEAR),
+                        mCalendar.get(Calendar.MONTH),
+                        mCalendar.get(Calendar.DATE),
                         hour, minute);
-                SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
+                SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a", Locale.US);
                 tvTime.setText(
-                        sdfTime.format(calendar.getTime())
+                        sdfTime.format(mCalendar.getTime())
                 );
             }
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+        }, mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE), false);
 
         timePickerDialog.show();
     }
@@ -129,13 +130,13 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                calendar.set(year, month, day);
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd/MM/yyyy");
+                mCalendar.set(year, month, day);
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd/MM/yyyy", Locale.US);
                 tvDate.setText(
-                        sdf.format(calendar.getTime())
+                        sdf.format(mCalendar.getTime())
                 );
             }
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+        }, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DATE));
 
         datePickerDialog.show();
     }
@@ -155,16 +156,16 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
         tvTime = findViewById(R.id.tvTime);
 
 
-        calendar = Calendar.getInstance();
+        mCalendar = Calendar.getInstance();
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd/MM/yyyy", Locale.US);
 
-        date = sdf.format(calendar.getTime());
+        mDate = sdf.format(mCalendar.getTime());
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
-        time = sdfTime.format(calendar.getTime());
-        tvDate.setText(date);
-        tvTime.setText(time);
+        SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a", Locale.US);
+        mTime = sdfTime.format(mCalendar.getTime());
+        tvDate.setText(mDate);
+        tvTime.setText(mTime);
 
         tvDate.setOnClickListener(this);
         tvTime.setOnClickListener(this);

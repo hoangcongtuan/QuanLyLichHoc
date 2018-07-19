@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.ItemClickListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
@@ -125,7 +126,7 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
             final Reminder deleteReminder = reminderAdapter.getReminder(position);
             final int deletePosition = position;
             @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
             final Calendar calendar = Calendar.getInstance();
             try {
                 calendar.setTime(
