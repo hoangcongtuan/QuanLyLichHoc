@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
@@ -27,15 +29,12 @@ import java.util.Locale;
 
 public class EditAlarmActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private static final String TAG = EditAlarmActivity.class.getName().toString();
     private Calendar mCalendar;
     private EditText edtTitle, edtContent;
     private TextView tvDate, tvTime;
     private Reminder reminder;
     private int remiderId;
-
-    public EditAlarmActivity() {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,23 +73,19 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
                     tvTime.setText(
                             sdfTime.format(mCalendar.getTime())
                     );
-
                 } catch (ParseException e) {
                     e.printStackTrace();
-                    errorOccurReturn();
+                    Crashlytics.log(Log.ERROR, TAG, "Error when parse data time from reminder");
                     Toast.makeText(this,
-                            getResources().getString(R.string.error_alarm_database_access), Toast.LENGTH_LONG).show();
+                            getResources().getString(R.string.error_parse_date_time), Toast.LENGTH_LONG).show();
+                    errorOccurReturn();
                 }
-
-
             }
             else{
                 errorOccurReturn();
                 Toast.makeText(this,
                         getResources().getString(R.string.error_alarm_database_access), Toast.LENGTH_LONG).show();
             }
-
-
         }
         else {
             errorOccurReturn();

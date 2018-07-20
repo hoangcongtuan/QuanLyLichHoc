@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
@@ -26,18 +28,14 @@ public class AlarmDetailActivity extends AppCompatActivity {
     private static final String TAG = AlarmDetailActivity.class.getName();
 
     private TextView tvDate, tvTime, tvTitle, tvContent;
-
     private int reminderId;
-
     private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_details);
-
         init();
-
         initWidget();
 
         //get reminder
@@ -69,11 +67,12 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 );
 
             } catch (ParseException e) {
+                Crashlytics.log(Log.ERROR, TAG, "Error when parse date time from reminder");
                 e.printStackTrace();
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(getResources().getString(R.string.error_title));
                 builder.setMessage(
-                        getResources().getString(R.string.error_alarm_database_access)
+                        getResources().getString(R.string.error_parse_date_time)
                 );
 
                 builder.setPositiveButton(
@@ -88,10 +87,8 @@ public class AlarmDetailActivity extends AppCompatActivity {
 
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
-                //up error detail here
             }
         }
-
     }
 
     public void init() {

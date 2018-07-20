@@ -54,15 +54,11 @@ public class LichHocFragment extends Fragment {
 
     private void getWidgets() {
         rvTKB = rootView.findViewById(R.id.rvTKB);
-
     }
 
     private void setWidgets() {
         rvTKB.setAdapter(rvTKBieuAdapter);
-
         rvTKB.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvTKB.getContext(),
                 ((LinearLayoutManager)rvTKB.getLayoutManager()).getOrientation());
         rvTKB.addItemDecoration(dividerItemDecoration);

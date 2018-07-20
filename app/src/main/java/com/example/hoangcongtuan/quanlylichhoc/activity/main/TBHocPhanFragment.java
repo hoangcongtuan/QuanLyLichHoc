@@ -28,7 +28,7 @@ public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMore
 
     private RVTBAdapter hocPhanAdapter;
     private RecyclerView recyclerView;
-    private LoadFeedHelper loadFeedHelper;
+    private LoadFeedHelper loadPostHelper;
 
     private ImageView img_empty_state;
 
@@ -62,24 +62,23 @@ public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMore
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         DatabaseReference tbHPhanRef = database.child("lop_hoc_phan/data/");
 
-        loadFeedHelper = new LoadFeedHelper(hocPhanAdapter, tbHPhanRef, this);
+        loadPostHelper = new LoadFeedHelper(hocPhanAdapter, tbHPhanRef, this);
         return  rootView;
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //recyclerView.addOnScrollListener(hidingScrollListener);
 
-        loadFeedHelper.loadFirstTime();
+        loadPostHelper.loadFirstTime();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (isScrollTo) {
-            loadFeedHelper.scrollTo(hash);
+            loadPostHelper.scrollTo(hash);
             isScrollTo = false;
         }
 

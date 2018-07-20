@@ -20,6 +20,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.crashlytics.android.Crashlytics;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
@@ -102,7 +103,7 @@ public class LoginActivity extends AppCompatActivity
     private ProgressDialogBuilderCustom pr_dialog_login_builder;
     private AlertDialog pr_login;
 
-    private CallbackManager callbackManager;
+    private CallbackManager facebookLoginCallBack;
 
 
     @Override
@@ -132,8 +133,8 @@ public class LoginActivity extends AppCompatActivity
                 .build();
 
         //init facebook
-        callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        facebookLoginCallBack = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(facebookLoginCallBack, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
                 pr_login.dismiss();
@@ -147,6 +148,7 @@ public class LoginActivity extends AppCompatActivity
                                     handleFbLoginResult(loginResult.getAccessToken());
                                 } catch (JSONException e) {
                                     e.printStackTrace();
+                                    Crashlytics.log(Log.ERROR, TAG, "Login Fb Failed : " + e.getMessage());
                                     Snackbar.make(coordinatorLayout,
                                             getResources().getString(R.string.fb_login_failed), Snackbar.LENGTH_INDEFINITE)
                                             .show();
@@ -154,6 +156,7 @@ public class LoginActivity extends AppCompatActivity
                             }
                         }
                 );
+
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id, name, link");
                 graphRequest.setParameters(parameters);
@@ -163,11 +166,13 @@ public class LoginActivity extends AppCompatActivity
 
             @Override
             public void onCancel() {
+                Crashlytics.log(Log.ERROR, TAG, "On Fb login cancel");
                 pr_login.dismiss();
             }
 
             @Override
             public void onError(FacebookException error) {
+                Crashlytics.log(Log.ERROR, TAG, "On Fb login Error");
                 pr_login.dismiss();
                 Snackbar snackbar = Snackbar.make(coordinatorLayout,
                         getResources().getString(R.string.fb_login_failed), Snackbar.LENGTH_INDEFINITE);
@@ -204,6 +209,9 @@ public class LoginActivity extends AppCompatActivity
         btnLoginFb.setOnClickListener(this);
     }
 
+    /**
+     * Sign in with Google
+     */
     public void googleSignIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
@@ -216,15 +224,15 @@ public class LoginActivity extends AppCompatActivity
             showNoInternetMessage();
     }
 
+    /**
+     * SignIn whit Fb
+     */
     public void facebookSignIn() {
         if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
             LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
-
             //show progress dialog
             pr_login.show();
-        }
-
-        else
+        } else
             showNoInternetMessage();
     }
 
@@ -248,6 +256,7 @@ public class LoginActivity extends AppCompatActivity
                             handleFirebaseLoginSuccess();
                         }
                         else {
+                            Crashlytics.log(Log.ERROR, TAG, "Error Fb login, Email exist!");
                             Snackbar snackbar = Snackbar.make(coordinatorLayout,
                                     getResources().getString(R.string.email_already_login), Snackbar.LENGTH_INDEFINITE);
                             snackbar.show();
@@ -259,8 +268,8 @@ public class LoginActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+        facebookLoginCallBack.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RC_SIGN_IN:
                 GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -274,7 +283,6 @@ public class LoginActivity extends AppCompatActivity
         progressBarLogin.setVisibility(View.VISIBLE);
         viewgroup_login.setVisibility(View.GONE);
         tvUserName.setVisibility(View.VISIBLE);
-
     }
 
     public void finishAuthWithFirebase() {
@@ -304,6 +312,9 @@ public class LoginActivity extends AppCompatActivity
                 });
     }
 
+    /**
+     * Login firebase success, update User Class DB and Subscribe topic
+     */
     private void handleFirebaseLoginSuccess() {
 
         final DatabaseReference firebaseDB = FirebaseDatabase.getInstance().getReference();
@@ -311,11 +322,6 @@ public class LoginActivity extends AppCompatActivity
         DatabaseReference firebaseDBUserMaHP = firebaseDB.child(KEY_FIRBASE_USER)
                 .child(firebaseUser.getUid()).child(KEY_FIREBASE_LIST_MAHP);
 
-        //tai du lieu user ve
-        //unsubscribe old topic
-//        ArrayList<String> list_old_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
-//        Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeAllTopics(list_old_topic);
-//        Utils.QLLHUtils.getsInstance(getApplicationContext()).unSubscribeTopic(LoginActivity.TOPIC_TBCHUNG);
         firebaseDBUserMaHP.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -337,7 +343,6 @@ public class LoginActivity extends AppCompatActivity
                         //subscribe new topic
                         Utils.getsInstance(getApplicationContext()).subscribeTopic(list_topic);
                         Utils.getsInstance(getApplicationContext()).subscribeTopic(LoginActivity.TOPIC_TBCHUNG);
-
 
                         //goto MainAct
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -363,7 +368,8 @@ public class LoginActivity extends AppCompatActivity
             }
 
             @Override
-            public void onCancelled(final DatabaseError databaseError) {
+            public void onCancelled(@NonNull final DatabaseError databaseError) {
+                Crashlytics.log(Log.ERROR, TAG, "Error when get user db from firebase: " + databaseError.getMessage());
                 Snackbar snackbar = Snackbar.make(coordinatorLayout, getResources().getString(R.string.error)
                     + databaseError.getCode() + ": " + databaseError.getMessage(), Snackbar.LENGTH_INDEFINITE);
                 snackbar.setAction(getResources().getString(R.string.details),
@@ -381,7 +387,6 @@ public class LoginActivity extends AppCompatActivity
             }
         });
 
-
         DatabaseReference firebaseUserNode = firebaseDB.child(KEY_FIRBASE_USER)
                 .child(firebaseUser.getUid()).child(KEY_FIREBASE_USERINFO);
 
@@ -395,7 +400,6 @@ public class LoginActivity extends AppCompatActivity
         firebaseUserNode.child(KEY_FIREBASE_USERPROVIDER).setValue(
                 firebaseUser.getProviders().get(0)
         );
-
     }
 
     public void sync_token(final DatabaseReference node_user, final ArrayList<String> list_topic, final OnSyncToken onSyncToken) {

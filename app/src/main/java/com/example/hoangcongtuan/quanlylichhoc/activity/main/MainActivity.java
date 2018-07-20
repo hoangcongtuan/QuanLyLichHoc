@@ -108,12 +108,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private GoogleApiClient mGoogleApiClient;
 
 
+    /**
+     * Init view
+     * check Intent extras, if has Post ID, scroll to ID's Post
+     * @param savedInstanceState saved bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //kiem tra trong intent co extras hay ko, neu co -> xu ly payload notification gui toi
         init();
         getWidgets();
         setWidgets();
@@ -145,6 +149,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /**
+     * Init Some value
+     */
     private void init() {
         //init
         strTabs = getResources().getStringArray(R.array.tab_name);
@@ -172,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         pr_dialog = progressDialogBuilderCustom.create();
     }
-
 
     private void getWidgets() {
         //getWidgets
@@ -214,6 +220,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Utils.getsInstance(getApplicationContext()).getRequestQueue().add(avatarRequest);
     }
 
+    /**
+     * Search post function with "text" keyword, pass thi keyword to Search Activity and Category info
+     * @param text keyword
+     */
     private void searchPost(String text) {
         Intent intent = new Intent(MainActivity.this, SearchResultActivity.class);
         switch (viewPager.getCurrentItem()) {
@@ -226,13 +236,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case PAGE_TKB:
                 return;
-                //intent.putExtra("CATEGORY", PAGE_TKB);
-                //break;
         }
         intent.putExtra("TEXT", text);
         startActivity(intent);
     }
 
+    /**
+     * Get topic subscribed and log it out
+     * @param token FCM Token
+     * @param key FCM Server key
+     */
     private void getTopicSubcribe(String token, final String key) {
         final JsonObjectRequest jsonRequest;
         jsonRequest = new JsonObjectRequest(
@@ -284,7 +297,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
     private void setupViewPager(ViewPager viewPager) {
 
         pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
@@ -296,6 +308,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewPager.setOffscreenPageLimit(3);
     }
 
+    /**
+     * UnSubscribe all topic and logout
+     */
     private void logOut() {
 
         ArrayList<String> list_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
@@ -316,12 +331,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -362,7 +375,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         return true;
     }
-
 
     public void showDeleteUserDBDialog()  {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -455,18 +467,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         FirebaseInstanceId.getInstance().getToken(),
                         getResources().getString(R.string.SERVER_KEY)
                 );
-
-//                Log.d(TAG, "onNavigationItemSelected: Token = " + FirebaseInstanceId.getInstance().getToken());
-//                Log.d(TAG, "onNavigationItemSelected: Token ID = " + FirebaseInstanceId.getInstance().getId());
-//                Log.d(TAG, "onNavigationItemSelected: Token ID time creation = " + FirebaseInstanceId.getInstance().getCreationTime());
                 break;
             case R.id.item_showSubscribeTopic:
                 searchPost("Thông báo chuyển phòng học khu B");
                 break;
-//            case R.id.item_cat_dat:
-//                Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
-//                startActivity(intentSettings);
-//                break;
+
             case R.id.item_nhac_nho:
                 Intent intentAlarm = new Intent(MainActivity.this, AlarmActivity.class);
                 startActivity(intentAlarm);

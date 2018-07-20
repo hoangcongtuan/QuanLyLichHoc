@@ -68,6 +68,7 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
                 setResult(RESULT_OK, intent);
                 finish();
                 break;
+
             case android.R.id.home:
                 finish();
                 break;
@@ -81,12 +82,16 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
             case R.id.tvDate:
                 showDatePickerDialog();
                 break;
+
             case R.id.tvTime:
                 showTimePickerDialog();
                 break;
         }
     }
 
+    /**
+     * Save reminder to SQLite Database
+     */
     private void saveReminder() {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
@@ -101,7 +106,9 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
 
         int mRepeat = 0;
         String mType = "none";
+
         reminder = new Reminder(reminderTitle, reminderContent, mDate, mTime, mRepeat, mType);
+
         ReminderDBHelper.getsInstance(getApplicationContext()).addReminder(reminder);
 
         ReminderManager.getsInstance(getApplicationContext()).setReminder(reminder.getId(), mCalendar);
@@ -170,5 +177,4 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
         tvDate.setOnClickListener(this);
         tvTime.setOnClickListener(this);
     }
-
 }

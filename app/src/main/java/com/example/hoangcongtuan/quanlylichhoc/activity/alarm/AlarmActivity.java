@@ -11,9 +11,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.ReminderAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
@@ -33,15 +35,14 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
     private final static int RC_DETAIL = 0;
     private final static int RC_ADD = 1;
     private static final String TAG = AlarmActivity.class.getName();
-    private ReminderAdapter reminderAdapter;
 
+    private ReminderAdapter reminderAdapter;
     private CoordinatorLayout alarmLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
-
         initWidget();
     }
 
@@ -52,7 +53,6 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
 
         alarmLayout = findViewById(R.id.alarm_layout);
         RecyclerView rvAlarm = findViewById(R.id.rvAlarms);
@@ -79,11 +79,9 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
             public void onClick(View view) {
                 Intent i = new Intent(AlarmActivity.this, AddAlarmActivity.class);
                 CircularAnimUtil.startActivityForResult(AlarmActivity.this, i, RC_ADD, btnAddAlarm, R.color.colorPrimary);
-                //startActivityForResult(i, RC_ADD);
             }
         });
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -106,13 +104,14 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_DETAIL || requestCode == RC_ADD) {
             //update alarm list
             reminderAdapter.removeAllReminder();
             ArrayList<Reminder> lstReminder = ReminderDBHelper.getsInstance(getApplicationContext()).getAllReminders();
             for(Reminder r : lstReminder)
                 reminderAdapter.addReminder(r);
+
             reminderAdapter.notifyDataSetChanged();
             if (requestCode == RC_ADD && resultCode == RESULT_OK)
                 Snackbar.make(alarmLayout, getResources().getString(R.string.add_alarm_success), Snackbar.LENGTH_LONG).show();
@@ -125,20 +124,25 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
         if (viewHolder instanceof ReminderAdapter.ViewHolder) {
             final Reminder deleteReminder = reminderAdapter.getReminder(position);
             final int deletePosition = position;
+
             @SuppressLint("SimpleDateFormat")
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
             final Calendar calendar = Calendar.getInstance();
+
             try {
                 calendar.setTime(
                         sdf.parse(deleteReminder.getDate())
                 );
             } catch (ParseException e) {
+                Log.d(TAG, "onSwiped: Error when parse date time from reminder");
+                Crashlytics.log(Log.ERROR, TAG, "onSwiped: Error when parse date time from reminder");
                 e.printStackTrace();
             }
+
             ReminderDBHelper.getsInstance(getApplicationContext()).deleteReminder(deleteReminder.getId());
             ReminderManager.getsInstance(getApplicationContext()).deleteReminder(deleteReminder.getId());
             reminderAdapter.removeReminder(viewHolder.getAdapterPosition());
-            //reminderAdapter.notifyDataSetChanged();
+
             Snackbar.make(alarmLayout, getResources().getString(R.string.remove_alarm_success), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getResources().getString(R.string.undo), new View.OnClickListener() {
                         @Override

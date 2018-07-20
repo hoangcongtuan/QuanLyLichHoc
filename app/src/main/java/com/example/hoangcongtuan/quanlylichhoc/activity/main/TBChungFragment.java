@@ -3,7 +3,6 @@ package com.example.hoangcongtuan.quanlylichhoc.activity.main;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,6 @@ import android.widget.ImageView;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.utils.LoadFeedHelper;
-import com.example.hoangcongtuan.quanlylichhoc.utils.LoadSearchPostResultHelper;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -29,8 +27,7 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
     private RecyclerView recyclerView;
     private RVTBAdapter tbChungAdapter;
     private ImageView img_empty_state;
-    private LoadSearchPostResultHelper searchPostResultHelper;
-    private LoadFeedHelper loadFeedHelper;
+    private LoadFeedHelper loadPostHelper;
     //if hash not null, scroll to new feed has hashkey == hash
     private String hash;
     private boolean isScrollTo = false;
@@ -44,11 +41,16 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
         return  viewGroup;
     }
 
+    /**
+     * Scroll to a Post that has a hash key is hash
+     * If is empty state, change layout to empty state
+     * @param savedInstanceState
+     */
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (isScrollTo) {
-            loadFeedHelper.scrollTo(hash);
+            loadPostHelper.scrollTo(hash);
             isScrollTo = false;
         }
 
@@ -71,8 +73,8 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
         //get tb chung ref
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         DatabaseReference tbChungRef = database.child("chung/data/");
-        loadFeedHelper = new LoadFeedHelper(tbChungAdapter, tbChungRef, this);
-        loadFeedHelper.loadFirstTime();
+        loadPostHelper = new LoadFeedHelper(tbChungAdapter, tbChungRef, this);
+        loadPostHelper.loadFirstTime();
 
     }
 
@@ -89,6 +91,10 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
         recyclerView.setAdapter(tbChungAdapter);
     }
 
+    /**
+     * Scroll hash'post
+     * @param hash
+     */
     public void scrollTo(String hash) {
         this.hash = hash;
         this.isScrollTo = true;
@@ -103,43 +109,6 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
         isEmptyState = false;
     }
 
-
-    public void searchPost(String text) {
-//        JsonRequest jsonRequest = new JsonArrayRequest(MainActivity.FIND_URL + text, new Response.Listener<JSONArray>() {
-//            @Override
-//            public void onResponse(JSONArray response) {
-//                //Log.d(TAG, "onResponse: JSON = " + response.toString());
-//                //json array to array list
-//                ArrayList<String> arr_post_key = new ArrayList<>();
-//                try {
-//                    for (int i = 0; i < response.length(); i++)
-//                        arr_post_key.add(response.get(i).toString());
-//                }
-//                catch (JSONException e) {
-//                        e.printStackTrace();
-//                }
-//                finally {
-//                    DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-//                    DatabaseReference tbChungRef = database.child("chung/data/");
-//
-//                    searchPostAdapter = new RVTBAdapter(recyclerView, getContext());
-//                    recyclerView.setAdapter(searchPostAdapter);
-//                    searchPostResultHelper = new LoadSearchPostResultHelper(searchPostAdapter,
-//                            tbChungRef, TBChungFragment.this, arr_post_key);
-//
-//                    searchPostResultHelper.loadFirstTime();
-//                }
-//
-//                Log.d(TAG, "onResponse: json lenght = " + response.length());
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.d(TAG, "onErrorResponse: " + error.getMessage());
-//            }
-//        });
-//        Utils.VolleyUtils.getsInstance(this.getActivity()).getRequestQueue().add(jsonRequest);
-    }
 
     @Override
     public void onLoadMore() {
