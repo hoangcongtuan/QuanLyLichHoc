@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
@@ -27,8 +28,8 @@ public class LopHPCustomDialogBuilder extends AlertDialog.Builder {
     private View rootView;
     private AutoCompleteTextView autoMaHP;
     private AutoCompleteTextView autoTenHP;
-    private TextView tvTKB;
-    private TextView tvGV;
+    private EditText edtTKB;
+    private EditText edtGV;
     //danh sach ma hoc phan, tenHP
     private ArrayList<String> lstMaHP;
     private ArrayList<String> lstTenHP;
@@ -62,10 +63,10 @@ public class LopHPCustomDialogBuilder extends AlertDialog.Builder {
 
     private void getWidgets() {
 
-        autoMaHP = (AutoCompleteTextView)rootView.findViewById(R.id.autoMaHP);
-        autoTenHP = (AutoCompleteTextView)rootView.findViewById(R.id.autoTenHP);
-        tvTKB = (TextView)rootView.findViewById(R.id.tvTKB);
-        tvGV = (TextView)rootView.findViewById(R.id.tvGV);
+        autoMaHP = rootView.findViewById(R.id.autoMaHP);
+        autoTenHP = rootView.findViewById(R.id.autoTenHP);
+        edtTKB = rootView.findViewById(R.id.edtTKB);
+        edtGV = rootView.findViewById(R.id.edtGV);
 
     }
 
@@ -77,8 +78,8 @@ public class LopHPCustomDialogBuilder extends AlertDialog.Builder {
     void updateUI(LopHP lopHP) {
         autoMaHP.setText(lopHP.getMaHP());
         autoTenHP.setText(lopHP.getTenHP());
-        tvGV.setText(lopHP.getTenGV());
-        tvTKB.setText(lopHP.getTkb());
+        edtGV.setText(lopHP.getTenGV());
+        edtTKB.setText(lopHP.getTkb());
         currentLopHP = lopHP;
     }
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -45,15 +44,12 @@ import java.util.ArrayList;
 public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private final static String TAG = RecognizeFragment.class.getName();
-    private RVHPhanAdapter rvhPhanAdapter;
+    private RVHPhanAdapter rvClassAdapter;
     private CoordinatorLayout layout_setup;
-    private RecyclerView rvLopHP;
+    private RecyclerView rvClass;
     //private FloatingActionButton fabAdd;
     private Bitmap bitmap;
     private ImageView imageView;
-    private ProgressBar progressBar;
-    private View rootView;
-
     private OnRecognize onRecognize;
 
     @Override
@@ -65,8 +61,8 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_recognize, container, false);
-        initWidgets();
+        View rootView = inflater.inflate(R.layout.fragment_recognize, container, false);
+        initWidgets(rootView);
         return rootView;
     }
 
@@ -79,35 +75,30 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         if (context instanceof OnRecognize)
             onRecognize = (OnRecognize)context;
     }
 
     private void init() {
         ArrayList<LopHP> lstMaHP = new ArrayList<>();
-        rvhPhanAdapter = new RVHPhanAdapter(getContext(), lstMaHP);
+        rvClassAdapter = new RVHPhanAdapter(getContext(), lstMaHP);
         bitmap = null;
     }
 
     public ArrayList<LopHP> getListMaHp() {
-        return rvhPhanAdapter.getAllItem();
+        return rvClassAdapter.getAllItem();
     }
 
-    private void initWidgets() {
-        rvLopHP = rootView.findViewById(R.id.rvHocPhan);
+    private void initWidgets(View rootView) {
+        rvClass = rootView.findViewById(R.id.rvHocPhan);
         imageView = rootView.findViewById(R.id.imgHocPhan);
-        progressBar = rootView.findViewById(R.id.progress_bar_recog);
-        //fabAdd = rootView.findViewById(R.id.fabAdd);
-
-        rvLopHP.setAdapter(rvhPhanAdapter);
-        rvLopHP.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvClass.setAdapter(rvClassAdapter);
+        rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(
                 0, ItemTouchHelper.RIGHT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvLopHP);
-
-        rvLopHP.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), rvLopHP, new RecyclerTouchListener.ClickListener() {
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvClass);
+        rvClass.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), rvClass, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
                 showEditMaHPDialog(position);
@@ -119,22 +110,20 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
             }
         }));
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvLopHP.getContext(),
-                ((LinearLayoutManager)rvLopHP.getLayoutManager()).getOrientation());
-        rvLopHP.addItemDecoration(dividerItemDecoration);
-
-//        fabAdd.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                showAddLopHPDialog();
-//            }
-//        });
-
-        rvLopHP.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvClass.getContext(),
+                ((LinearLayoutManager) rvClass.getLayoutManager()).getOrientation());
+        rvClass.addItemDecoration(dividerItemDecoration);
+        rvClass.setVisibility(View.GONE);
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            Log.d(TAG, "setUserVisibleHint: is Visible");
+            recognize();
+        }
+    }
 
     public void addUserHP(final String id) {
         LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(id);
@@ -145,8 +134,8 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
             return;
         }
 
-        if (rvhPhanAdapter.indexOf(lopHP) == -1)  {
-            rvhPhanAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
+        if (rvClassAdapter.indexOf(lopHP) == -1)  {
+            rvClassAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
 
             Snackbar.make(
                     layout_setup,
@@ -156,7 +145,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
                             R.string.undo, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    rvhPhanAdapter.undo();
+                                    rvClassAdapter.undo();
                                 }
                             }
                     ).show();
@@ -167,7 +156,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 
     public void removeUserHP(final String id) {
         try {
-            rvhPhanAdapter.removeItem(id);
+            rvClassAdapter.removeItem(id);
             Snackbar.make(
                     layout_setup,
                     getResources().getString(R.string.remove_hp_success),
@@ -175,7 +164,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
                     .setAction(R.string.undo, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            rvhPhanAdapter.undo();
+                            rvClassAdapter.undo();
                         }
                     }).show();
         } catch (AppException e) {
@@ -216,41 +205,26 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     public void recognize() {
         onRecognize.startRecognize();
         recognizeMaHP(RecognizeFragment.this.bitmap);
+        onRecognize.endRecognize();
     }
 
     public void recognizeMaHP(Bitmap bitmap) {
         ArrayList<String> arrayList;
         arrayList = processImage(bitmap);
 
-
-        rvLopHP.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
+        rvClass.setVisibility(View.VISIBLE);
 
         if(arrayList == null) {
-            //Toast.makeText(getActivity(), "Khong co du lieu nao!", Toast.LENGTH_SHORT).show();
-            Snackbar.make(layout_setup, R.string.no_data, Snackbar.LENGTH_INDEFINITE).show();
-            //lstMaHP.clear();
-            rvhPhanAdapter.removeAllItem();
-            //rvhPhanAdapter.notifyDataSetChanged();
-            //callback to SetupAct
-            onRecognize.endRecognize();
+            Snackbar.make(layout_setup, R.string.no_data, Snackbar.LENGTH_LONG).show();
+            rvClassAdapter.removeAllItem();
             return;
         }
 
-        //lstMaHP.clear();
-        rvhPhanAdapter.removeAllItem();
+        rvClassAdapter.removeAllItem();
         for (String i : arrayList) {
             i = i.replace(" ", "").replace(",", ".").replace(".", "_");
-//            lstMaHP.add(
-//                    getLopHPById(i)
-//            );
-            rvhPhanAdapter.addItemWithoutSort(getLopHPById(i));
-
+            rvClassAdapter.addItemWithoutSort(getLopHPById(i));
         }
-        //rvhPhanAdapter.notifyDataSetChanged();
-
-        //callback to SetupAct
-        onRecognize.endRecognize();
     }
 
     public LopHP getLopHPById(String id) {
@@ -269,11 +243,9 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     public ArrayList<String> processImage(Bitmap bitmap) throws NullPointerException{
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity()).build();
         if(!textRecognizer.isOperational()) {
-            Snackbar.make(layout_setup, R.string.not_support_vision, Snackbar.LENGTH_INDEFINITE).show();
-            //Toast.makeText(getActivity(), "Vision Err", Toast.LENGTH_LONG).show();
+            Snackbar.make(layout_setup, R.string.not_support_vision, Snackbar.LENGTH_SHORT).show();
             return null;
         }
-
         else {
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
             SparseArray<TextBlock> textBlocks = textRecognizer.detect(frame);
@@ -292,21 +264,20 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
                 return arrayList;
             }
         }
-
     }
 
     public void showEditMaHPDialog(final int itemPosition) {
         final EditMaHPCustomDialogBuilder builderEditMaHP = new EditMaHPCustomDialogBuilder(getContext());
-        builderEditMaHP.setMaHP(rvhPhanAdapter.getItem(itemPosition).getMaHP());
+        builderEditMaHP.setMaHP(rvClassAdapter.getItem(itemPosition).getMaHP());
         builderEditMaHP.setTitle(getString(R.string.edit_ma_hp));
         builderEditMaHP.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 LopHP lopHP = getLopHPById(builderEditMaHP.getMaHP());
 
-                rvhPhanAdapter.updateItem(itemPosition, lopHP);
+                rvClassAdapter.updateItem(itemPosition, lopHP);
 
-                rvhPhanAdapter.notifyDataSetChanged();
+                rvClassAdapter.notifyDataSetChanged();
             }
         });
 
@@ -329,25 +300,15 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof RVHPhanAdapter.ViewHolder) {
-            final LopHP lopHP = rvhPhanAdapter.getItem(position);
+            final LopHP lopHP = rvClassAdapter.getItem(position);
             removeUserHP(lopHP.getMaHP());
         }
     }
 
     public interface OnRecognize {
-        public void startRecognize();
-        public void endRecognize();
+        void startRecognize();
+        void endRecognize();
     }
 }

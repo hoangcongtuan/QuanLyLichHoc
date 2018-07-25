@@ -1,112 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="20dp">
-
-        <LinearLayout
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/ma_hoc_phan"
-                android:layout_weight="3"
-                android:layout_margin="5dp"
-                android:layout_gravity="center_vertical"/>
-
+            android:hint="@string/ma_hoc_phan"
+            android:layout_margin="4dp">
             <AutoCompleteTextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/autoMaHP"
-                app:layout_constraintTop_toTopOf="parent"
                 android:completionThreshold="1"
                 android:ems="2"
-                android:textSize="14sp"
-                android:layout_weight="6"
-                android:layout_margin="5dp"
-                android:layout_gravity="center_vertical">
+                android:textSize="14sp">
             </AutoCompleteTextView>
-        </LinearLayout>
+        </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/ten_hoc_phan"
-                android:layout_weight="3"
-                android:layout_margin="5dp"
-                android:layout_gravity="center_vertical"/>
-
+            android:hint="@string/ten_hoc_phan"
+            android:layout_margin="4dp">
             <AutoCompleteTextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/autoTenHP"
                 android:completionThreshold="1"
                 android:ems="5"
-                android:textSize="14sp"
-                android:layout_weight="6"
-                android:layout_margin="5dp"
-                android:layout_gravity="center_vertical">
+                android:textSize="14sp">
             </AutoCompleteTextView>
-        </LinearLayout>
+        </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
+            android:hint="@string/giao_vien"
+            android:layout_margin="4dp">
+            <EditText
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/giao_vien"
-                android:layout_weight="3"
-                android:layout_margin="5dp"
-                android:layout_gravity="center_vertical"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Giang vien"
-                android:id="@+id/tvGV"
-                android:layout_weight="6"
-                android:layout_margin="5dp"
-                android:layout_gravity="center_vertical"/>
-        </LinearLayout>
+                android:id="@+id/edtGV"
+                android:enabled="false"
+                android:textSize="14sp"/>
+        </android.support.design.widget.TextInputLayout>
 
 
-        <LinearLayout
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
+            android:hint="@string/thoi_gian_phong_hoc"
+            android:layout_margin="4dp">
+            <EditText
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/thoi_gian_phong_hoc"
-                android:layout_weight="3"
-                android:layout_margin="5dp"
-                android:layout_gravity="center_vertical"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvTKB"
-                android:text="Thoi Gian"
-                android:layout_weight="6"
-                android:layout_margin="5dp"
-                android:layout_gravity="center_vertical"/>
-        </LinearLayout>
+                android:enabled="false"
+                android:id="@+id/edtTKB"
+                android:textSize="14sp"/>
+        </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

@@ -2,12 +2,20 @@ package com.example.hoangcongtuan.quanlylichhoc.customview;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by hoangcongtuan on 10/15/17.
@@ -18,7 +26,8 @@ public class EditMaHPCustomDialogBuilder extends AlertDialog.Builder {
     private final static String TAG = EditMaHPCustomDialogBuilder.class.getName();
 
     private View rootView;
-    private EditText edtMaHP;
+    private AutoCompleteTextView edtMaHP;
+    private TextInputLayout textInputLayout;
 
     public EditMaHPCustomDialogBuilder(@NonNull Context context) {
         super(context);
@@ -39,10 +48,26 @@ public class EditMaHPCustomDialogBuilder extends AlertDialog.Builder {
 
     private void getWidgets() {
         edtMaHP = rootView.findViewById(R.id.edtMaHP);
-
+        textInputLayout = rootView.findViewById(R.id.textInputLayout);
     }
 
     private void setWidgets() {
+        edtMaHP.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                textInputLayout.setError("");
+            }
+        });
     }
 
 
@@ -56,5 +81,18 @@ public class EditMaHPCustomDialogBuilder extends AlertDialog.Builder {
 
     public String getMaHP() {
         return edtMaHP.getText().toString();
+    }
+
+    public void showError(String str) {
+        this.textInputLayout.setError(str);
+    }
+
+    public void setAutoCompleteList(ArrayList<String> lstClass) {
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_custome, lstClass);
+        edtMaHP.setAdapter(arrayAdapter);
+    }
+
+    public void showError(int strResourceId) {
+        this.textInputLayout.setError(getContext().getResources().getString(strResourceId));
     }
 }

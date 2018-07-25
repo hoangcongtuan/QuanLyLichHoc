@@ -1,5 +1,6 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.setup;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVHPhanAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.EditMaHPCustomDialogBuilder;
@@ -45,19 +47,15 @@ import java.util.ArrayList;
 public class FinishFragment extends Fragment implements View.OnClickListener,
         RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
     private final static String TAG = FinishFragment.class.getName();
-
     private  final static String TOPIC_TBCHUNG = "TBChung";
-
     private RecyclerView rvHPhan;
     //private FloatingActionButton fabAdd;
-
     private RVHPhanAdapter rvhPhanAdapter;
     private ArrayList<LopHP> lstLopHP;
     private ArrayList<String> lstMaHP;
-
     private CoordinatorLayout layout_setup;
-
     private OnUpLoadUserDBComplete onUpLoadUserDBComplete;
+    private FinishFragCallBack finishFragCallBack;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,17 +83,13 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
     private void initWidgets(View rootView) {
 
         layout_setup = rootView.findViewById(R.id.layout_finish);
-
         rvHPhan = rootView.findViewById(R.id.rvTKB);
         //fabAdd = (FloatingActionButton)rootView.findViewById(R.id.fabAdd);
-
         rvHPhan.setAdapter(rvhPhanAdapter);
         rvHPhan.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(
                 0, ItemTouchHelper.RIGHT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvHPhan);
-
         rvHPhan.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), rvHPhan, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -153,8 +147,14 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 LopHP lopHP = getLopHPById(builderEditMaHP.getMaHP());
+                if (lopHP == null) {
+                    builderEditMaHP.showError(R.string.class_id_invailid);
+                }
 
-                rvhPhanAdapter.updateItem(itemPosition, lopHP);
+                else {
+                    rvhPhanAdapter.updateItem(itemPosition, lopHP);
+                    finishFragCallBack.onListClassChangeState(rvhPhanAdapter.getAllItem().isEmpty());
+                }
             }
         });
 
@@ -165,6 +165,8 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
             }
         });
 
+        builderEditMaHP.setAutoCompleteList(DBLopHPHelper.getsInstance().getListMaHP());
+
         AlertDialog alertDialog = builderEditMaHP.create();
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
@@ -173,19 +175,18 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
     public LopHP getLopHPById(String id) {
         //Ensure return value not null, using to add LopHP to listView
         LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(id);
-        if (lopHP == null) {
-            lopHP = new LopHP();
-            lopHP.setMaHP(id);
-            lopHP.setTenGV(getResources().getString(R.string.unknown_symbol));
-            lopHP.setTenHP(getResources().getString(R.string.unknown));
-            lopHP.setTkb(getResources().getString(R.string.unknown_symbol));
-        }
+//        if (lopHP == null) {
+//            lopHP = new LopHP();
+//            lopHP.setMaHP(id);
+//            lopHP.setTenGV(getResources().getString(R.string.unknown_symbol));
+//            lopHP.setTenHP(getResources().getString(R.string.unknown));
+//            lopHP.setTkb(getResources().getString(R.string.unknown_symbol));
+//        }
         return lopHP;
     }
 
     //tao thoi khoa bieu tu danh sach ma hoc phan da nhan dang duoc
-    public void processTKB(ArrayList<LopHP> listLopHP) {
-
+    public void setListClass(ArrayList<LopHP> listLopHP) {
         //xoa danh sach cu
         lstLopHP.clear();
         lstMaHP.clear();
@@ -243,6 +244,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
 
         if (lstMaHP.indexOf(lopHP) == -1)  {
             rvhPhanAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
+            lstMaHP.add(id);
 
             Snackbar.make(
                     layout_setup,
@@ -330,6 +332,13 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof FinishFragCallBack)
+            this.finishFragCallBack = (FinishFragCallBack)context;
+    }
+
+    @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof RVHPhanAdapter.ViewHolder) {
             final LopHP lopHP = rvhPhanAdapter.getItem(position);
@@ -337,8 +346,12 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
         }
     }
 
+    public interface FinishFragCallBack {
+        void onListClassChangeState(boolean isEmpty);
+    }
+
     public interface OnUpLoadUserDBComplete {
-        public void onSuccess();
-        public void onFailed();
+        void onSuccess();
+        void onFailed();
     }
 }

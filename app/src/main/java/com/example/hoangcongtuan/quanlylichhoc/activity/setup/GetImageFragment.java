@@ -2,6 +2,7 @@ package com.example.hoangcongtuan.quanlylichhoc.activity.setup;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -35,7 +36,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by hoangcongtuan on 9/25/17.
  */
 
-public class GetImageFragment extends Fragment implements View.OnClickListener {
+public class GetImageFragment extends Fragment implements View.OnClickListener{
 
     private final static String TAG = GetImageFragment.class.getName();
 
@@ -44,16 +45,11 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_IMAGE_GALLERY = 0;
     private static final int REQUEST_IMAGE_CAMERA = 1;
     private static final int REQUEST_IMAGE_CROP = 2;
-    private ImageButton btnPickCamera;
-    private ImageButton btnPickGallery;
-    private TextView tvAddManually;
     public ImageView ivImage;
     public Boolean isLoadImage;
     public Bitmap bitmap;
-    private CallBack callBack;
-    private Activity activity;
-    private AlertDialog.Builder alertBuilder;
-    private AlertDialog alertDialog;
+    private GetImageFragCallBack getImageFragCallBack;
+    private AlertDialog cropTipDialog;
     private Uri imageUri;
 
     private String mCurrentPhotoPath;
@@ -63,18 +59,14 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_welcome_layout, container, false);
-        btnPickCamera = (ImageButton) rootView.findViewById(R.id.btnPickCamera);
-        btnPickGallery = (ImageButton)rootView.findViewById(R.id.btnPickGallery);
-        ivImage = (ImageView)rootView.findViewById(R.id.ivImage);
-
-        tvAddManually = rootView.findViewById(R.id.tvAdd_manually);
+        ImageButton btnPickCamera = rootView.findViewById(R.id.btnPickCamera);
+        ImageButton btnPickGallery = rootView.findViewById(R.id.btnPickGallery);
+        ivImage = rootView.findViewById(R.id.ivImage);
 
         btnPickGallery.setOnClickListener(this);
         btnPickCamera.setOnClickListener(this);
 
-        tvAddManually.setOnClickListener(this);
-
-        alertBuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getActivity());
         alertBuilder.setTitle(getResources().getString(R.string.crop_dialog_title));
         alertBuilder.setMessage(getResources().getString(R.string.crop_dialog_message));
         LayoutInflater inflater1 = getActivity().getLayoutInflater();
@@ -87,10 +79,7 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        alertDialog = alertBuilder.create();
-
-
-        activity = getActivity();
+        cropTipDialog = alertBuilder.create();
         isLoadImage = false;
 
         return rootView;
@@ -113,17 +102,19 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
             case R.id.btnPickGallery:
                 openGallery();
                 break;
-            case R.id.tvAdd_manually:
-                callBack.onAddManually();
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof GetImageFragCallBack)
+            this.getImageFragCallBack = (GetImageFragCallBack)context;
     }
 
     private void openGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(Intent.createChooser(galleryIntent, "Chọn hình ảnh từ thư viện"), REQUEST_IMAGE_GALLERY);
-//        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
-//        galleryIntent.setType("image/*");
-//        startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY);
     }
 
     public void reallyOpenCamera() throws IOException, AppException {
@@ -208,7 +199,6 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
         else {
             throw new AppException("Can't create image file!");
         }
-
     }
 
     @Override
@@ -216,18 +206,20 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
         if(resultCode != Activity.RESULT_OK) {
             return;
         }
+
         switch(requestCode){
             case REQUEST_IMAGE_CAMERA:
                 imageUri = Uri.fromFile(new File(mCurrentPhotoPath));
-                alertDialog.show();
+                cropTipDialog.show();
                 break;
 
             case REQUEST_IMAGE_GALLERY:
                 if(data !=null) {
                     imageUri = data.getData();
-                    alertDialog.show();
+                    cropTipDialog.show();
                 }
                 break;
+
             case REQUEST_IMAGE_CROP:
                 if(data != null)
                 {
@@ -236,9 +228,9 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
                         Bitmap bitmap = bundle.getParcelable("data");
                         ivImage.setImageBitmap(bitmap);
                     }
-
                 }
                 break;
+
             case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                 CropImage.ActivityResult result = CropImage.getActivityResult(data);
                 Uri uri = result.getUri();
@@ -246,7 +238,7 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
                     isLoadImage = true;
                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                     ivImage.setImageBitmap(bitmap);
-                    callBack.onBitmapAvailable();
+                    getImageFragCallBack.onBitmapAvailable(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -255,25 +247,17 @@ public class GetImageFragment extends Fragment implements View.OnClickListener {
             default:
                 break;
         }
-
     }
-
 
     private void cropImage(final Uri uri) {
         CropImage.activity(uri).start(getContext(), this);
     }
 
-    public interface CallBack {
-        void onBitmapAvailable();
-        void onAddManually();
+    public interface GetImageFragCallBack {
+        void onBitmapAvailable(Bitmap bitmap);
     }
 
-    public void setCallBack(CallBack callBack) {
-        this.callBack = callBack;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
+//    public void setCallBack(GetImageFragCallBack getImageFragCallBack) {
+//        this.getImageFragCallBack = getImageFragCallBack;
+//    }
 }

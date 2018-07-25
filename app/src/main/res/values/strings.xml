@@ -72,7 +72,7 @@
     <string name="data_loading">Đang tải dữ liệu</string>
     <string name="lop_hoc_phan">Lớp học phần</string>
     <string name="understand">Đã hiểu</string>
-    <string name="delete_data">Xóa dữ liệu lớp học phần</string>
+    <string name="delete_user_class">Xóa dữ liệu lớp học phần?</string>
     <string name="delete_data_detail">Dữ liệu về các lớp học phần của bạn sẽ bị xóa khỏi thiết bị và trên đám mây</string>
     <string name="delete">DELETE</string>
 
@@ -161,5 +161,8 @@
     <string name="sample_title">Thông báo đến lớp: [14.Nh25] Tuốc bin</string>
     <string name="sample_content">Thầy/Cô nhắn: Lớp NGHỈ HỌC (Tiết:7-8) ngày: 07/09/2017</string>
     <string name="processing">Đang xử lý ...</string>
+    <string name="let_try">Thử</string>
+    <string name="provide_class_id_method_tip">Ứng dụng cần danh sách mã học phần bạn đang học.\nChỉ cần ảnh chụp danh sách mã học phần, chúng tôi sẽ nhận dạng các lớp học phần cho bạn, bạn có muốn thử tính năng này không?</string>
+    <string name="class_id_invailid">Không tìm thấy lớp học phần</string>
 
 </resources>
