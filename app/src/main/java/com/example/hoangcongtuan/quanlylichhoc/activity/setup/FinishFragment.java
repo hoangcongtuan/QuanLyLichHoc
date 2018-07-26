@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -142,19 +143,11 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
     public void showEditMaHPDialog(final int itemPosition) {
         final EditMaHPCustomDialogBuilder builderEditMaHP = new EditMaHPCustomDialogBuilder(getContext());
         builderEditMaHP.setMaHP(rvhPhanAdapter.getItem(itemPosition).getMaHP());
-        builderEditMaHP.setTitle(getString(R.string.edit_ma_hp));
+        //builderEditMaHP.setTitle(getString(R.string.edit_ma_hp));
         builderEditMaHP.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                LopHP lopHP = getLopHPById(builderEditMaHP.getMaHP());
-                if (lopHP == null) {
-                    builderEditMaHP.showError(R.string.class_id_invailid);
-                }
 
-                else {
-                    rvhPhanAdapter.updateItem(itemPosition, lopHP);
-                    finishFragCallBack.onListClassChangeState(rvhPhanAdapter.getAllItem().isEmpty());
-                }
             }
         });
 
@@ -167,7 +160,30 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
 
         builderEditMaHP.setAutoCompleteList(DBLopHPHelper.getsInstance().getListMaHP());
 
-        AlertDialog alertDialog = builderEditMaHP.create();
+        final AlertDialog alertDialog = builderEditMaHP.create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button btnPositive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                btnPositive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        LopHP lopHP = getLopHPById(builderEditMaHP.getMaHP());
+                        if (lopHP == null) {
+                            builderEditMaHP.showError(R.string.class_id_invailid);
+                        }
+
+                        else {
+                            rvhPhanAdapter.updateItem(itemPosition, lopHP);
+                            finishFragCallBack.onListClassChangeState(rvhPhanAdapter.getAllItem().isEmpty());
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
     }

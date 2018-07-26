@@ -394,7 +394,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                         Utils.getsInstance(getApplicationContext()).showErrorMessage(this, e.getMessage());
                     }
                 }
-
                 break;
             }
         }

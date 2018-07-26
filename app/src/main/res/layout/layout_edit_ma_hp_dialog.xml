@@ -4,16 +4,20 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textInputLayout"
-        android:layout_margin="8dp"
+        android:hint="@string/ma_hoc_phan"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         app:errorEnabled="true">
         <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edtMaHP"/>
+            android:id="@+id/edtMaHP"
+            android:completionThreshold="1"
+            android:ems="2"/>
     </android.support.design.widget.TextInputLayout>
 </LinearLayout>

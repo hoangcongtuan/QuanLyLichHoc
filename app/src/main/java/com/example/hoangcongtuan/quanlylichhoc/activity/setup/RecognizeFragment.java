@@ -19,8 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVHPhanAdapter;
@@ -223,11 +223,11 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
         rvClassAdapter.removeAllItem();
         for (String i : arrayList) {
             i = i.replace(" ", "").replace(",", ".").replace(".", "_");
-            rvClassAdapter.addItemWithoutSort(getLopHPById(i));
+            rvClassAdapter.addItemWithoutSort(getLopHPByIdNonNull(i));
         }
     }
 
-    public LopHP getLopHPById(String id) {
+    public LopHP getLopHPByIdNonNull(String id) {
         //Ensure return value not null, using to add LopHP to listView
         LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(id);
         if (lopHP == null) {
@@ -239,6 +239,14 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
         }
         return lopHP;
     }
+
+    public LopHP getLopHPById(String id) {
+        //Ensure return value not null, using to add LopHP to listView
+        LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(id);
+        return lopHP;
+    }
+
+
 
     public ArrayList<String> processImage(Bitmap bitmap) throws NullPointerException{
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity()).build();
@@ -269,15 +277,11 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     public void showEditMaHPDialog(final int itemPosition) {
         final EditMaHPCustomDialogBuilder builderEditMaHP = new EditMaHPCustomDialogBuilder(getContext());
         builderEditMaHP.setMaHP(rvClassAdapter.getItem(itemPosition).getMaHP());
-        builderEditMaHP.setTitle(getString(R.string.edit_ma_hp));
+//        builderEditMaHP.setTitle(getString(R.string.edit_ma_hp));
         builderEditMaHP.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                LopHP lopHP = getLopHPById(builderEditMaHP.getMaHP());
 
-                rvClassAdapter.updateItem(itemPosition, lopHP);
-
-                rvClassAdapter.notifyDataSetChanged();
             }
         });
 
@@ -288,7 +292,30 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
             }
         });
 
-        AlertDialog alertDialog = builderEditMaHP.create();
+        builderEditMaHP.setAutoCompleteList(DBLopHPHelper.getsInstance().getListMaHP());
+
+        final AlertDialog alertDialog = builderEditMaHP.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button btnPositive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                btnPositive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        LopHP lopHP = getLopHPById(builderEditMaHP.getMaHP());
+                        if (lopHP == null) {
+                            builderEditMaHP.showError(R.string.class_id_invailid);
+                        }
+
+                        else {
+                            rvClassAdapter.updateItem(itemPosition, lopHP);
+//                            finishFragCallBack.onListClassChangeState(rvhPhanAdapter.getAllItem().isEmpty());
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
     }
