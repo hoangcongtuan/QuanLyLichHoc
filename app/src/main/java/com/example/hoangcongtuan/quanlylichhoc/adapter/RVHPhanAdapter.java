@@ -78,6 +78,14 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
         return lstLopHP.indexOf(lopHP);
     }
 
+    public int indexOf(String id) {
+        //return lstLopHP.indexOf(lopHP);
+        for (LopHP i : lstLopHP)
+            if (i.getMaHP().compareTo(id) == 0)
+                return lstLopHP.indexOf(i);
+        return -1;
+    }
+
     public void addItem(LopHP lopHP) {
         //find proper position
         int i;

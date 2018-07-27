@@ -164,5 +164,6 @@
     <string name="let_try">Thử</string>
     <string name="provide_class_id_method_tip">Ứng dụng cần danh sách mã học phần bạn đang học.\nChỉ cần ảnh chụp danh sách mã học phần, chúng tôi sẽ nhận dạng các lớp học phần cho bạn, bạn có muốn thử tính năng này không?</string>
     <string name="class_id_invailid">Không tìm thấy lớp học phần</string>
+    <string name="class_is_exist">Lớp học phần bị trùng</string>
 
 </resources>

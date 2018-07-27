@@ -173,7 +173,8 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
                         if (lopHP == null) {
                             builderEditMaHP.showError(R.string.class_id_invailid);
                         }
-
+                        else if (rvhPhanAdapter.indexOf(lopHP.getMaHP()) != -1)
+                            builderEditMaHP.showError(R.string.class_is_exist);
                         else {
                             rvhPhanAdapter.updateItem(itemPosition, lopHP);
                             finishFragCallBack.onListClassChangeState(rvhPhanAdapter.getAllItem().isEmpty());

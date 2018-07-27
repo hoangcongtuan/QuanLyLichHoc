@@ -7,6 +7,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -52,22 +53,7 @@ public class EditMaHPCustomDialogBuilder extends AlertDialog.Builder {
     }
 
     private void setWidgets() {
-        edtMaHP.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                textInputLayout.setError("");
-            }
-        });
     }
 
 

@@ -306,7 +306,8 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
                         if (lopHP == null) {
                             builderEditMaHP.showError(R.string.class_id_invailid);
                         }
-
+                        else if (rvClassAdapter.indexOf(lopHP.getMaHP()) != -1)
+                            builderEditMaHP.showError(R.string.class_is_exist);
                         else {
                             rvClassAdapter.updateItem(itemPosition, lopHP);
 //                            finishFragCallBack.onListClassChangeState(rvhPhanAdapter.getAllItem().isEmpty());
