@@ -11,6 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/ma_hoc_phan"
+            android:id="@+id/textInputLayout"
             android:layout_margin="4dp">
             <AutoCompleteTextView
                 android:layout_width="match_parent"

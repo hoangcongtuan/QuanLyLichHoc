@@ -186,17 +186,34 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
         lopHPCustomDialogBuilder.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                LopHP lopHP = lopHPCustomDialogBuilder.getCurrentLopHP();
-                if (lopHP == null) {
-                    Snackbar.make(layout_setup,
-                            getResources().getString(R.string.incorrect_ma_hp), Snackbar.LENGTH_LONG).show();
-                }
-                else
-                    addUserHP(lopHPCustomDialogBuilder.getCurrentLopHP().getMaHP());
+
             }
         });
 
-        AlertDialog alertDialog = lopHPCustomDialogBuilder.create();
+        final AlertDialog alertDialog = lopHPCustomDialogBuilder.create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button btnPositive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                btnPositive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //override positive button, prevent dismiss when click to it in some case
+                        LopHP lopHP = lopHPCustomDialogBuilder.getCurrentLopHP();
+                        if (lopHP == null) {
+                            lopHPCustomDialogBuilder.showError(R.string.class_id_invailid);
+                        }
+                        else if (rvClassAdapter.indexOf(lopHP.getMaHP()) != -1)
+                            lopHPCustomDialogBuilder.showError(R.string.class_is_exist);
+                        else {
+                            addUserHP(lopHPCustomDialogBuilder.getCurrentLopHP().getMaHP());
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
     }

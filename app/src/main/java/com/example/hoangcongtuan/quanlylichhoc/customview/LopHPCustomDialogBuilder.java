@@ -2,6 +2,7 @@ package com.example.hoangcongtuan.quanlylichhoc.customview;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ public class LopHPCustomDialogBuilder extends AlertDialog.Builder {
     private ArrayList<String> lstTenHP;
     private ArrayAdapter<String> adapterMaHP;
     private ArrayAdapter<String> adapterTenHP;
+    private TextInputLayout textInputLayout;
 
     private LopHP currentLopHP;
 
@@ -68,6 +70,8 @@ public class LopHPCustomDialogBuilder extends AlertDialog.Builder {
         edtTKB = rootView.findViewById(R.id.edtTKB);
         edtGV = rootView.findViewById(R.id.edtGV);
 
+        textInputLayout = rootView.findViewById(R.id.textInputLayout);
+
     }
 
     private void setWidgets() {
@@ -81,6 +85,16 @@ public class LopHPCustomDialogBuilder extends AlertDialog.Builder {
         edtGV.setText(lopHP.getTenGV());
         edtTKB.setText(lopHP.getTkb());
         currentLopHP = lopHP;
+    }
+
+    public void showError(String str) {
+        textInputLayout.setError(str);
+    }
+
+    public void showError(int strId) {
+        textInputLayout.setError(
+                getContext().getResources().getString(strId)
+        );
     }
 
     private void setWidgetEvent() {
