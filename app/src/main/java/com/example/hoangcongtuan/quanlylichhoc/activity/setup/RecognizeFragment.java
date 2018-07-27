@@ -135,7 +135,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
         }
 
         if (rvClassAdapter.indexOf(lopHP) == -1)  {
-            rvClassAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
+            rvClassAdapter.addItemWithoutSort(DBLopHPHelper.getsInstance().getLopHocPhan(id));
 
             Snackbar.make(
                     layout_setup,

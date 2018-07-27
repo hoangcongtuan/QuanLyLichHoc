@@ -259,7 +259,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
         }
 
         if (lstMaHP.indexOf(lopHP) == -1)  {
-            rvhPhanAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
+            rvhPhanAdapter.addItemWithoutSort(DBLopHPHelper.getsInstance().getLopHocPhan(id));
             lstMaHP.add(id);
 
             Snackbar.make(

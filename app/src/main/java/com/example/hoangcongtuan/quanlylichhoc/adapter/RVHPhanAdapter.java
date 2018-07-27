@@ -1,5 +1,6 @@
 package com.example.hoangcongtuan.quanlylichhoc.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +49,7 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
         return viewHolder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(RVHPhanAdapter.ViewHolder holder, int position) {
         LopHP lopHP = lstLopHP.get(position);
@@ -87,8 +89,8 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
         lstLopHP.add(i, lopHP);
 
         //lstLopHP.add(lopHP);
-        this.notifyItemInserted(i);
-        notifyItemRangeChanged(i, lstLopHP.size() - 1);
+        notifyItemInserted(i);
+        notifyItemRangeChanged(i, lstLopHP.size());
 
         undo_LopHP = lopHP;
         undo_position = i;
