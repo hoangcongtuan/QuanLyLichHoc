@@ -154,7 +154,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
         builderEditMaHP.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+//abc
             }
         });
 
