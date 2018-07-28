@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVHPhanAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.customview.LopHPCustomDialogBuilder;
+import com.example.hoangcongtuan.quanlylichhoc.customview.AddClassCustomDialogBuilder;
 import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
 import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
@@ -116,24 +116,30 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         fabAdd.setOnClickListener(this);
     }
     public void showAddLopHPDialog() {
-        final LopHPCustomDialogBuilder lopHPCustomDialogBuilder = new LopHPCustomDialogBuilder(this);
-        lopHPCustomDialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        final AddClassCustomDialogBuilder addClassCustomDialogBuilder = new AddClassCustomDialogBuilder(this);
+
+        addClassCustomDialogBuilder.setAutoCompleteList(
+                DBLopHPHelper.getsInstance().getListMaHP(),
+                DBLopHPHelper.getsInstance().getListTenHP()
+        );
+
+        addClassCustomDialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
         });
 
-        lopHPCustomDialogBuilder.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
+        addClassCustomDialogBuilder.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                LopHP lopHP = lopHPCustomDialogBuilder.getCurrentLopHP();
+                LopHP lopHP = addClassCustomDialogBuilder.getCurrentLopHP();
                 if (lopHP == null) {
                     Snackbar.make(editHPLayout,
                              getResources().getString(R.string.incorrect_ma_hp), Snackbar.LENGTH_LONG).show();
                 }
                 else if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
-                    addUserHP(lopHPCustomDialogBuilder.getCurrentLopHP().getMaHP());
+                    addUserHP(addClassCustomDialogBuilder.getCurrentLopHP().getMaHP());
                 }
                 else
                     showNoInternetMessage();
@@ -143,7 +149,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
-        AlertDialog alertDialog = lopHPCustomDialogBuilder.create();
+        AlertDialog alertDialog = addClassCustomDialogBuilder.create();
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
     }

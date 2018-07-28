@@ -24,11 +24,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVHPhanAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.customview.EditMaHPCustomDialogBuilder;
-import com.example.hoangcongtuan.quanlylichhoc.customview.LopHPCustomDialogBuilder;
+import com.example.hoangcongtuan.quanlylichhoc.customview.EditClassIDCustomDialogBuilder;
+import com.example.hoangcongtuan.quanlylichhoc.customview.AddClassCustomDialogBuilder;
 import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
 import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
 import com.example.hoangcongtuan.quanlylichhoc.listener.RecyclerTouchListener;
@@ -141,7 +140,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
     }
 
     public void showEditMaHPDialog(final int itemPosition) {
-        final EditMaHPCustomDialogBuilder builderEditMaHP = new EditMaHPCustomDialogBuilder(getContext());
+        final EditClassIDCustomDialogBuilder builderEditMaHP = new EditClassIDCustomDialogBuilder(getContext());
         builderEditMaHP.setMaHP(rvhPhanAdapter.getItem(itemPosition).getMaHP());
         //builderEditMaHP.setTitle(getString(R.string.edit_ma_hp));
         builderEditMaHP.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -308,22 +307,27 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
     }
 
     public void showAddLopHPDialog() {
-        final LopHPCustomDialogBuilder lopHPCustomDialogBuilder = new LopHPCustomDialogBuilder(getContext());
-        lopHPCustomDialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        final AddClassCustomDialogBuilder addClassCustomDialogBuilder = new AddClassCustomDialogBuilder(getContext());
+        addClassCustomDialogBuilder.setAutoCompleteList(
+                DBLopHPHelper.getsInstance().getListMaHP(),
+                DBLopHPHelper.getsInstance().getListTenHP()
+        );
+
+        addClassCustomDialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
         });
 
-        lopHPCustomDialogBuilder.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
+        addClassCustomDialogBuilder.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
         });
 
-        final AlertDialog alertDialog = lopHPCustomDialogBuilder.create();
+        final AlertDialog alertDialog = addClassCustomDialogBuilder.create();
 
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -333,14 +337,14 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
                     @Override
                     public void onClick(View view) {
                         //override positive button, prevent dismiss when click to it in some case
-                        LopHP lopHP = lopHPCustomDialogBuilder.getCurrentLopHP();
+                        LopHP lopHP = addClassCustomDialogBuilder.getCurrentLopHP();
                         if (lopHP == null) {
-                            lopHPCustomDialogBuilder.showError(R.string.class_id_invailid);
+                            addClassCustomDialogBuilder.showError(R.string.class_id_invailid);
                         }
                         else if (rvhPhanAdapter.indexOf(lopHP.getMaHP()) != -1)
-                            lopHPCustomDialogBuilder.showError(R.string.class_is_exist);
+                            addClassCustomDialogBuilder.showError(R.string.class_is_exist);
                         else {
-                            addUserHP(lopHPCustomDialogBuilder.getCurrentLopHP().getMaHP());
+                            addUserHP(addClassCustomDialogBuilder.getCurrentLopHP().getMaHP());
                             alertDialog.dismiss();
                         }
                     }

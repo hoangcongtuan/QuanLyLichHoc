@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
@@ -22,25 +21,19 @@ import java.util.ArrayList;
  * Created by hoangcongtuan on 10/15/17.
  */
 
-public class LopHPCustomDialogBuilder extends AlertDialog.Builder {
+public class AddClassCustomDialogBuilder extends AlertDialog.Builder {
 
-    private final static String TAG = LopHPCustomDialogBuilder.class.getName();
+    private final static String TAG = AddClassCustomDialogBuilder.class.getName();
 
     private View rootView;
     private AutoCompleteTextView autoMaHP;
     private AutoCompleteTextView autoTenHP;
     private EditText edtTKB;
     private EditText edtGV;
-    //danh sach ma hoc phan, tenHP
-    private ArrayList<String> lstMaHP;
-    private ArrayList<String> lstTenHP;
-    private ArrayAdapter<String> adapterMaHP;
-    private ArrayAdapter<String> adapterTenHP;
     private TextInputLayout textInputLayout;
 
-    private LopHP currentLopHP;
 
-    public LopHPCustomDialogBuilder(@NonNull Context context) {
+    public AddClassCustomDialogBuilder(@NonNull Context context) {
         super(context);
 
         init();
@@ -55,12 +48,6 @@ public class LopHPCustomDialogBuilder extends AlertDialog.Builder {
         setTitle(getContext().getResources().getString(R.string.lop_hoc_phan));
         LayoutInflater inflater = LayoutInflater.from(getContext());
         rootView = inflater.inflate(R.layout.layout_them_hphan_dialog, null);
-        lstMaHP = DBLopHPHelper.getsInstance().getListMaHP();
-        lstTenHP = DBLopHPHelper.getsInstance().getListTenHP();
-
-        adapterMaHP = new ArrayAdapter<String>(getContext(), R.layout.layout_dropdown_custome, lstMaHP);
-        adapterTenHP = new ArrayAdapter<String>(getContext(), R.layout.layout_dropdown_custome, lstTenHP);
-
     }
 
     private void getWidgets() {
@@ -69,22 +56,18 @@ public class LopHPCustomDialogBuilder extends AlertDialog.Builder {
         autoTenHP = rootView.findViewById(R.id.autoTenHP);
         edtTKB = rootView.findViewById(R.id.edtTKB);
         edtGV = rootView.findViewById(R.id.edtGV);
-
         textInputLayout = rootView.findViewById(R.id.textInputLayout);
-
     }
 
     private void setWidgets() {
-        autoTenHP.setAdapter(adapterTenHP);
-        autoMaHP.setAdapter(adapterMaHP);
+
     }
 
-    void updateUI(LopHP lopHP) {
+    private void updateUI(LopHP lopHP) {
         autoMaHP.setText(lopHP.getMaHP());
         autoTenHP.setText(lopHP.getTenHP());
         edtGV.setText(lopHP.getTenGV());
         edtTKB.setText(lopHP.getTkb());
-        currentLopHP = lopHP;
     }
 
     public void showError(String str) {
@@ -95,6 +78,14 @@ public class LopHPCustomDialogBuilder extends AlertDialog.Builder {
         textInputLayout.setError(
                 getContext().getResources().getString(strId)
         );
+    }
+
+    public void setAutoCompleteList(ArrayList<String> lstId, ArrayList<String> lstName) {
+        ArrayAdapter<String> adapterMaHP = new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_custome, lstId);
+        ArrayAdapter<String> adapterTenHP = new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_custome, lstName);
+
+        autoTenHP.setAdapter(adapterTenHP);
+        autoMaHP.setAdapter(adapterMaHP);
     }
 
     private void setWidgetEvent() {
