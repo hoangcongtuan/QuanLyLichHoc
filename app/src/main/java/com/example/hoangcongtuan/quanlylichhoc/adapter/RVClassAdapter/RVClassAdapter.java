@@ -1,7 +1,8 @@
-package com.example.hoangcongtuan.quanlylichhoc.adapter;
+package com.example.hoangcongtuan.quanlylichhoc.adapter.RVClassAdapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,48 +17,59 @@ import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by hoangcongtuan on 1/30/18.
  */
 
-public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHolder> {
+public class RVClassAdapter extends RecyclerView.Adapter<RVClassAdapter.ViewHolder> implements Observables {
     private final static int ACTION_ADD = 0;
     private final static int ACTION_REMOVE = 1;
     private ArrayList<LopHP> lstLopHP;
     private Context mContext;
+    private ArrayList<RepositoryObserver> mObservers;
 
     private LopHP undo_LopHP;
     private int undo_position;
     private int last_action;
 
-
-    public RVHPhanAdapter(Context context, ArrayList<LopHP> arrayList) {
+    public RVClassAdapter(Context context, ArrayList<LopHP> arrayList) {
         this.mContext = context;
         this.lstLopHP = arrayList;
+        mObservers = new ArrayList<>();
 
         undo_LopHP = null;
         undo_position = -1;
         last_action = -1;
+
+        notifyObservers();
     }
 
+    @NonNull
     @Override
-    public RVHPhanAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RVClassAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.layout_item_hphan_with_background, parent, false);
-        RVHPhanAdapter.ViewHolder viewHolder = new RVHPhanAdapter.ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(RVHPhanAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(RVClassAdapter.ViewHolder holder, int position) {
         LopHP lopHP = lstLopHP.get(position);
         holder.tvMaHP.setText(lopHP.getMaHP());
         holder.tvTenHP.setText(lopHP.getTenHP());
         holder.tvIndex.setText(position + 1 + "");
         holder.tvTenGV.setText(lopHP.getTenGV());
         holder.tvTkb.setText(lopHP.getTkb());
+    }
+
+    public void copyFrom(ArrayList<LopHP> lstLopHP) {
+        this.lstLopHP.clear();
+        this.lstLopHP.addAll(lstLopHP);
+        notifyDataSetChanged();
+        notifyObservers();
     }
 
     public LopHP getItem(int postion) {
@@ -93,43 +105,46 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
             if (lstLopHP.get(i).getTkb().compareTo(lopHP.getTkb()) > 0)
                 break;
         }
-
         lstLopHP.add(i, lopHP);
-
-        //lstLopHP.add(lopHP);
         notifyItemInserted(i);
-        notifyItemRangeChanged(i, lstLopHP.size());
+        notifyItemRangeChanged(i, lstLopHP.size() - i);
 
         undo_LopHP = lopHP;
         undo_position = i;
         last_action = ACTION_ADD;
-        //sortItem();
+
+        notifyObservers();
     }
 
     public void addItemWithoutSort(LopHP lopHP) {
         lstLopHP.add(lopHP);
         notifyItemInserted(lstLopHP.size() - 1);
-        //sortItem();
+
+        notifyObservers();
     }
 
-    public void insertItem(int position, LopHP lopHP) {
+    private void insertItem(int position, LopHP lopHP) {
         lstLopHP.add(position, lopHP);
         this.notifyItemInserted(position);
-        this.notifyItemRangeChanged(position, lstLopHP.size() - 1);
+        this.notifyItemRangeChanged(position, lstLopHP.size() - position);
 
         undo_LopHP = lopHP;
         undo_position = position;
         last_action = ACTION_ADD;
+
+        notifyObservers();
     }
 
-    public void removeItem(int position) {
+    private void removeItem(int position) {
         undo_LopHP = lstLopHP.get(position);
         undo_position = position;
 
         lstLopHP.remove(position);
         this.notifyItemRemoved(position);
-        notifyItemRangeChanged(position, lstLopHP.size() - 1);
+        notifyItemRangeChanged(position, lstLopHP.size() - position);
         last_action = ACTION_REMOVE;
+
+        notifyObservers();
     }
 
     public void removeItem(String id) throws AppException {
@@ -141,11 +156,12 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
 
         lstLopHP.remove(index);
         this.notifyItemRemoved(index);
-        notifyItemRangeChanged(index, lstLopHP.size() - 1);
-        //this.notifyDataSetChanged();
+        notifyItemRangeChanged(index, lstLopHP.size() - index);
+
+        notifyObservers();
     }
 
-    public int getIndexOf(String id) throws AppException {
+    private int getIndexOf(String id) throws AppException {
         for (LopHP lopHP : lstLopHP) {
             if (lopHP.getMaHP().equals(id))
                 return lstLopHP.indexOf(lopHP);
@@ -160,17 +176,19 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
     public void removeAllItem() {
         lstLopHP.clear();
         this.notifyDataSetChanged();
+
+        notifyObservers();
     }
 
     public ArrayList<LopHP> getAllItem() {
         return lstLopHP;
     }
 
-    public void restoreItem(LopHP lopHP, int position) {
-        lstLopHP.add(position, lopHP);
-        this.notifyItemInserted(position);
-        sortItem();
-
+    public ArrayList<String> getAllId() {
+        ArrayList<String> list = new ArrayList<>();
+        for(LopHP i: lstLopHP)
+            list.add(i.getMaHP());
+        return list;
     }
 
     public void undo() {
@@ -182,27 +200,37 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
                 insertItem(undo_position, undo_LopHP);
                 break;
         }
-
         last_action = -1;
     }
-
-    public void sortItem() {
-        Utils.getsInstance(mContext).sortLHP(lstLopHP);
-        this.notifyDataSetChanged();
-    }
-
-
 
     @Override
     public int getItemCount() {
         return lstLopHP.size();
     }
 
+    @Override
+    public void registerObserver(RepositoryObserver repositoryObserver) {
+        if (!mObservers.contains(repositoryObserver))
+            mObservers.add(repositoryObserver);
+    }
+
+    @Override
+    public void removeObserver(RepositoryObserver repositoryObserver) {
+        if (mObservers.contains(repositoryObserver))
+            mObservers.remove(repositoryObserver);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (RepositoryObserver observer: mObservers)
+            observer.onDataStateChange(lstLopHP.isEmpty());
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvMaHP, tvTenHP, tvTenGV, tvTkb, tvIndex;
-        public RelativeLayout viewBackground;
+        RelativeLayout viewBackground;
         public ConstraintLayout viewForeground;
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             viewBackground = itemView.findViewById(R.id.background);
             viewForeground = itemView.findViewById(R.id.foreground);
@@ -213,6 +241,4 @@ public class RVHPhanAdapter extends RecyclerView.Adapter<RVHPhanAdapter.ViewHold
             tvIndex = itemView.findViewById(R.id.tvIndex);
         }
     }
-
-
 }

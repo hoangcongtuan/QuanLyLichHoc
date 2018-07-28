@@ -306,15 +306,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     btnBack.setVisibility(View.INVISIBLE);
                     btnNext.setVisibility(View.INVISIBLE);
                     btnFinish.setVisibility(View.VISIBLE);
-                    //TODO: finish button only enable when class is not empty
-                    btnFinish.setEnabled(true);
                 } else {
                     btnBack.setVisibility(View.VISIBLE);
                     btnBack.setEnabled(true);
                     btnNext.setVisibility(View.INVISIBLE);
                     btnFinish.setVisibility(View.VISIBLE);
-                    //TODO: finish button only enable when class is not empty
-                    btnFinish.setEnabled(true);
                 }
                 break;
         }
@@ -470,13 +466,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         else
             btnFinish.setEnabled(true);
     }
-
-//    @Override
-//    public void onAddManually() {
-//        manuallyMode = true;
-//        currentStep = STEP_FINISH;
-//        setStepper(currentStep);
-//    }
 
     private class FabVisibilityChangedListener extends FloatingActionButton.OnVisibilityChangedListener {
 

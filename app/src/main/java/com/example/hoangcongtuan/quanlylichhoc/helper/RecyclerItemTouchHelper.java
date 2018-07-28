@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVHPhanAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVClassAdapter.RVClassAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.ReminderAdapter;
 
 /**
@@ -49,8 +49,8 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
             if (viewHolder instanceof ReminderAdapter.ViewHolder) {
                 View foregroundView = ((ReminderAdapter.ViewHolder)viewHolder).viewForeground;
                 getDefaultUIUtil().onSelected(foregroundView);
-            } else if (viewHolder instanceof RVHPhanAdapter.ViewHolder) {
-                View foregroundView = ((RVHPhanAdapter.ViewHolder)viewHolder).viewForeground;
+            } else if (viewHolder instanceof RVClassAdapter.ViewHolder) {
+                View foregroundView = ((RVClassAdapter.ViewHolder)viewHolder).viewForeground;
                 getDefaultUIUtil().onSelected(foregroundView);
             }
 
@@ -64,8 +64,8 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
         if (viewHolder instanceof ReminderAdapter.ViewHolder) {
             View foregroundView = ((ReminderAdapter.ViewHolder)viewHolder).viewForeground;
             getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
-        } else if (viewHolder instanceof RVHPhanAdapter.ViewHolder) {
-            View foregroundView = ((RVHPhanAdapter.ViewHolder)viewHolder).viewForeground;
+        } else if (viewHolder instanceof RVClassAdapter.ViewHolder) {
+            View foregroundView = ((RVClassAdapter.ViewHolder)viewHolder).viewForeground;
             getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
         }
     }
@@ -76,8 +76,8 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
         if (viewHolder instanceof ReminderAdapter.ViewHolder) {
             View foregroundView = ((ReminderAdapter.ViewHolder)viewHolder).viewForeground;
             getDefaultUIUtil().clearView(foregroundView);
-        } else if (viewHolder instanceof RVHPhanAdapter.ViewHolder) {
-            View foregroundView = ((RVHPhanAdapter.ViewHolder)viewHolder).viewForeground;
+        } else if (viewHolder instanceof RVClassAdapter.ViewHolder) {
+            View foregroundView = ((RVClassAdapter.ViewHolder)viewHolder).viewForeground;
             getDefaultUIUtil().clearView(foregroundView);
         }
 
@@ -89,8 +89,8 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
         if (viewHolder instanceof ReminderAdapter.ViewHolder) {
             View foregroundView = ((ReminderAdapter.ViewHolder)viewHolder).viewForeground;
             getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
-        } else if (viewHolder instanceof RVHPhanAdapter.ViewHolder) {
-            View foregroundView = ((RVHPhanAdapter.ViewHolder)viewHolder).viewForeground;
+        } else if (viewHolder instanceof RVClassAdapter.ViewHolder) {
+            View foregroundView = ((RVClassAdapter.ViewHolder)viewHolder).viewForeground;
             getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
         }
     }

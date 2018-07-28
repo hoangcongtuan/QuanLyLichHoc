@@ -23,7 +23,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVHPhanAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVClassAdapter.RVClassAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.EditClassIDCustomDialogBuilder;
 import com.example.hoangcongtuan.quanlylichhoc.customview.AddClassCustomDialogBuilder;
 import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
@@ -44,7 +44,7 @@ import java.util.ArrayList;
 public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private final static String TAG = RecognizeFragment.class.getName();
-    private RVHPhanAdapter rvClassAdapter;
+    private RVClassAdapter rvClassAdapter;
     private CoordinatorLayout layout_setup;
     private RecyclerView rvClass;
     //private FloatingActionButton fabAdd;
@@ -81,7 +81,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 
     private void init() {
         ArrayList<LopHP> lstMaHP = new ArrayList<>();
-        rvClassAdapter = new RVHPhanAdapter(getContext(), lstMaHP);
+        rvClassAdapter = new RVClassAdapter(getContext(), lstMaHP);
         bitmap = null;
     }
 
@@ -140,7 +140,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
             Snackbar.make(
                     layout_setup,
                     getResources().getString(R.string.add_hp_success),
-                    Snackbar.LENGTH_INDEFINITE)
+                    Snackbar.LENGTH_LONG)
                     .setAction(
                             R.string.undo, new View.OnClickListener() {
                                 @Override
@@ -150,7 +150,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
                             }
                     ).show();
         } else {
-            Snackbar.make(layout_setup, R.string.duplicated_lop_hp, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(layout_setup, R.string.duplicated_lop_hp, Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -160,7 +160,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
             Snackbar.make(
                     layout_setup,
                     getResources().getString(R.string.remove_hp_success),
-                    Snackbar.LENGTH_INDEFINITE)
+                    Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -272,7 +272,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     public ArrayList<String> processImage(Bitmap bitmap) throws NullPointerException{
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity()).build();
         if(!textRecognizer.isOperational()) {
-            Snackbar.make(layout_setup, R.string.not_support_vision, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(layout_setup, R.string.not_support_vision, Snackbar.LENGTH_LONG).show();
             return null;
         }
         else {
@@ -350,7 +350,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if (viewHolder instanceof RVHPhanAdapter.ViewHolder) {
+        if (viewHolder instanceof RVClassAdapter.ViewHolder) {
             final LopHP lopHP = rvClassAdapter.getItem(position);
             removeUserHP(lopHP.getMaHP());
         }

@@ -11,10 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVHPhanAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVClassAdapter.RVClassAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
-import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -26,7 +25,7 @@ public class LichHocFragment extends Fragment {
 
     private View rootView;
     private RecyclerView rvTKB;
-    private RVHPhanAdapter rvTKBieuAdapter;
+    private RVClassAdapter rvTKBieuAdapter;
     private ArrayList<LopHP> lstLopHP;
 
     @Nullable
@@ -49,7 +48,7 @@ public class LichHocFragment extends Fragment {
 
     private void init() {
         lstLopHP = new ArrayList<>(DBLopHPHelper.getsInstance().getListUserLopHP());
-        rvTKBieuAdapter = new RVHPhanAdapter(getActivity(), lstLopHP);
+        rvTKBieuAdapter = new RVClassAdapter(getActivity(), lstLopHP);
     }
 
     private void getWidgets() {

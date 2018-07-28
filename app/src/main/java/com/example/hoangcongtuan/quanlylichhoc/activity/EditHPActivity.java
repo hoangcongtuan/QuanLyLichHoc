@@ -21,7 +21,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVHPhanAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVClassAdapter.RVClassAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.AddClassCustomDialogBuilder;
 import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
 import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
@@ -50,7 +50,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
     private FloatingActionButton fabAdd;
     private RecyclerView rvTKB;
-    private RVHPhanAdapter rvHPhanAdapter;
+    private RVClassAdapter rvHPhanAdapter;
     private Boolean modified = false;
     private CoordinatorLayout editHPLayout;
 
@@ -77,7 +77,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         dbUserMaHocPhan = database.child(KEY_USER).child(user.getUid()).child(KEY_MA_HP);
         ArrayList<LopHP> lstLopHP = DBLopHPHelper.getsInstance().getListUserLopHP();
-        rvHPhanAdapter = new RVHPhanAdapter(this, lstLopHP);
+        rvHPhanAdapter = new RVClassAdapter(this, lstLopHP);
     }
 
     private void getWidgets() {
@@ -376,7 +376,7 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if (viewHolder instanceof RVHPhanAdapter.ViewHolder) {
+        if (viewHolder instanceof RVClassAdapter.ViewHolder) {
             if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
                 final LopHP lopHP = rvHPhanAdapter.getItem(position);
                 removeUserHP(lopHP.getMaHP());
