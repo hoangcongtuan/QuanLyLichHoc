@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
+import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 
 import java.util.ArrayList;
@@ -67,7 +68,11 @@ public class RVClassAdapter extends RecyclerView.Adapter<RVClassAdapter.ViewHold
 
     public void copyFrom(ArrayList<LopHP> lstLopHP) {
         this.lstLopHP.clear();
-        this.lstLopHP.addAll(lstLopHP);
+        for(LopHP i: lstLopHP) {
+            if (DBLopHPHelper.getsInstance().getLopHocPhan(i.getMaHP()) != null)
+                this.lstLopHP.add(i);
+        }
+        //this.lstLopHP.addAll(lstLopHP);
         notifyDataSetChanged();
         notifyObservers();
     }

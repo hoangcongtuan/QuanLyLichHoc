@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //create progress dialog
         progressDialogBuilderCustom = new ProgressDialogBuilderCustom(this);
-        progressDialogBuilderCustom.setTitle(R.string.processing);
+        progressDialogBuilderCustom.setMessage(R.string.processing);
 
         pr_dialog = progressDialogBuilderCustom.create();
     }

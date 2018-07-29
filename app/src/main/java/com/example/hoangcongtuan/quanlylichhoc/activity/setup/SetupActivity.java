@@ -70,7 +70,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private FinishFragment finishFragment;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private ProgressDialogBuilderCustom progressDialogBuilderCustom;
     private AlertDialog pr_dialog;
 
     private DatabaseReference database;
@@ -132,7 +131,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         finishFragment = new FinishFragment();
 
         //create progress dialog
-        progressDialogBuilderCustom = new ProgressDialogBuilderCustom(this);
+        ProgressDialogBuilderCustom progressDialogBuilderCustom = new ProgressDialogBuilderCustom(this);
         progressDialogBuilderCustom.setText(R.string.processing);
 
         pr_dialog = progressDialogBuilderCustom.create();
