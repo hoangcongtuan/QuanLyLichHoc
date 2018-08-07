@@ -2,6 +2,7 @@ package com.example.hoangcongtuan.quanlylichhoc.activity;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +28,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.crashlytics.android.Crashlytics;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.alarm.AddAlarmActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
@@ -57,11 +59,16 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
+import io.github.inflationx.calligraphy3.CalligraphyConfig;
+import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
+import io.github.inflationx.viewpump.ViewPump;
+import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+
 /**
  * Kiem tra trang thai dang nhap, neu da dang nhap thi toi man hinh chinh, con ko thi toi man hinh dang nhap
  */
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
     private final static String TAG = SplashActivity.class.getName();
     private final static String KEY_ALL_HP_DB_VERSION = "ALL_HP_DATABASE_VERSION";
     private final static String KEY_VERSION = "version_info";
@@ -73,7 +80,6 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
         layout_splash = findViewById(R.id.layout_finish);
         tvLoadingInfo = findViewById(R.id.tvLoadingInfo);
 
@@ -466,9 +472,7 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, "onResponse: " + response.toString());
-
                         JSONObject json_topics = null;
-
                         try {
                             json_topics = new JSONObject("{}");
                         } catch (JSONException e) {
@@ -478,19 +482,16 @@ public class SplashActivity extends AppCompatActivity {
                             Toast.makeText(SplashActivity.this, R.string.error_sync_topic, Toast.LENGTH_LONG).show();
                             check_intent();
                         }
-
                         try {
                             json_topics = response.getJSONObject("rel").getJSONObject("topics");
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Crashlytics.log(Log.ERROR, TAG, "Error when get topics JSON");
                         }
-
                         Log.d(TAG, "onResponse: " + json_topics.toString());
-
                         Iterator<String> keys = json_topics.keys();
                         ArrayList<String> sub_list = new ArrayList<>();
-                        String key = "";
+                        String key;
 
                         //remove unsubscribe topic
                         while(keys.hasNext()) {

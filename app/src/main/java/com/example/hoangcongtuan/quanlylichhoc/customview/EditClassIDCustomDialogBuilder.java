@@ -24,7 +24,6 @@ public class EditClassIDCustomDialogBuilder extends AlertDialog.Builder {
     private View rootView;
     private AutoCompleteTextView edtMaHP;
     private TextInputLayout textInputLayout;
-    private ArrayAdapter<String> arrayAdapter;
 
     public EditClassIDCustomDialogBuilder(@NonNull Context context) {
         super(context);
@@ -66,7 +65,7 @@ public class EditClassIDCustomDialogBuilder extends AlertDialog.Builder {
     }
 
     public void setAutoCompleteList(ArrayList<String> lstClass) {
-        arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_custome, lstClass);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_custome, lstClass);
         edtMaHP.setAdapter(arrayAdapter);
     }
 

@@ -1,6 +1,7 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.main;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -22,7 +23,6 @@ import java.util.ArrayList;
  */
 
 public class LichHocFragment extends Fragment {
-
     private View rootView;
     private RecyclerView rvTKB;
     private RVClassAdapter rvTKBieuAdapter;
@@ -30,13 +30,11 @@ public class LichHocFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_lich_hoc, container, false);
-
         getWidgets();
         setWidgets();
         setWidgetsEvent();
-
         return rootView;
     }
 
@@ -71,11 +69,8 @@ public class LichHocFragment extends Fragment {
         lstLopHP.clear();
         ArrayList<LopHP> lst = DBLopHPHelper.getsInstance().getListUserLopHP();
         for(LopHP hp : lst) {
-            //lstLopHP.add(hp);
             rvTKBieuAdapter.addItem(hp);
         }
-
-        //Utils.sortLHP(lstLopHP);
         rvTKBieuAdapter.notifyDataSetChanged();
     }
 }

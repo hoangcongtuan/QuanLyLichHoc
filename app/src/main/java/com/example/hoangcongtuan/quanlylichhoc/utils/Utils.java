@@ -6,11 +6,13 @@ import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.net.InetAddress;
@@ -24,8 +26,11 @@ import java.util.Comparator;
 
 public class Utils {
 
+    private static final String TAG = Utils.class.getName();
     private RequestQueue requestQueue;
     private static Utils sInstance;
+
+    public final static String APP_FONT_PATH = "fonts/SourceSansPro-Regular.ttf";
 
 
     private Utils(Context context) {
@@ -62,8 +67,15 @@ public class Utils {
     }
 
     public void subscribeTopic(ArrayList<String> lstTopic) {
-        for (String s : lstTopic)
-            FirebaseMessaging.getInstance().subscribeToTopic(s);
+        for (final String s : lstTopic) {
+            Log.d(TAG, "subscribeTopic: Start subscribe: " + s);
+            FirebaseMessaging.getInstance().subscribeToTopic(s).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d(TAG, "onSuccess: Finish subscribe: " + s);
+                }
+            });
+        }
     }
 
     public void unSubscribeTopic(String topic) {
@@ -71,7 +83,9 @@ public class Utils {
     }
 
     public void subscribeTopic(String topic) {
+        Log.d(TAG, "subscribeTopic: Start Subscribe: " + topic );
         FirebaseMessaging.getInstance().subscribeToTopic(topic);
+        Log.d(TAG, "subscribeTopic: Finish subscribe topic: " + topic);
     }
 
     public RequestQueue getRequestQueue() {

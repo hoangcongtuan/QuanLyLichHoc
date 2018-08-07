@@ -1,6 +1,7 @@
 package com.example.hoangcongtuan.quanlylichhoc.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,19 +34,19 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         this.mCalendar = Calendar.getInstance();
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View reminderView = inflater.inflate(R.layout.layout_item_alarm, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(reminderView);
-        return viewHolder;
+        return new ViewHolder(reminderView);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reminder reminder = mReminders.get(position);
 
         holder.tvTitle.setText(reduceString(
@@ -99,10 +100,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
             return mContext.getResources().getString(R.string.lastday);
         else if (days > 0)
             return mContext.getResources().getString(R.string.infuture);
-        else if (days < 0)
-            return mContext.getResources().getString(R.string.inpast);
-
-        return null;
+        else return mContext.getResources().getString(R.string.inpast);
     }
 
     private String reduceString(String str) {
@@ -123,15 +121,15 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
     }
 
     public interface ItemClickListener {
-        public void onClick(View view, int position, boolean isLongClick);
+        void onClick(View view, int position, boolean isLongClick);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         private TextView tvTitle, tvContent, tvDate, tvTime, tvSomeDay;
-        public RelativeLayout viewBackground;
+        RelativeLayout viewBackground;
         public ConstraintLayout viewForeground;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             tvTitle = itemView.findViewById(R.id.tvTitle);

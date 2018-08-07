@@ -22,19 +22,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.about.AboutActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.alarm.AlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.EditHPActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.SearchResultActivity;
+import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.MainPagerAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
@@ -53,7 +55,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONObject;
 
@@ -61,30 +62,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.inflationx.calligraphy3.CalligraphyUtils;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private final static String TAG = MainActivity.class.getName();
 
     public final static String FIND_URL = "https://us-central1-server-dut.cloudfunctions.net/searchPost?category=%s&text=%s";
     public final static String CATE_CHUNG = "chung";
     public final static String CATE_HOC_PHAN = "hocphan";
-
     public final static int RC_EDIT_HP_ACT = 1;
-
     public final static int PAGE_TB_CHUNG = 0;
     public final static int PAGE_TB_HP = 1;
     public final static int PAGE_TKB = 2;
 
-    private MainPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private String[] strTabs;
     private Toolbar toolbar;
-    private ActionBarDrawerToggle toggle;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
     private Uri avatarUrl;
     private TextView tvUserName;
@@ -93,10 +91,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TBHocPhanFragment tbHPhanFragment;
     private LichHocFragment lichHocFragment;
     private CoordinatorLayout main_content_layout;
-    private ProgressDialogBuilderCustom progressDialogBuilderCustom;
     private AlertDialog pr_dialog;
 
-    private DatabaseReference database;
     private DatabaseReference firebaseDBUserMaHP;
 
     private GoogleApiClient mGoogleApiClient;
@@ -149,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void init() {
         //init
         strTabs = getResources().getStringArray(R.array.tab_name);
-        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         //config google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -163,13 +159,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         avatarUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
         Log.d(TAG, "init: avatarurl = " + avatarUrl);
 
-        database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         firebaseDBUserMaHP = database.child(LoginActivity.KEY_FIRBASE_USER)
                 .child(user.getUid()).child(LoginActivity.KEY_FIREBASE_LIST_MAHP);
 
         //create progress dialog
-        progressDialogBuilderCustom = new ProgressDialogBuilderCustom(this);
-        progressDialogBuilderCustom.setMessage(R.string.processing);
+        ProgressDialogBuilderCustom progressDialogBuilderCustom = new ProgressDialogBuilderCustom(this);
+        progressDialogBuilderCustom.setText(R.string.processing);
 
         pr_dialog = progressDialogBuilderCustom.create();
     }
@@ -258,8 +254,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 })
         {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<String, String>();
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "key=" + key);
                 return headers;
             }
@@ -274,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
 
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
         drawerLayout.addDrawerListener(toggle);
 
         toggle.syncState();
@@ -285,6 +281,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tvUserName.setText(user.getDisplayName());
         tvEmail.setText(user.getEmail());
 
+        //apply font for tablayout
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+        for(int i = 0; i < tabsCount; i++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(i);
+            int tabChildsCount = vgTab.getChildCount();
+            for(int j = 0; j < tabChildsCount; j++) {
+                View tabViewChild = vgTab.getChildAt(j);
+                if (tabViewChild instanceof TextView)
+                    CalligraphyUtils.applyFontToTextView(tabViewChild.getContext(), (TextView)tabViewChild, Utils.APP_FONT_PATH);
+            }
+        }
+
     }
 
     private void setWidgetsEvent() {
@@ -293,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupViewPager(ViewPager viewPager) {
 
-        pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+        MainPagerAdapter pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(tbChungFragment, strTabs[0]);
         pagerAdapter.addFragment(tbHPhanFragment, strTabs[1]);
         pagerAdapter.addFragment(lichHocFragment, strTabs[2]);
@@ -456,21 +465,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent(MainActivity.this, EditHPActivity.class);
                 startActivityForResult(intent, RC_EDIT_HP_ACT);
                 break;
-            case R.id.item_showFCMDetails:
-                getTopicSubcribe(
-                        FirebaseInstanceId.getInstance().getToken(),
-                        getResources().getString(R.string.SERVER_KEY)
-                );
-                break;
-            case R.id.item_showSubscribeTopic:
-                searchPost("Thông báo chuyển phòng học khu B");
+
+//            case R.id.item_showFCMDetails:
+//                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+//                    @Override
+//                    public void onSuccess(InstanceIdResult instanceIdResult) {
+//                        getTopicSubcribe(
+//                                instanceIdResult.getToken(),
+//                                getResources().getString(R.string.SERVER_KEY)
+//                        );
+//                    }
+//                });
+//                break;
+//
+//            case R.id.item_showSubscribeTopic:
+//                searchPost("Thông báo chuyển phòng học khu B");
+//                break;
+
+            case R.id.item_about:
+                Intent intentAbout = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(intentAbout);
                 break;
 
             case R.id.item_nhac_nho:
                 Intent intentAlarm = new Intent(MainActivity.this, AlarmActivity.class);
                 startActivity(intentAlarm);
                 break;
-
         }
         drawerLayout.closeDrawers();
         return true;
@@ -491,7 +511,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Snackbar.LENGTH_LONG).show();
                 }
                 break;
-
         }
     }
 }

@@ -11,9 +11,8 @@ import com.example.hoangcongtuan.quanlylichhoc.R;
 
 public class ProgressDialogBuilderCustom extends AlertDialog.Builder {
 
-    private ProgressBar progressBar;
     private TextView tv_progress;
-    private View rootView;
+
     public ProgressDialogBuilderCustom(Context context) {
         super(context);
 
@@ -25,10 +24,10 @@ public class ProgressDialogBuilderCustom extends AlertDialog.Builder {
     private void initView() {
         //inflate layout to view
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        rootView = inflater.inflate(R.layout.layout_progress_dialog, null);
+        View rootView = inflater.inflate(R.layout.layout_progress_dialog, null);
 
         //find view
-        progressBar = rootView.findViewById(R.id.progress_bar);
+        ProgressBar progressBar = rootView.findViewById(R.id.progress_bar);
         tv_progress = rootView.findViewById(R.id.tv_progress_text);
 
         //apply layout

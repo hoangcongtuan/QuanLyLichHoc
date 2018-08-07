@@ -1,6 +1,7 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.main;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -35,7 +36,7 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         ViewGroup viewGroup;
         viewGroup = (ViewGroup)inflater.inflate(R.layout.fragment_tb_chung, container, false);
         return  viewGroup;
@@ -44,7 +45,7 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
     /**
      * Scroll to a Post that has a hash key is hash
      * If is empty state, change layout to empty state
-     * @param savedInstanceState
+     * @param savedInstanceState ke me no
      */
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         setupWidget();
@@ -93,7 +94,7 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
 
     /**
      * Scroll hash'post
-     * @param hash
+     * @param hash post'hash want to scroll to
      */
     public void scrollTo(String hash) {
         this.hash = hash;

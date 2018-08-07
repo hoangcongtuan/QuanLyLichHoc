@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
@@ -24,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AddAlarmActivity extends AppCompatActivity implements View.OnClickListener{
+public class AddAlarmActivity extends BaseActivity implements View.OnClickListener{
 
     public static final String EXTRA_TIEU_DE = "tieu_de";
     public static final String EXTRA_NOI_DUNG = "noi_dung";
@@ -108,9 +109,7 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
         String mType = "none";
 
         reminder = new Reminder(reminderTitle, reminderContent, mDate, mTime, mRepeat, mType);
-
         ReminderDBHelper.getsInstance(getApplicationContext()).addReminder(reminder);
-
         ReminderManager.getsInstance(getApplicationContext()).setReminder(reminder.getId(), mCalendar);
     }
 
@@ -128,12 +127,10 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
                 );
             }
         }, mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE), false);
-
         timePickerDialog.show();
     }
 
     private void showDatePickerDialog() {
-
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -144,7 +141,6 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
                 );
             }
         }, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DATE));
-
         datePickerDialog.show();
     }
 
@@ -161,7 +157,6 @@ public class AddAlarmActivity extends AppCompatActivity implements View.OnClickL
         edtContent = findViewById(R.id.edtReminderContent);
         tvDate = findViewById(R.id.tvDate);
         tvTime = findViewById(R.id.tvTime);
-
 
         mCalendar = Calendar.getInstance();
         @SuppressLint("SimpleDateFormat")

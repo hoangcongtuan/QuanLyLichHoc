@@ -230,10 +230,6 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
         }
     }
 
-    private int getIndexOf(String maHP) {
-        return rvClassAdapter.indexOf(maHP);
-    }
-
     public void showAddLopHPDialog() {
         final AddClassCustomDialogBuilder addClassCustomDialogBuilder = new AddClassCustomDialogBuilder(getContext());
         addClassCustomDialogBuilder.setAutoCompleteList(

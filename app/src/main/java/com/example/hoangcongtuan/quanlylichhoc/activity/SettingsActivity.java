@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Switch;
 
@@ -43,10 +42,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
-
-
     private void getWidgets() {
-        swNotification = (Switch) findViewById(R.id.swNotification);
+        swNotification = findViewById(R.id.swNotification);
     }
 
     private void setWidgets() {
@@ -79,7 +76,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                     subscribe();
                 else
                     unSubscribe();
-
                 break;
         }
     }
@@ -89,6 +85,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         super.onDestroy();
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("enableNotification", swNotification.isChecked());
-        editor.commit();
+        editor.apply();
     }
 }

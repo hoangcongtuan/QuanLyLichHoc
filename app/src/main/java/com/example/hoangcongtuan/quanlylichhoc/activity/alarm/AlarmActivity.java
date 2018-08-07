@@ -17,6 +17,7 @@ import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.ReminderAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.ItemClickListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+public class AlarmActivity extends BaseActivity implements ReminderAdapter.ItemClickListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private final static int RC_DETAIL = 0;
     private final static int RC_ADD = 1;
@@ -47,7 +48,6 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
     }
 
     public void initWidget() {
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(getResources().getString(R.string.alarm_act_title));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,7 +56,6 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
 
         alarmLayout = findViewById(R.id.alarm_layout);
         RecyclerView rvAlarm = findViewById(R.id.rvAlarms);
-        
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(
                 0, ItemTouchHelper.RIGHT, this);
@@ -68,7 +67,6 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
         reminderAdapter.setClickListener(this);
 
         rvAlarm.setLayoutManager(new LinearLayoutManager(this));
-
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvAlarm.getContext(),
                 ((LinearLayoutManager)rvAlarm.getLayoutManager()).getOrientation());
         rvAlarm.addItemDecoration(dividerItemDecoration);
@@ -93,7 +91,6 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
         return true;
     }
 
-
     @Override
     public void onClick(View view, int position, boolean isLongClick) {
         Reminder reminder = reminderAdapter.getReminder(position);
@@ -115,7 +112,6 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
             reminderAdapter.notifyDataSetChanged();
             if (requestCode == RC_ADD && resultCode == RESULT_OK)
                 Snackbar.make(alarmLayout, getResources().getString(R.string.add_alarm_success), Snackbar.LENGTH_LONG).show();
-
         }
     }
 
@@ -128,7 +124,6 @@ public class AlarmActivity extends AppCompatActivity implements ReminderAdapter.
             @SuppressLint("SimpleDateFormat")
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
             final Calendar calendar = Calendar.getInstance();
-
             try {
                 calendar.setTime(
                         sdf.parse(deleteReminder.getDate())

@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class DBLopHPHelper extends SQLiteOpenHelper {
     private static final String TAG = SQLiteOpenHelper.class.getName();
 
-
     private static final String DATABASE_NAME = "QuanLyLichHocDB.db";
     private static final int DATABASE_VERSION = 1;
     private static final String ALL_HOCPHAN_TABLE_NAME = "THONG_TIN_LOP_HOC_PHAN";

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
@@ -27,9 +28,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class EditAlarmActivity extends AppCompatActivity implements View.OnClickListener{
+public class EditAlarmActivity extends BaseActivity implements View.OnClickListener{
 
-    private static final String TAG = EditAlarmActivity.class.getName().toString();
+    private static final String TAG = EditAlarmActivity.class.getName();
     private Calendar mCalendar;
     private EditText edtTitle, edtContent;
     private TextView tvDate, tvTime;
@@ -43,7 +44,6 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
 
         init();
         initWidget();
-
         //get reminder to edit
         Intent intent = getIntent();
         if (intent.hasExtra(ReminderManager.KEY_REMINDER_ID)) {
@@ -93,7 +93,6 @@ public class EditAlarmActivity extends AppCompatActivity implements View.OnClick
                     getResources().getString(R.string.error_alarm_database_access), Toast.LENGTH_LONG).show();
         }
     }
-
 
     private void init() {
         mCalendar = Calendar.getInstance();

@@ -29,6 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.StepPagerAdapter;
@@ -49,7 +50,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 
-public class SetupActivity extends AppCompatActivity implements View.OnClickListener,
+public class SetupActivity extends BaseActivity implements View.OnClickListener,
         NavigationView.OnNavigationItemSelectedListener, RecognizeFragment.OnRecognize, GetImageFragment.GetImageFragCallBack,
         FinishFragment.FinishFragCallBack{
     private final static String TAG = SetupActivity.class.getName();
@@ -68,11 +69,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private GetImageFragment getImageFragment;
     private RecognizeFragment recognizeFragment;
     private FinishFragment finishFragment;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
     private AlertDialog pr_dialog;
 
-    private DatabaseReference database;
     private DatabaseReference dbUserMaHocPhan;
 
     private Uri avatarUrl;
@@ -151,12 +149,12 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         currentStep = STEP_GET_IMAGE;
 
         //get firebase
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         avatarUrl = firebaseUser.getPhotoUrl();
         userName = firebaseUser.getDisplayName();
 
-        database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         dbUserMaHocPhan = database.child(LoginActivity.KEY_FIRBASE_USER).child(firebaseUser.getUid()).child(LoginActivity.KEY_FIREBASE_LIST_MAHP);
     }
 

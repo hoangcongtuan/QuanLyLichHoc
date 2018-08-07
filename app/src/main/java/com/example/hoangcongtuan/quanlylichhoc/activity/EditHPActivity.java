@@ -18,9 +18,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVClassAdapter.RVClassAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.AddClassCustomDialogBuilder;
 import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
@@ -37,7 +39,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class EditHPActivity extends AppCompatActivity implements View.OnClickListener
+public class EditHPActivity extends BaseActivity implements View.OnClickListener
         , RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
 
     private static final String TAG = EditHPActivity.class.getName();
@@ -133,23 +135,36 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
         addClassCustomDialogBuilder.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                LopHP lopHP = addClassCustomDialogBuilder.getCurrentLopHP();
-                if (lopHP == null) {
-                    Snackbar.make(editHPLayout,
-                             getResources().getString(R.string.incorrect_ma_hp), Snackbar.LENGTH_LONG).show();
-                }
-                else if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
-                    addUserHP(addClassCustomDialogBuilder.getCurrentLopHP().getMaHP());
-                }
-                else
-                    showNoInternetMessage();
+
 
             }
         });
 
-
-
-        AlertDialog alertDialog = addClassCustomDialogBuilder.create();
+        final AlertDialog alertDialog = addClassCustomDialogBuilder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button btnPositive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                btnPositive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //override positive button, prevent dismiss when click to it in some case
+                        LopHP lopHP = addClassCustomDialogBuilder.getCurrentLopHP();
+                        if (lopHP == null) {
+                            addClassCustomDialogBuilder.showError(R.string.class_id_invailid);
+                        }
+                        else if (rvHPhanAdapter.indexOf(lopHP.getMaHP()) != -1)
+                            addClassCustomDialogBuilder.showError(R.string.class_is_exist);
+                        else if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
+                            addUserHP(addClassCustomDialogBuilder.getCurrentLopHP().getMaHP());
+                            alertDialog.dismiss();
+                        }
+                        else
+                            showNoInternetMessage();
+                    }
+                });
+            }
+        });
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
     }
@@ -181,9 +196,8 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
     public void addUserHP(final String id) {
         //add on firebase
-        ArrayList<String> tmp = new ArrayList<>();
         ArrayList<String> lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
-        tmp.addAll(lstMaHP);
+        ArrayList<String> tmp = new ArrayList<>(lstMaHP);
         tmp.add(id);
         dbUserMaHocPhan.setValue(tmp).addOnSuccessListener(this, new OnSuccessListener<Void>() {
             @Override
@@ -231,9 +245,8 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void undo_addUserLopHP(final String id) {
-        ArrayList<String> tmp = new ArrayList<>();
         final ArrayList<String> lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
-        tmp.addAll(lstMaHP);
+        ArrayList<String> tmp = new ArrayList<>(lstMaHP);
         tmp.remove(
                 tmp.indexOf(id)
         );
@@ -256,7 +269,6 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 } catch (AppException e) {
                     e.printStackTrace();
                     Toast.makeText(EditHPActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-
                 }
 
             }
@@ -274,9 +286,8 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
 
     public void undo_removeUserLopHP(final String id) {
         //add on firebase
-        ArrayList<String> tmp = new ArrayList<>();
         ArrayList<String> lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
-        tmp.addAll(lstMaHP);
+        ArrayList<String> tmp = new ArrayList<>(lstMaHP);
         tmp.add(id);
         dbUserMaHocPhan.setValue(tmp).addOnSuccessListener(this, new OnSuccessListener<Void>() {
             @Override
@@ -304,9 +315,8 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void removeUserHP(final String id) {
-        ArrayList<String> tmp = new ArrayList<>();
         final ArrayList<String> lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
-        tmp.addAll(lstMaHP);
+        ArrayList<String> tmp = new ArrayList<>(lstMaHP);
         tmp.remove(
                 tmp.indexOf(id)
         );
@@ -361,7 +371,6 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                                 }).show();
             }
         });
-
     }
 
     @Override
@@ -372,7 +381,6 @@ public class EditHPActivity extends AppCompatActivity implements View.OnClickLis
                 break;
         }
     }
-
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {

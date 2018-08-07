@@ -1,6 +1,7 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.main;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -25,35 +26,29 @@ import com.google.firebase.database.FirebaseDatabase;
 public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMoreCallBack {
 
     private final static String TAG = TBHocPhanFragment.class.getName();
-
-    private RVTBAdapter hocPhanAdapter;
     private RecyclerView recyclerView;
     private LoadFeedHelper loadPostHelper;
-
     private ImageView img_empty_state;
-
     private String hash;
     private boolean isScrollTo = false;
     private boolean isEmptyState = false;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View rootView = (ViewGroup)inflater.inflate(R.layout.fragment_tb_hocphan, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_tb_hocphan, container, false);
 
-        recyclerView = (RecyclerView)rootView.findViewById(R.id.rvTBHocPhan);
+        recyclerView = rootView.findViewById(R.id.rvTBHocPhan);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        hocPhanAdapter = new RVTBAdapter(recyclerView, getContext());
+        RVTBAdapter hocPhanAdapter = new RVTBAdapter(recyclerView, getContext());
 
         img_empty_state = rootView.findViewById(R.id.img_empty_state);
 
@@ -67,9 +62,8 @@ public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMore
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //recyclerView.addOnScrollListener(hidingScrollListener);
 
         loadPostHelper.loadFirstTime();
     }

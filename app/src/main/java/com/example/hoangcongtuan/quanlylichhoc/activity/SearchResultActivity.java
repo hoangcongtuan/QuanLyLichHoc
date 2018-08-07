@@ -1,22 +1,17 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity;
 
 import android.content.Intent;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -24,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVPostAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
@@ -37,20 +33,17 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class SearchResultActivity extends AppCompatActivity implements RVTBAdapter.ILoadMoreCallBack, LoadSearchPostResultHelper.SearchPostCallBack{
+public class SearchResultActivity extends BaseActivity implements RVTBAdapter.ILoadMoreCallBack, LoadSearchPostResultHelper.SearchPostCallBack{
 
     private final static String TAG = SearchResultActivity.class.getName();
-    private final static int SHOW_BTN_TOP_THRESHOLD = 3;
     private TextView tvNumResult;
     private TextView tvResult;
     private RecyclerView recyclerView;
     private FloatingActionButton fabTop;
     private RVPostAdapter rvPostAdapter;
-    private CoordinatorLayout layout_search_result;
 
     private ImageView img_no_result;
     private ImageView img_empty_state;
-    private LinearLayout layout_result;
     private LoadSearchPostResultHelper searchPostResultHelper;
 
     @Override
@@ -96,15 +89,13 @@ public class SearchResultActivity extends AppCompatActivity implements RVTBAdapt
                 };
 
                 smoothScroller.setTargetPosition(0);
-                ((LinearLayoutManager)recyclerView.getLayoutManager()).startSmoothScroll(smoothScroller);
+                (recyclerView.getLayoutManager()).startSmoothScroll(smoothScroller);
             }
         });
 
         img_empty_state = findViewById(R.id.img_empty_state);
         img_no_result = findViewById(R.id.img_no_result);
 
-        layout_search_result = findViewById(R.id.layout_search_result);
-        layout_result = findViewById(R.id.layout_result);
         rvPostAdapter = new RVPostAdapter(recyclerView, SearchResultActivity.this);
 
         recyclerView.setAdapter(rvPostAdapter);

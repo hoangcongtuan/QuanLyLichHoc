@@ -49,7 +49,7 @@ public class RVClassAdapter extends RecyclerView.Adapter<RVClassAdapter.ViewHold
 
     @NonNull
     @Override
-    public RVClassAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RVClassAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.layout_item_hphan_with_background, parent, false);
         return new ViewHolder(view);
@@ -57,7 +57,7 @@ public class RVClassAdapter extends RecyclerView.Adapter<RVClassAdapter.ViewHold
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(RVClassAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RVClassAdapter.ViewHolder holder, int position) {
         LopHP lopHP = lstLopHP.get(position);
         holder.tvMaHP.setText(lopHP.getMaHP());
         holder.tvTenHP.setText(lopHP.getTenHP());

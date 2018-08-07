@@ -1,5 +1,6 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.setup;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -20,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
@@ -37,11 +37,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  */
 
 public class GetImageFragment extends Fragment implements View.OnClickListener{
-
     private final static String TAG = GetImageFragment.class.getName();
-
     public final static int RQ_PER_CAMERA = 0;
-
     private static final int REQUEST_IMAGE_GALLERY = 0;
     private static final int REQUEST_IMAGE_CAMERA = 1;
     private static final int REQUEST_IMAGE_CROP = 2;
@@ -54,10 +51,9 @@ public class GetImageFragment extends Fragment implements View.OnClickListener{
 
     private String mCurrentPhotoPath;
 
-
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_welcome_layout, container, false);
         ImageButton btnPickCamera = rootView.findViewById(R.id.btnPickCamera);
         ImageButton btnPickGallery = rootView.findViewById(R.id.btnPickGallery);
@@ -70,6 +66,7 @@ public class GetImageFragment extends Fragment implements View.OnClickListener{
         alertBuilder.setTitle(getResources().getString(R.string.crop_dialog_title));
         alertBuilder.setMessage(getResources().getString(R.string.crop_dialog_message));
         LayoutInflater inflater1 = getActivity().getLayoutInflater();
+        @SuppressLint("InflateParams")
         View dialogView = inflater1.inflate(R.layout.layout_crop_guide_dialog, null);
         alertBuilder.setView(dialogView);
         alertBuilder.setPositiveButton(getResources().getString(R.string.understand), new DialogInterface.OnClickListener() {
@@ -81,7 +78,6 @@ public class GetImageFragment extends Fragment implements View.OnClickListener{
 
         cropTipDialog = alertBuilder.create();
         isLoadImage = false;
-
         return rootView;
     }
 
@@ -120,9 +116,8 @@ public class GetImageFragment extends Fragment implements View.OnClickListener{
     public void reallyOpenCamera() throws IOException, AppException {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            File photoFile = null;
+            File photoFile;
             photoFile = createImageFile();
-
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(getActivity(),
                         getApplicationContext().getPackageName() + ".fileprovider",
@@ -131,7 +126,6 @@ public class GetImageFragment extends Fragment implements View.OnClickListener{
                 //get camera package
                 String camera_package = cameraIntent.resolveActivity(getActivity().getPackageManager()).getPackageName();
                 getContext().grantUriPermission(camera_package, photoURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAMERA);
             }
@@ -144,26 +138,11 @@ public class GetImageFragment extends Fragment implements View.OnClickListener{
     }
 
     private void openCamera() throws IOException, AppException {
-        //check permission
-//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//            //permission is not granted, request permission
-//            //show explaination
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
-//
-//            }
-//            else {
-//                requestPermissions(new String[] {Manifest.permission.CAMERA}, RQ_PER_CAMERA);
-//            }
-//        }
-//        else {
            reallyOpenCamera();
-//        }
-
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case RQ_PER_CAMERA: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -177,7 +156,6 @@ public class GetImageFragment extends Fragment implements View.OnClickListener{
                         Utils.getsInstance(getApplicationContext()).showErrorMessage(getActivity(), e.getMessage());
                     }
                 }
-
                 break;
             }
         }
@@ -206,7 +184,6 @@ public class GetImageFragment extends Fragment implements View.OnClickListener{
         if(resultCode != Activity.RESULT_OK) {
             return;
         }
-
         switch(requestCode){
             case REQUEST_IMAGE_CAMERA:
                 imageUri = Uri.fromFile(new File(mCurrentPhotoPath));
@@ -256,8 +233,4 @@ public class GetImageFragment extends Fragment implements View.OnClickListener{
     public interface GetImageFragCallBack {
         void onBitmapAvailable(Bitmap bitmap);
     }
-
-//    public void setCallBack(GetImageFragCallBack getImageFragCallBack) {
-//        this.getImageFragCallBack = getImageFragCallBack;
-//    }
 }

@@ -50,7 +50,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         String app_channel_id = getResources().getString(R.string.APP_CHANNEL_ID);
-        NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this, app_channel_id)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, app_channel_id)
                 .setSmallIcon(R.drawable.ic_chat_white_24dp)
                 .setContentTitle(msg.getData().get("title"))
                 .setAutoCancel(true)

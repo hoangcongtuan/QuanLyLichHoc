@@ -3,6 +3,7 @@ package com.example.hoangcongtuan.quanlylichhoc.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -71,7 +72,7 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int itemLoaded;
 
     //thresh sold
-    public int visibleThreshold = 1;
+    private int visibleThreshold = 1;
 
     //true if all new feed is loaded
     public boolean allItemLoaded;
@@ -124,12 +125,12 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private TextView tvTBThoiGian, tvTBTieuDe, tvThongBaoNoiDung;
         private ImageView btnDots;
-        public ThongBaoHolder(View itemView) {
+        ThongBaoHolder(View itemView) {
             super(itemView);
-            tvTBThoiGian = (TextView)itemView.findViewById(R.id.tvTBThoiGian);
-            tvTBTieuDe = (TextView)itemView.findViewById(R.id.tvTBTieude);
-            tvThongBaoNoiDung = (TextView)itemView.findViewById(R.id.tvTBNoiDung);
-            btnDots = (ImageView)itemView.findViewById(R.id.btnDots);
+            tvTBThoiGian = itemView.findViewById(R.id.tvTBThoiGian);
+            tvTBTieuDe = itemView.findViewById(R.id.tvTBTieude);
+            tvThongBaoNoiDung = itemView.findViewById(R.id.tvTBNoiDung);
+            btnDots = itemView.findViewById(R.id.btnDots);
 
             tvThongBaoNoiDung.setClickable(true);
             tvThongBaoNoiDung.setMovementMethod(LinkMovementMethod.getInstance());
@@ -139,7 +140,7 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //holder view cho item dang load trong recycle view
     public class ThongBaoHolderLoading extends RecyclerView.ViewHolder {
 
-        public ThongBaoHolderLoading(View itemView) {
+        ThongBaoHolderLoading(View itemView) {
             super(itemView);
         }
     }
@@ -147,7 +148,7 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     //luc tao item cho recycleview, phu thuoc vao viewType
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView;
         switch (viewType) {
             case ITEM_LOADING:
@@ -164,7 +165,7 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     //hien thi du lieu len item
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         if(holder instanceof ThongBaoHolder) {
             //neu la holder cua thong bao da load xong
             final ThongBaoHolder tbHolder = (ThongBaoHolder) holder;
@@ -181,7 +182,7 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     //menu xuat hien khi nhan button ... tren bang tin
-    public void showPopupNewFeed(final View view, final int position) {
+    private void showPopupNewFeed(final View view, final int position) {
         PopupMenu popupMenu = new PopupMenu(mContext, view);
         popupMenu.inflate(R.menu.menu_post);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -241,8 +242,6 @@ public class RVTBAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void onLoadMore();
         void onLoadMoreFinish();
     }
-
-
 
     //tra ve trang thai cua thong bao, tu do xac dinh dung viewholder nao
     @Override

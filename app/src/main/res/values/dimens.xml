@@ -4,7 +4,7 @@
     <dimen name="view_padding">5dp</dimen>
     <dimen name="time_size">15sp</dimen>
     <dimen name="tittle_size">17sp</dimen>
-    <dimen name="content_size">17sp</dimen>
+    <dimen name="content_size">16sp</dimen>
     <dimen name="card_margin">5dp</dimen>
     <dimen name="card_margin_left_right">8dp</dimen>
     <dimen name="card_album_radius">1dp</dimen>
@@ -41,4 +41,5 @@
     <dimen name="tabsHeight">48dp</dimen>
 
 
+    <item name="lineSpaceMultiplier" type="dimen" format="float">1.2</item>
 </resources>

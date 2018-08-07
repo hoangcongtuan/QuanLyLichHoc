@@ -7,11 +7,11 @@ import java.util.Date;
  */
 
 public class Post {
-    Date date;
-    String tittle;
-    String content;
-    String strDate;
-    String key;
+    private Date date;
+    private String tittle;
+    private String content;
+    private String strDate;
+    private String key;
 
     public Post(String strDate, String tittle, String content, String key) {
         this.strDate = strDate;

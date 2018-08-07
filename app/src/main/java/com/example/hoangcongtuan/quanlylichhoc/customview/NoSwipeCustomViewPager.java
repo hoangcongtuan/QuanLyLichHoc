@@ -1,6 +1,5 @@
 package com.example.hoangcongtuan.quanlylichhoc.customview;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -52,7 +51,7 @@ public class NoSwipeCustomViewPager extends ViewPager {
     }
 
     public class MyScroller extends Scroller {
-        public MyScroller(Context context) {
+        MyScroller(Context context) {
             super(context, new DecelerateInterpolator());
         }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -47,7 +48,6 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     private RVClassAdapter rvClassAdapter;
     private CoordinatorLayout layout_setup;
     private RecyclerView rvClass;
-    //private FloatingActionButton fabAdd;
     private Bitmap bitmap;
     private ImageView imageView;
     private OnRecognize onRecognize;
@@ -60,7 +60,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recognize, container, false);
         initWidgets(rootView);
         return rootView;
@@ -263,8 +263,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 
     public LopHP getLopHPById(String id) {
         //Ensure return value not null, using to add LopHP to listView
-        LopHP lopHP = DBLopHPHelper.getsInstance().getLopHocPhan(id);
-        return lopHP;
+        return DBLopHPHelper.getsInstance().getLopHocPhan(id);
     }
 
 
@@ -298,7 +297,6 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
     public void showEditMaHPDialog(final int itemPosition) {
         final EditClassIDCustomDialogBuilder builderEditMaHP = new EditClassIDCustomDialogBuilder(getContext());
         builderEditMaHP.setMaHP(rvClassAdapter.getItem(itemPosition).getMaHP());
-//        builderEditMaHP.setTitle(getString(R.string.edit_ma_hp));
         builderEditMaHP.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

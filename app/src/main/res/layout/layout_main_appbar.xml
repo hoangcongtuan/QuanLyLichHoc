@@ -15,5 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabIndicatorColor="@android:color/white"
-        app:tabMode="fixed"/>
+        app:tabMode="fixed"
+        fontPath="fonts/SourceSansPro-Regular.ttf"/>
 </android.support.design.widget.AppBarLayout>

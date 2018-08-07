@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
@@ -22,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AlarmDetailActivity extends AppCompatActivity {
+public class AlarmDetailActivity extends BaseActivity {
 
     public final static int RC_EDIT = 1;
     private static final String TAG = AlarmDetailActivity.class.getName();
@@ -37,7 +38,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_alarm_details);
         init();
         initWidget();
-
         //get reminder
         Intent i = getIntent();
         if (i.hasExtra(ReminderManager.KEY_REMINDER_ID)) {
@@ -96,7 +96,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
     }
 
     public void initWidget() {
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -162,7 +161,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 showDeleteDialog();
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

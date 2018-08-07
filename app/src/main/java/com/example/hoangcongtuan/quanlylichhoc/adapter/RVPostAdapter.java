@@ -3,6 +3,7 @@ package com.example.hoangcongtuan.quanlylichhoc.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -36,10 +37,6 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return mContext;
     }
 
-    public LinearLayoutManager getLinearLayoutManager() {
-        return linearLayoutManager;
-    }
-
     private LinearLayoutManager linearLayoutManager;
 
     //load more callback
@@ -51,17 +48,14 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final static int ITEM_LOADED = 0;
     private final static int ITEM_LOADING = 1;
 
-    //amount item load more
-    public final static int LOAD_MORE_DELTA = 5;
-
     //returen code when create fast alarm
-    public final static int RC_FAST_ADD_ALARM = 2;
+    private final static int RC_FAST_ADD_ALARM = 2;
 
     //true if post is loading more item
     public boolean isLoading;
 
     //thresh sold
-    public int visibleThreshold = 1;
+    private int visibleThreshold = 1;
 
     //true if all new feed is loaded
     public boolean allItemLoaded;
@@ -109,12 +103,12 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         private TextView tvTBThoiGian, tvTBTieuDe, tvThongBaoNoiDung;
         private ImageView btnDots;
-        public ThongBaoHolder(View itemView) {
+        ThongBaoHolder(View itemView) {
             super(itemView);
-            tvTBThoiGian = (TextView)itemView.findViewById(R.id.tvTBThoiGian);
-            tvTBTieuDe = (TextView)itemView.findViewById(R.id.tvTBTieude);
-            tvThongBaoNoiDung = (TextView)itemView.findViewById(R.id.tvTBNoiDung);
-            btnDots = (ImageView)itemView.findViewById(R.id.btnDots);
+            tvTBThoiGian = itemView.findViewById(R.id.tvTBThoiGian);
+            tvTBTieuDe = itemView.findViewById(R.id.tvTBTieude);
+            tvThongBaoNoiDung = itemView.findViewById(R.id.tvTBNoiDung);
+            btnDots = itemView.findViewById(R.id.btnDots);
 
             tvThongBaoNoiDung.setClickable(true);
             tvThongBaoNoiDung.setMovementMethod(LinkMovementMethod.getInstance());
@@ -124,15 +118,16 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     //holder view cho item dang load trong recycle view
     public class ThongBaoHolderLoading extends RecyclerView.ViewHolder {
 
-        public ThongBaoHolderLoading(View itemView) {
+        ThongBaoHolderLoading(View itemView) {
             super(itemView);
         }
     }
 
 
     //luc tao item cho recycleview, phu thuoc vao viewType
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView;
         switch (viewType) {
             case ITEM_LOADING:
@@ -149,7 +144,7 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     //hien thi du lieu len item
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         if(holder instanceof ThongBaoHolder) {
             //neu la holder cua thong bao da load xong
             final ThongBaoHolder tbHolder = (ThongBaoHolder) holder;
@@ -166,7 +161,7 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     //menu xuat hien khi nhan button ... tren bang tin
-    public void showPopupNewFeed(final View view, final int position) {
+    private void showPopupNewFeed(final View view, final int position) {
         PopupMenu popupMenu = new PopupMenu(mContext, view);
         popupMenu.inflate(R.menu.menu_post);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
