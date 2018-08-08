@@ -400,20 +400,6 @@ public class SplashActivity extends BaseActivity {
             switch (screen) {
                 case "main":
                     Intent main_intent = new Intent(SplashActivity.this, MainActivity.class);
-                    if (splashIntent.hasExtra("tieu_de"))
-                        main_intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
-                    else
-                        main_intent.putExtra("tieu_de", "Null");
-
-                    if (splashIntent.hasExtra("thoi_gian"))
-                        main_intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
-                    else
-                        main_intent.putExtra("thoi_gian", "Null");
-
-                    if (splashIntent.hasExtra("noi_dung"))
-                        main_intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
-                    else
-                        main_intent.putExtra("noi_dung", "Null");
 
                     if (splashIntent.hasExtra("id"))
                         main_intent.putExtra("id", splashIntent.getStringExtra("id"));

@@ -42,9 +42,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void sendNotification(RemoteMessage msg) {
         Intent intent = new Intent(this, SplashActivity.class);
         intent.putExtra("screen", "main");
-        intent.putExtra("tieu_de", msg.getData().get("tieu_de"));
-        intent.putExtra("thoi_gian", msg.getData().get("thoi_gian"));
-        intent.putExtra("noi_dung", msg.getData().get("noi_dung"));
         intent.putExtra("id", msg.getData().get("id"));
         intent.putExtra("type", msg.getData().get("type"));
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -70,8 +67,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         builder.setContentIntent(pendingIntent);
         Intent intentAlarm = new Intent(this, SplashActivity.class);
         intentAlarm.putExtra("screen", "add_alarm");
-        intentAlarm.putExtra("tieu_de", msg.getData().get("tieu_de"));
-        intentAlarm.putExtra("noi_dung", msg.getData().get("noi_dung"));
+        intentAlarm.putExtra("tieu_de", msg.getData().get("title"));
+        intentAlarm.putExtra("noi_dung", msg.getData().get("body"));
 
         PendingIntent pIAlarm = PendingIntent.getActivity(this, createID(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT);
 

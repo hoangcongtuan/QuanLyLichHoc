@@ -1,5 +1,6 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.main;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -119,9 +120,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             tbChungFragment.hide_empty_state();
             tbHPhanFragment.hide_empty_state();
             Intent intent = getIntent();
-            Log.d(TAG, "onCreate: Intent = " + intent.toString());
-            if (intent.getExtras() != null && intent.hasExtra("tieu_de")) {
-                Log.d(TAG, "setWidgetsEvent: key = " + intent.getStringExtra("id"));
+//            Log.d(TAG, "onCreate: Intent = " + intent.toString());
+            if (intent.getExtras() != null && intent.hasExtra("type")) {
+//                Log.d(TAG, "setWidgetsEvent: key = " + intent.getStringExtra("id"));
                 String tbType = intent.getStringExtra("type");
                 if (tbType.compareTo("tbc") == 0) {
                     viewPager.setCurrentItem(0);
