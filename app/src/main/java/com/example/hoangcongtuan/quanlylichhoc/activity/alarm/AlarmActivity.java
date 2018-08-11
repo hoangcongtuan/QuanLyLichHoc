@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +21,7 @@ import com.example.hoangcongtuan.quanlylichhoc.adapter.ReminderAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
 import com.example.hoangcongtuan.quanlylichhoc.utils.CircularAnimUtil;
-import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.ReminderDBHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 
 import java.text.ParseException;
@@ -31,8 +30,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AlarmActivity extends BaseActivity implements ReminderAdapter.ItemClickListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
-
+public class AlarmActivity extends BaseActivity implements ReminderAdapter.ItemClickListener,
+        RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
     private final static int RC_DETAIL = 0;
     private final static int RC_ADD = 1;
     private static final String TAG = AlarmActivity.class.getName();

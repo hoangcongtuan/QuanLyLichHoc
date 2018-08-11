@@ -2,7 +2,6 @@ package com.example.hoangcongtuan.quanlylichhoc.activity;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,13 +13,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -33,7 +30,7 @@ import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.VersionInfo;
-import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -58,11 +55,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-
-import io.github.inflationx.calligraphy3.CalligraphyConfig;
-import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
-import io.github.inflationx.viewpump.ViewPump;
-import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 /**
  * Kiem tra trang thai dang nhap, neu da dang nhap thi toi man hinh chinh, con ko thi toi man hinh dang nhap
@@ -216,20 +208,20 @@ public class SplashActivity extends BaseActivity {
                         case "main":
                             Intent main_intent = new Intent(SplashActivity.this, MainActivity.class);
 
-                            if (splashIntent.hasExtra("tieu_de"))
-                                main_intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
-                            else
-                                main_intent.putExtra("tieu_de", "Null");
-
-                            if (splashIntent.hasExtra("thoi_gian"))
-                                main_intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
-                            else
-                                main_intent.putExtra("thoi_gian", "Null");
-
-                            if (splashIntent.hasExtra("noi_dung"))
-                                main_intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
-                            else
-                                main_intent.putExtra("noi_dung", "Null");
+//                            if (splashIntent.hasExtra("tieu_de"))
+//                                main_intent.putExtra("tieu_de", splashIntent.getStringExtra("tieu_de"));
+//                            else
+//                                main_intent.putExtra("tieu_de", "Null");
+//
+//                            if (splashIntent.hasExtra("thoi_gian"))
+//                                main_intent.putExtra("thoi_gian", splashIntent.getStringExtra("thoi_gian"));
+//                            else
+//                                main_intent.putExtra("thoi_gian", "Null");
+//
+//                            if (splashIntent.hasExtra("noi_dung"))
+//                                main_intent.putExtra("noi_dung", splashIntent.getStringExtra("noi_dung"));
+//                            else
+//                                main_intent.putExtra("noi_dung", "Null");
 
                             if (splashIntent.hasExtra("id"))
                                 main_intent.putExtra("id", splashIntent.getStringExtra("id"));
@@ -319,7 +311,6 @@ public class SplashActivity extends BaseActivity {
                         else {
                             //chua co du lieu lop hoc phan
                             //di toi man hinh setup
-                            //finishAuthWithFirebase();
                             Log.d(TAG, "onDataChange: no user data, let setup your data");
                             Intent intent = new Intent(SplashActivity.this, SetupActivity.class);
                             startActivity(intent);
@@ -328,7 +319,6 @@ public class SplashActivity extends BaseActivity {
                     }
                     else {
                         //di toi man hinh setup
-                        //finishAuthWithFirebase();
                         Log.d(TAG, "onDataChange: no user data, let setup your data");
                         Intent intent = new Intent(SplashActivity.this, SetupActivity.class);
                         startActivity(intent);

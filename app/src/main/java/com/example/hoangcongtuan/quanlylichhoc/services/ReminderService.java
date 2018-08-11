@@ -16,7 +16,7 @@ import android.util.Log;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.alarm.AlarmDetailActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
-import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.ReminderDBHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 /**
  * Created by huuthangit on 2017-10-25.

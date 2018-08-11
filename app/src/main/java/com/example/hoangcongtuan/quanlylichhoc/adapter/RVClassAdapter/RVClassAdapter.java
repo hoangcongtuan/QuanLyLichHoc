@@ -14,11 +14,9 @@ import android.widget.TextView;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
-import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
-import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
+import com.example.hoangcongtuan.quanlylichhoc.helper.DBLopHPHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by hoangcongtuan on 1/30/18.

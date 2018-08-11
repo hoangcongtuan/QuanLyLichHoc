@@ -22,7 +22,6 @@ import java.util.Locale;
 
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHolder> {
-
     private List<Reminder> mReminders;
     private Context mContext;
     private ItemClickListener clickListener;

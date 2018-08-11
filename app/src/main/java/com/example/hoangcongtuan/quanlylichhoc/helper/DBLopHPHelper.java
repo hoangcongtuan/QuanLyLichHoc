@@ -1,4 +1,4 @@
-package com.example.hoangcongtuan.quanlylichhoc.utils;
+package com.example.hoangcongtuan.quanlylichhoc.helper;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.util.Log;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHPObj;
+import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -346,14 +347,14 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
     }
 
     public interface OnCheckDB {
-        public void onDBAvailable();
-        public void onDownloadFinish();
-        public void onStartDownload();
+        void onDBAvailable();
+        void onDownloadFinish();
+        void onStartDownload();
     }
 
 
     public interface OnLoadData {
-        public void onLoad(String string);
+        void onLoad(String string);
     }
 
 

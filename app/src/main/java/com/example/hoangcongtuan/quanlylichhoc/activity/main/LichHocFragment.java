@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVClassAdapter.RVClassAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
-import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.DBLopHPHelper;
 
 import java.util.ArrayList;
 

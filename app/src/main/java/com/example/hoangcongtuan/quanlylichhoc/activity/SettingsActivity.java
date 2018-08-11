@@ -8,13 +8,12 @@ import android.view.View;
 import android.widget.Switch;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener{
 
     private  final static String TOPIC_TBCHUNG = "TBChung";
-
     private Switch swNotification;
     private SharedPreferences sharedPreferences;
 

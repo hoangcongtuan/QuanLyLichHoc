@@ -8,7 +8,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +20,7 @@ import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
 import com.example.hoangcongtuan.quanlylichhoc.customview.ProgressDialogBuilderCustom;
-import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -63,7 +62,6 @@ import java.util.Arrays;
 
 public class LoginActivity extends BaseActivity
         implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
-
     private final static String TAG = LoginActivity.class.getName();
     private final static int RC_SIGN_IN = 1;
 
@@ -107,7 +105,6 @@ public class LoginActivity extends BaseActivity
     private void init() {
         //init firebase
         firebaseAuth = FirebaseAuth.getInstance();
-
         //init google SignIn
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -117,7 +114,6 @@ public class LoginActivity extends BaseActivity
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
         //init facebook
         facebookLoginCallBack = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(facebookLoginCallBack, new FacebookCallback<LoginResult>() {
@@ -147,7 +143,6 @@ public class LoginActivity extends BaseActivity
                 parameters.putString("fields", "id, name, link");
                 graphRequest.setParameters(parameters);
                 graphRequest.executeAsync();
-
             }
 
             @Override
@@ -167,7 +162,6 @@ public class LoginActivity extends BaseActivity
                 LoginManager.getInstance().logOut();
             }
         });
-
         //create login progress dialog
         ProgressDialogBuilderCustom pr_dialog_login_builder = new ProgressDialogBuilderCustom(this);
         pr_dialog_login_builder.setText(R.string.processing);

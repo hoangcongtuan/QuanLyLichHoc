@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +14,7 @@ import com.crashlytics.android.Crashlytics;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
-import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.ReminderDBHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 
 import java.text.ParseException;
@@ -24,7 +23,6 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class AlarmDetailActivity extends BaseActivity {
-
     public final static int RC_EDIT = 1;
     private static final String TAG = AlarmDetailActivity.class.getName();
 
@@ -42,7 +40,6 @@ public class AlarmDetailActivity extends BaseActivity {
         Intent i = getIntent();
         if (i.hasExtra(ReminderManager.KEY_REMINDER_ID)) {
             reminderId = i.getIntExtra(ReminderManager.KEY_REMINDER_ID, 0);
-
             Reminder reminder = ReminderDBHelper.getsInstance(getApplicationContext()).getReminder(reminderId);
             tvTitle.setText(reminder.getTitle());
             tvContent.setText(reminder.getContent());

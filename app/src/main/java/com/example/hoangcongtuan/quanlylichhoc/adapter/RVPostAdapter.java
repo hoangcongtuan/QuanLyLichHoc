@@ -9,7 +9,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.alarm.AddAlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Post;
-import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -29,62 +27,40 @@ import java.util.ArrayList;
  */
 
 public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
     private final static String TAG = RVPostAdapter.class.getName();
-    private ArrayList<Post> lstPost;
-    private Context mContext;
-
-    public Context getContext() {
-        return mContext;
-    }
-
-    private LinearLayoutManager linearLayoutManager;
-
-    //load more callback
-    private ILoadMoreCallBack loadMoreCallBack;
-
-    private RecyclerView recyclerView;
-
-    //type of item
     private final static int ITEM_LOADED = 0;
     private final static int ITEM_LOADING = 1;
+    public final static int RC_FAST_ADD_ALARM = 2;
+    public final static int LOAD_MORE_DELTA = 5;
+    private final static int VISIBLE_THRESHOLD = 1;
 
-    //returen code when create fast alarm
-    private final static int RC_FAST_ADD_ALARM = 2;
-
-    //true if post is loading more item
+    private ArrayList<Post> lstPost;
+    private Context mContext;
+    private LinearLayoutManager linearLayoutManager;
+    private ILoadMoreCallBack loadMoreCallBack;
+    private RecyclerView recyclerView;
     public boolean isLoading;
-
-    //thresh sold
-    private int visibleThreshold = 1;
-
-    //true if all new feed is loaded
     public boolean allItemLoaded;
-
+    public boolean isFirstTimeLoaded = false;
 
     public RVPostAdapter(final RecyclerView recyclerView, Context context) {
-        lstPost = new ArrayList<>();
-        linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+        this.lstPost = new ArrayList<>();
+        this.linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
         this.mContext = context;
-
         this.recyclerView = recyclerView;
-        isLoading = false;
-        allItemLoaded = false;
+        this.isLoading = false;
+        this.allItemLoaded = false;
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                Log.d(TAG, "onScrolled: ");
+
                 int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                //itemLoaded = linearLayoutManager.getItemCount();
-                if (linearLayoutManager.getItemCount() <= (lastVisibleItem + visibleThreshold)
-                        && !isLoading && !allItemLoaded) {
-                    //load cac thong bao tiep theo
+                if (linearLayoutManager.getItemCount() <= (lastVisibleItem + VISIBLE_THRESHOLD)
+                        && !isLoading && !allItemLoaded && isFirstTimeLoaded) {
                     if (loadMoreCallBack != null) {
-                            //chua load het cac thong bao
                             isLoading = true;
-                            //call back toi ham load more ben fragment
                             loadMoreCallBack.onLoadMore();
                     }
                 }
@@ -99,13 +75,13 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         });
     }
 
-    //hold view cho moi item da load trong recycle view
-    public class ThongBaoHolder extends RecyclerView.ViewHolder {
-
+    public class PostViewHolder extends RecyclerView.ViewHolder {
         private TextView tvTBThoiGian, tvTBTieuDe, tvThongBaoNoiDung;
         private ImageView btnDots;
-        ThongBaoHolder(View itemView) {
+
+        PostViewHolder(View itemView) {
             super(itemView);
+
             tvTBThoiGian = itemView.findViewById(R.id.tvTBThoiGian);
             tvTBTieuDe = itemView.findViewById(R.id.tvTBTieude);
             tvThongBaoNoiDung = itemView.findViewById(R.id.tvTBNoiDung);
@@ -116,52 +92,46 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    //holder view cho item dang load trong recycle view
-    public class ThongBaoHolderLoading extends RecyclerView.ViewHolder {
-
-        ThongBaoHolderLoading(View itemView) {
+    public class PostLoadingViewHolder extends RecyclerView.ViewHolder {
+        PostLoadingViewHolder(View itemView) {
             super(itemView);
         }
     }
 
-
-    //luc tao item cho recycleview, phu thuoc vao viewType
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView;
         switch (viewType) {
             case ITEM_LOADING:
-                //item dang load
                 itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_row_loading, parent, false);
-                return new ThongBaoHolderLoading(itemView);
+                return new PostLoadingViewHolder(itemView);
+
             case ITEM_LOADED:
-                //item da load
                 itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_row_thong_bao, parent, false);
-                return new ThongBaoHolder(itemView);
+                return new PostViewHolder(itemView);
+            default:
+                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_row_loading, parent, false);
+                return new PostLoadingViewHolder(itemView);
         }
-        return null;
     }
 
-    //hien thi du lieu len item
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        if(holder instanceof ThongBaoHolder) {
-            //neu la holder cua thong bao da load xong
-            final ThongBaoHolder tbHolder = (ThongBaoHolder) holder;
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
+        if(holder instanceof PostViewHolder) {
+            final PostViewHolder tbHolder = (PostViewHolder) holder;
             tbHolder.tvTBTieuDe.setText(lstPost.get(position).getTittle());
             tbHolder.tvTBThoiGian.setText(lstPost.get(position).getStrDate());
             tbHolder.tvThongBaoNoiDung.setText(Html.fromHtml(lstPost.get(position).getContent()));
             tbHolder.btnDots.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopupNewFeed(tbHolder.btnDots, position);
+                    showPopupNewFeed(tbHolder.btnDots, holder.getAdapterPosition());
                 }
             });
         }
     }
 
-    //menu xuat hien khi nhan button ... tren bang tin
     private void showPopupNewFeed(final View view, final int position) {
         PopupMenu popupMenu = new PopupMenu(mContext, view);
         popupMenu.inflate(R.menu.menu_post);
@@ -175,7 +145,6 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         addAlarmIntent.putExtra("noi_dung", Html.fromHtml(lstPost.get(position).getContent()).toString());
                         ((Activity)mContext).startActivityForResult(addAlarmIntent, RC_FAST_ADD_ALARM);
                         break;
-
                 }
                 return true;
             }
@@ -183,7 +152,6 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         popupMenu.show();
     }
 
-    //ham set callBack
     public void setLoadMoreCallBack(ILoadMoreCallBack loadMoreCallBack) {
         this.loadMoreCallBack = loadMoreCallBack;
     }
@@ -209,11 +177,20 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         lstPost.add(tb);
     }
 
+    public Context getContext() {
+        return mContext;
+    }
+
     public void removeAll() {
         lstPost.clear();
         isLoading = false;
         allItemLoaded = false;
         notifyDataSetChanged();
+    }
+
+    public void removeItem(int index) {
+        lstPost.remove(index);
+        this.notifyItemRemoved(index);
     }
 
     //interface dung de call back moi khi load them thong bao
@@ -222,7 +199,9 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         void onLoadMoreFinish();
     }
 
-
+    public LinearLayoutManager getLinearLayoutManager() {
+        return linearLayoutManager;
+    }
 
     //tra ve trang thai cua thong bao, tu do xac dinh dung viewholder nao
     @Override

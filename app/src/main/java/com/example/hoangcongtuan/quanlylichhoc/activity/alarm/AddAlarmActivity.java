@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,7 +17,7 @@ import android.widget.TimePicker;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
-import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.ReminderDBHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +25,6 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class AddAlarmActivity extends BaseActivity implements View.OnClickListener{
-
     public static final String EXTRA_TIEU_DE = "tieu_de";
     public static final String EXTRA_NOI_DUNG = "noi_dung";
 

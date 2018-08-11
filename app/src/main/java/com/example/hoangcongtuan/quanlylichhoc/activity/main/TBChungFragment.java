@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.utils.LoadFeedHelper;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVPostAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.helper.LoadFeedHelper;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -23,10 +23,10 @@ import com.google.firebase.database.FirebaseDatabase;
  * Created by hoangcongtuan on 9/6/17.
  */
 
-public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCallBack {
+public class TBChungFragment extends Fragment implements RVPostAdapter.ILoadMoreCallBack {
     private static final String TAG = TBChungFragment.class.getName();
     private RecyclerView recyclerView;
-    private RVTBAdapter tbChungAdapter;
+    private RVPostAdapter tbChungAdapter;
     private ImageView img_empty_state;
     private LoadFeedHelper loadPostHelper;
     //if hash not null, scroll to new feed has hashkey == hash
@@ -63,7 +63,6 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
             img_empty_state.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override
@@ -76,7 +75,6 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
         DatabaseReference tbChungRef = database.child("chung/data/");
         loadPostHelper = new LoadFeedHelper(tbChungAdapter, tbChungRef, this);
         loadPostHelper.loadFirstTime();
-
     }
 
     private void setupWidget() {
@@ -86,9 +84,7 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         img_empty_state = getView().findViewById(R.id.img_empty_state);
-
-
-        tbChungAdapter = new RVTBAdapter(recyclerView, getContext());
+        tbChungAdapter = new RVPostAdapter(recyclerView, getContext());
         recyclerView.setAdapter(tbChungAdapter);
     }
 
@@ -109,7 +105,6 @@ public class TBChungFragment extends Fragment implements RVTBAdapter.ILoadMoreCa
     public void hide_empty_state() {
         isEmptyState = false;
     }
-
 
     @Override
     public void onLoadMore() {

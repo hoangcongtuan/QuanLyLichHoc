@@ -18,7 +18,6 @@ import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 
 public class AboutActivity extends BaseActivity {
-
     private final static String TITLE = "About";
 
     @Override
@@ -52,7 +51,6 @@ public class AboutActivity extends BaseActivity {
                 return 1;
             }
 
-            @Nullable
             @Override
             public CharSequence getPageTitle(int position) {
                 return getResources().getString(R.string.app_name);
@@ -68,12 +66,6 @@ public class AboutActivity extends BaseActivity {
         });
 
         mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
-
-//        mViewPager.getPagerTitleStrip().setIndicatorHeight(0);
-//        mViewPager.getPagerTitleStrip().setTextColorResource(android.R.color.white);
-//        mViewPager.getPagerTitleStrip().setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL), Typeface.NORMAL);
-//        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
-//        mViewPager.getPagerTitleStrip().invalidate();
     }
 
     @Override

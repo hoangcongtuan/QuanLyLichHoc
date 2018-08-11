@@ -9,7 +9,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +27,7 @@ import com.example.hoangcongtuan.quanlylichhoc.customview.AddClassCustomDialogBu
 import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
 import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
-import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,21 +40,17 @@ import java.util.ArrayList;
 
 public class EditHPActivity extends BaseActivity implements View.OnClickListener
         , RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
-
     private static final String TAG = EditHPActivity.class.getName();
 
     private final static String KEY_USER = "user";
     private final static String KEY_INFO = "info";
     private final static String KEY_MA_HP = "ma_hoc_phan";
 
-
-
     private FloatingActionButton fabAdd;
     private RecyclerView rvTKB;
     private RVClassAdapter rvHPhanAdapter;
     private Boolean modified = false;
     private CoordinatorLayout editHPLayout;
-
     private DatabaseReference dbUserMaHocPhan;
 
     @Override
@@ -71,7 +66,6 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
         getWidgets();
         setWidgets();
         setWidgetsEvent();
-
     }
 
     private void init() {
@@ -98,7 +92,6 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvTKB.getContext(),
                 ((LinearLayoutManager)rvTKB.getLayoutManager()).getOrientation());
         rvTKB.addItemDecoration(dividerItemDecoration);
-
     }
 
     public void showNoInternetMessage() {
@@ -135,7 +128,6 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
         addClassCustomDialogBuilder.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
 
             }
         });
@@ -189,9 +181,7 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
             setResult(RESULT_OK);
         else
             setResult(RESULT_CANCELED);
-
         super.onBackPressed();
-
     }
 
     public void addUserHP(final String id) {
@@ -256,13 +246,10 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
             public void onSuccess(Void aVoid) {
                 //delete in local db
                 DBLopHPHelper.getsInstance().deleteUserMaHocPhan(id);
-
                 //unbsubscrible topic
                 Utils.getsInstance(getApplicationContext()).unSubscribeTopic(id);
-
                 //update flag
                 modified = true;
-
                 //update ui
                 try {
                     rvHPhanAdapter.removeItem(id);
@@ -294,12 +281,9 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
             public void onSuccess(Void aVoid) {
                 //insert to local db
                 DBLopHPHelper.getsInstance().insertUserMaHocPhan(id);
-
                 //subscrible topic
                 Utils.getsInstance(getApplicationContext()).subscribeTopic(id);
-
                 modified = true;
-
                 //update ui
                 rvHPhanAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
             }
@@ -336,20 +320,16 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
                         }).show();
                 //delete in local db
                 DBLopHPHelper.getsInstance().deleteUserMaHocPhan(id);
-
                 //unbsubscrible topic
                 Utils.getsInstance(getApplicationContext()).unSubscribeTopic(id);
-
                 //update flag
                 modified = true;
-
                 //update ui
                 try {
                     rvHPhanAdapter.removeItem(id);
                 } catch (AppException e) {
                     e.printStackTrace();
                     Toast.makeText(EditHPActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-
                 }
 
             }
@@ -393,8 +373,6 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
                 showNoInternetMessage();
                 rvHPhanAdapter.notifyItemChanged(position);
             }
-
-
         }
     }
 }

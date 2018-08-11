@@ -31,7 +31,7 @@ import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
 import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
 import com.example.hoangcongtuan.quanlylichhoc.listener.RecyclerTouchListener;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
-import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.DBLopHPHelper;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
@@ -43,7 +43,6 @@ import java.util.ArrayList;
  */
 
 public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
-
     private final static String TAG = RecognizeFragment.class.getName();
     private RVClassAdapter rvClassAdapter;
     private CoordinatorLayout layout_setup;
@@ -265,8 +264,6 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
         //Ensure return value not null, using to add LopHP to listView
         return DBLopHPHelper.getsInstance().getLopHocPhan(id);
     }
-
-
 
     public ArrayList<String> processImage(Bitmap bitmap) throws NullPointerException{
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity()).build();

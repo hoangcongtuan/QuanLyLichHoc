@@ -1,6 +1,5 @@
 package com.example.hoangcongtuan.quanlylichhoc.activity.main;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,7 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -40,9 +38,9 @@ import com.example.hoangcongtuan.quanlylichhoc.activity.SearchResultActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.login.LoginActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.MainPagerAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVPostAdapter;
 import com.example.hoangcongtuan.quanlylichhoc.customview.ProgressDialogBuilderCustom;
-import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
@@ -67,7 +65,6 @@ import io.github.inflationx.calligraphy3.CalligraphyUtils;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
-
     private final static String TAG = MainActivity.class.getName();
 
     public final static String FIND_URL = "https://us-central1-server-dut.cloudfunctions.net/searchPost?category=%s&text=%s";
@@ -98,7 +95,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private GoogleApiClient mGoogleApiClient;
 
-
     /**
      * Init view
      * check Intent extras, if has Post ID, scroll to ID's Post
@@ -120,9 +116,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             tbChungFragment.hide_empty_state();
             tbHPhanFragment.hide_empty_state();
             Intent intent = getIntent();
-//            Log.d(TAG, "onCreate: Intent = " + intent.toString());
             if (intent.getExtras() != null && intent.hasExtra("type")) {
-//                Log.d(TAG, "setWidgetsEvent: key = " + intent.getStringExtra("id"));
                 String tbType = intent.getStringExtra("type");
                 if (tbType.compareTo("tbc") == 0) {
                     viewPager.setCurrentItem(0);
@@ -505,7 +499,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     lichHocFragment.updateUI();
                 }
                 break;
-            case RVTBAdapter.RC_FAST_ADD_ALARM:
+            case RVPostAdapter.RC_FAST_ADD_ALARM:
                 if (resultCode == RESULT_OK) {
                     Snackbar.make(main_content_layout,
                             getResources().getString(R.string.add_alarm_success),

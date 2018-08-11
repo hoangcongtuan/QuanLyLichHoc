@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.utils.LoadFeedHelper;
+import com.example.hoangcongtuan.quanlylichhoc.adapter.RVPostAdapter;
+import com.example.hoangcongtuan.quanlylichhoc.helper.LoadFeedHelper;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -23,8 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
  * Java code cua fragment thong bao lop hoc phan
  */
 
-public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMoreCallBack {
-
+public class TBHocPhanFragment extends Fragment implements RVPostAdapter.ILoadMoreCallBack {
     private final static String TAG = TBHocPhanFragment.class.getName();
     private RecyclerView recyclerView;
     private LoadFeedHelper loadPostHelper;
@@ -48,10 +47,8 @@ public class TBHocPhanFragment extends Fragment implements RVTBAdapter.ILoadMore
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        RVTBAdapter hocPhanAdapter = new RVTBAdapter(recyclerView, getContext());
-
+        RVPostAdapter hocPhanAdapter = new RVPostAdapter(recyclerView, getContext());
         img_empty_state = rootView.findViewById(R.id.img_empty_state);
-
         recyclerView.setAdapter(hocPhanAdapter);
 
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();

@@ -2,7 +2,6 @@ package com.example.hoangcongtuan.quanlylichhoc.activity;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,8 +21,7 @@ import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.adapter.RVPostAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.adapter.RVTBAdapter;
-import com.example.hoangcongtuan.quanlylichhoc.utils.LoadSearchPostResultHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.LoadSearchPostResultHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -33,15 +31,14 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class SearchResultActivity extends BaseActivity implements RVTBAdapter.ILoadMoreCallBack, LoadSearchPostResultHelper.SearchPostCallBack{
-
+public class SearchResultActivity extends BaseActivity implements RVPostAdapter.ILoadMoreCallBack,
+        LoadSearchPostResultHelper.SearchPostCallBack{
     private final static String TAG = SearchResultActivity.class.getName();
     private TextView tvNumResult;
     private TextView tvResult;
     private RecyclerView recyclerView;
     private FloatingActionButton fabTop;
     private RVPostAdapter rvPostAdapter;
-
     private ImageView img_no_result;
     private ImageView img_empty_state;
     private LoadSearchPostResultHelper searchPostResultHelper;
@@ -52,17 +49,16 @@ public class SearchResultActivity extends BaseActivity implements RVTBAdapter.IL
         setContentView(R.layout.activity_search_result);
         init();
         initWidget();
-
         if (Utils.getsInstance(getApplicationContext()).isNetworkConnected(getApplicationContext())) {
             show_normal();
             search_first_time();
         }
         else
             show_empty_state();
-
     }
 
     private void init() {
+
     }
 
     private void initWidget() {
@@ -71,12 +67,10 @@ public class SearchResultActivity extends BaseActivity implements RVTBAdapter.IL
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(SearchResultActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
         tvResult = findViewById(R.id.tvResult);
 
         fabTop = findViewById(R.id.fab_top);
         fabTop.setVisibility(View.INVISIBLE);
-
 
         fabTop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +81,6 @@ public class SearchResultActivity extends BaseActivity implements RVTBAdapter.IL
                         return LinearSmoothScroller.SNAP_TO_START;
                     }
                 };
-
                 smoothScroller.setTargetPosition(0);
                 (recyclerView.getLayoutManager()).startSmoothScroll(smoothScroller);
             }
@@ -97,9 +90,7 @@ public class SearchResultActivity extends BaseActivity implements RVTBAdapter.IL
         img_no_result = findViewById(R.id.img_no_result);
 
         rvPostAdapter = new RVPostAdapter(recyclerView, SearchResultActivity.this);
-
         recyclerView.setAdapter(rvPostAdapter);
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -143,11 +134,8 @@ public class SearchResultActivity extends BaseActivity implements RVTBAdapter.IL
         Intent intent = getIntent();
         int category = intent.getIntExtra("CATEGORY", 0);
         String text = intent.getStringExtra("TEXT");
-//        if (getSupportActionBar() != null)
-//            getSupportActionBar().setTitle(getResources().getString(R.string.search_for).concat(" \"").concat(text).concat("\""));
         tvResult.setText(getResources().getString(R.string.search_for).concat(" \"").concat(text).concat("\""));
         searchPost(text, category);
-        Log.d(TAG, "onCreate: ");
     }
 
     public void searchPost(String text, final int category) {
@@ -155,13 +143,11 @@ public class SearchResultActivity extends BaseActivity implements RVTBAdapter.IL
         switch (category) {
             case MainActivity.PAGE_TB_CHUNG:
                 url = String.format(MainActivity.FIND_URL, MainActivity.CATE_CHUNG, text);
-                //url = MainActivity.FIND_URL + text;
                 break;
             case MainActivity.PAGE_TB_HP:
                 url = String.format(MainActivity.FIND_URL, MainActivity.CATE_HOC_PHAN, text);
                 break;
             case MainActivity.PAGE_TKB:
-                //url = String.format(MainActivity.FIND_URL, MainActivity.CATE_CHUNG, text);
                 break;
         }
         //replace space with %20
@@ -174,13 +160,11 @@ public class SearchResultActivity extends BaseActivity implements RVTBAdapter.IL
         rvPostAdapter.notifyItemInserted(rvPostAdapter.getItemCount() - 1);
 
         final long startTime = System.nanoTime();
-
         JsonRequest jsonRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 long duration = System.nanoTime() - startTime;
                 Log.d(TAG, "onResponse: Time Execute = " + duration / 1e9f);
-                //Log.d(TAG, "onResponse: JSON = " + response.toString());
                 //json array to array list
                 ArrayList<String> arr_post_key = new ArrayList<>();
                 try {
@@ -240,7 +224,5 @@ public class SearchResultActivity extends BaseActivity implements RVTBAdapter.IL
     @Override
     public void onNoResult() {
         show_no_result();
-        //layout_result.setVisibility(View.GONE);
-        //layout_search_result.setBackground(getResources().getDrawable(R.drawable.no_result));
     }
 }

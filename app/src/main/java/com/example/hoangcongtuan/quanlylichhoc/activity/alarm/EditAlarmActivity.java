@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +19,7 @@ import com.crashlytics.android.Crashlytics;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Reminder;
-import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderDBHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.ReminderDBHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.ReminderManager;
 
 import java.text.ParseException;
@@ -29,7 +28,6 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class EditAlarmActivity extends BaseActivity implements View.OnClickListener{
-
     private static final String TAG = EditAlarmActivity.class.getName();
     private Calendar mCalendar;
     private EditText edtTitle, edtContent;

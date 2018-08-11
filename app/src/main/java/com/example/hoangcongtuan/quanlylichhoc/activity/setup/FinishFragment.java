@@ -29,7 +29,7 @@ import com.example.hoangcongtuan.quanlylichhoc.exception.AppException;
 import com.example.hoangcongtuan.quanlylichhoc.helper.RecyclerItemTouchHelper;
 import com.example.hoangcongtuan.quanlylichhoc.listener.RecyclerTouchListener;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
-import com.example.hoangcongtuan.quanlylichhoc.utils.DBLopHPHelper;
+import com.example.hoangcongtuan.quanlylichhoc.helper.DBLopHPHelper;
 import com.example.hoangcongtuan.quanlylichhoc.utils.Utils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -61,14 +61,12 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_finish, container, false);
         initWidgets(rootView);
-
         return rootView;
     }
 
     private void init() {
         ArrayList<LopHP> lstLopHP = new ArrayList<>();
         rvClassAdapter = new RVClassAdapter(getActivity(), lstLopHP);
-
         rvClassAdapter.registerObserver(this);
     }
 
@@ -78,7 +76,6 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
 
         rvHPhan.setAdapter(rvClassAdapter);
         rvHPhan.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(
                 0, ItemTouchHelper.RIGHT, this);
 
@@ -94,7 +91,6 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
 
             }
         }));
-
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvHPhan.getContext(),
                 ((LinearLayoutManager) rvHPhan.getLayoutManager()).getOrientation());
         rvHPhan.addItemDecoration(dividerItemDecoration);
@@ -103,6 +99,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         this.layout_setup = ((SetupActivity)getActivity()).get_layout_setup();
     }
 
@@ -149,7 +146,6 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
                 });
             }
         });
-
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
     }

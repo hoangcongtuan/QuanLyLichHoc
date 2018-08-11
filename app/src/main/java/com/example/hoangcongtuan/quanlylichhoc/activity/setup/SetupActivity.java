@@ -271,12 +271,6 @@ public class SetupActivity extends BaseActivity implements View.OnClickListener,
                 tvStep3.setTextColor(Color.WHITE);
                 tvStep3.setBackgroundResource(R.drawable.shape_circle);
 
-//                TODO: Need more smart solution here
-//                recognizeFragment.setBitmap(
-//                        getImageFragment.bitmap
-//                );
-//                recognizeFragment.recognize();
-
                 btnBack.setVisibility(View.VISIBLE);
                 btnNext.setVisibility(View.VISIBLE);
                 btnNext.setEnabled(true);
