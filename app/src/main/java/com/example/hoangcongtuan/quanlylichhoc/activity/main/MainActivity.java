@@ -54,6 +54,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONObject;
 
@@ -311,7 +313,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     private void logOut() {
 
-        ArrayList<String> list_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
+        ArrayList<String> list_topic = Utils.getsInstance(MainActivity.this).dotToUnderLine(
+                DBLopHPHelper.getsInstance().getListUserMaHP()
+        );
         //unsubscrible all topics
         Utils.getsInstance(this).unSubscribeAllTopics(
                 list_topic
@@ -391,7 +395,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             public void onSuccess(Void aVoid) {
                                 //xoa du lieu local
                                 //unsbuscribe all topic
-                                ArrayList<String> list_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
+                                ArrayList<String> list_topic = Utils.getsInstance(MainActivity.this).dotToUnderLine(
+                                        DBLopHPHelper.getsInstance().getListUserMaHP()
+                                );
 
                                 Utils.getsInstance(getApplicationContext()).unSubscribeAllTopics(list_topic);
                                 Utils.getsInstance(getApplicationContext()).unSubscribeTopic(LoginActivity.TOPIC_TBCHUNG);
@@ -461,17 +467,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 startActivityForResult(intent, RC_EDIT_HP_ACT);
                 break;
 
-//            case R.id.item_showFCMDetails:
-//                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
-//                    @Override
-//                    public void onSuccess(InstanceIdResult instanceIdResult) {
-//                        getTopicSubcribe(
-//                                instanceIdResult.getToken(),
-//                                getResources().getString(R.string.SERVER_KEY)
-//                        );
-//                    }
-//                });
-//                break;
+            case R.id.item_showFCMDetails:
+                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                    @Override
+                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                        getTopicSubcribe(
+                                instanceIdResult.getToken(),
+                                getResources().getString(R.string.SERVER_KEY)
+                        );
+                    }
+                });
+                break;
 //
 //            case R.id.item_showSubscribeTopic:
 //                searchPost("Thông báo chuyển phòng học khu B");

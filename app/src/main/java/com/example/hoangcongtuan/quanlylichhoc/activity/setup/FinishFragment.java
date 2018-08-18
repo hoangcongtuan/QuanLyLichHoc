@@ -162,6 +162,14 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
 
     public void writelstMaHPtoUserDB (DatabaseReference dbUserMaHocPhan) {
         final ArrayList<String> listId = rvClassAdapter.getAllId();
+        for(int i = 0; i < listId.size(); i++) {
+            listId.set(i,
+                    Utils.getsInstance(getContext())
+                            .dotToUnderLine(
+                                    listId.get(i)
+                            )
+            );
+        }
         //write to FirebaseDB
         dbUserMaHocPhan.setValue(listId).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -169,7 +177,9 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
                 //delete old db
                 DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
                 for (String s : listId) {
-                    DBLopHPHelper.getsInstance().insertUserMaHocPhan(s);
+                    DBLopHPHelper.getsInstance().insertUserMaHocPhan(
+                            Utils.getsInstance(getContext()).underLineToDot(s)
+                    );
                 }
 
                 //subscribe a topics

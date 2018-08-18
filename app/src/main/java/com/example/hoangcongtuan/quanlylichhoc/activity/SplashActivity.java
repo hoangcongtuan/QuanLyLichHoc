@@ -161,7 +161,6 @@ public class SplashActivity extends BaseActivity {
      * @param versionInfo database version, get from firebase database
      */
     private void check_database_version(VersionInfo versionInfo) {
-
         tvLoadingInfo.setText(
                 getResources().getString(R.string.check_db_version)
         );
@@ -286,10 +285,15 @@ public class SplashActivity extends BaseActivity {
                             //save Firebase DB to local DB
 
                             for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                DBLopHPHelper.getsInstance().insertUserMaHocPhan((String)snapshot.getValue());
+                                String id = (String)snapshot.getValue();
+                                //change _ to .
+                                id = Utils.getsInstance(SplashActivity.this).underLineToDot(id);
+                                DBLopHPHelper.getsInstance().insertUserMaHocPhan(id);
                             }
 
-                            final ArrayList<String> list_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
+                            final ArrayList<String> list_topic = Utils.getsInstance(SplashActivity.this).dotToUnderLine(
+                                    DBLopHPHelper.getsInstance().getListUserMaHP()
+                            );
 
                             FirebaseInstanceId.getInstance().getInstanceId()
                                     .addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {

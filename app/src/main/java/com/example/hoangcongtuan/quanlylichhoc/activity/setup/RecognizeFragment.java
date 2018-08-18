@@ -135,7 +135,6 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 
         if (rvClassAdapter.indexOf(lopHP) == -1)  {
             rvClassAdapter.addItemWithoutSort(DBLopHPHelper.getsInstance().getLopHocPhan(id));
-
             Snackbar.make(
                     layout_setup,
                     getResources().getString(R.string.add_hp_success),
@@ -242,7 +241,7 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 
         rvClassAdapter.removeAllItem();
         for (String i : arrayList) {
-            i = i.replace(" ", "").replace(",", ".").replace(".", "_");
+            i = i.replace(" ", "").replace(",", ".");
             rvClassAdapter.addItemWithoutSort(getLopHPByIdNonNull(i));
         }
     }

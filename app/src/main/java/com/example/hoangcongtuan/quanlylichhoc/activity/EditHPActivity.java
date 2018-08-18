@@ -187,8 +187,10 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
     public void addUserHP(final String id) {
         //add on firebase
         ArrayList<String> lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
-        ArrayList<String> tmp = new ArrayList<>(lstMaHP);
-        tmp.add(id);
+        lstMaHP.add(id);
+
+        ArrayList<String> tmp = Utils.getsInstance(EditHPActivity.this).dotToUnderLine(lstMaHP);
+
         dbUserMaHocPhan.setValue(tmp).addOnSuccessListener(this, new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -208,7 +210,9 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
                 DBLopHPHelper.getsInstance().insertUserMaHocPhan(id);
 
                 //subscrible topic
-                Utils.getsInstance(getApplicationContext()).subscribeTopic(id);
+                Utils.getsInstance(getApplicationContext()).subscribeTopic(
+                        Utils.getsInstance(EditHPActivity.this).dotToUnderLine(id)
+                );
 
                 modified = true;
 
@@ -236,10 +240,9 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
 
     public void undo_addUserLopHP(final String id) {
         final ArrayList<String> lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
-        ArrayList<String> tmp = new ArrayList<>(lstMaHP);
-        tmp.remove(
-                tmp.indexOf(id)
-        );
+        lstMaHP.remove(id);
+        ArrayList<String> tmp = Utils.getsInstance(EditHPActivity.this).dotToUnderLine(lstMaHP);
+
         //remove on firebase DB
         dbUserMaHocPhan.setValue(tmp).addOnSuccessListener(this, new OnSuccessListener<Void>() {
             @Override
@@ -247,7 +250,9 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
                 //delete in local db
                 DBLopHPHelper.getsInstance().deleteUserMaHocPhan(id);
                 //unbsubscrible topic
-                Utils.getsInstance(getApplicationContext()).unSubscribeTopic(id);
+                Utils.getsInstance(getApplicationContext()).unSubscribeTopic(
+                        Utils.getsInstance(EditHPActivity.this).dotToUnderLine(id)
+                );
                 //update flag
                 modified = true;
                 //update ui
@@ -274,15 +279,18 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
     public void undo_removeUserLopHP(final String id) {
         //add on firebase
         ArrayList<String> lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
-        ArrayList<String> tmp = new ArrayList<>(lstMaHP);
-        tmp.add(id);
+        lstMaHP.add(id);
+        ArrayList<String> tmp = Utils.getsInstance(EditHPActivity.this).dotToUnderLine(lstMaHP);
+
         dbUserMaHocPhan.setValue(tmp).addOnSuccessListener(this, new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 //insert to local db
                 DBLopHPHelper.getsInstance().insertUserMaHocPhan(id);
                 //subscrible topic
-                Utils.getsInstance(getApplicationContext()).subscribeTopic(id);
+                Utils.getsInstance(getApplicationContext()).subscribeTopic(
+                        Utils.getsInstance(EditHPActivity.this).dotToUnderLine(id)
+                );
                 modified = true;
                 //update ui
                 rvHPhanAdapter.addItem(DBLopHPHelper.getsInstance().getLopHocPhan(id));
@@ -300,10 +308,9 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
 
     public void removeUserHP(final String id) {
         final ArrayList<String> lstMaHP = DBLopHPHelper.getsInstance().getListUserMaHP();
-        ArrayList<String> tmp = new ArrayList<>(lstMaHP);
-        tmp.remove(
-                tmp.indexOf(id)
-        );
+        lstMaHP.remove(id);
+        ArrayList<String> tmp = Utils.getsInstance(EditHPActivity.this).dotToUnderLine(lstMaHP);
+
         //remove on firebase DB
         dbUserMaHocPhan.setValue(tmp).addOnSuccessListener(this, new OnSuccessListener<Void>() {
             @Override
@@ -321,7 +328,9 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
                 //delete in local db
                 DBLopHPHelper.getsInstance().deleteUserMaHocPhan(id);
                 //unbsubscrible topic
-                Utils.getsInstance(getApplicationContext()).unSubscribeTopic(id);
+                Utils.getsInstance(getApplicationContext()).unSubscribeTopic(
+                        Utils.getsInstance(EditHPActivity.this).dotToUnderLine(id)
+                );
                 //update flag
                 modified = true;
                 //update ui

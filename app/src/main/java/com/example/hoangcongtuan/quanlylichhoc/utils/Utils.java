@@ -26,13 +26,11 @@ import java.util.Comparator;
  */
 
 public class Utils {
-
     private static final String TAG = Utils.class.getName();
-    private RequestQueue requestQueue;
-    private static Utils sInstance;
-
     public final static String APP_FONT_PATH = "fonts/SourceSansPro-Regular.ttf";
 
+    private RequestQueue requestQueue;
+    private static Utils sInstance;
 
     private Utils(Context context) {
         if (requestQueue == null) {
@@ -48,7 +46,7 @@ public class Utils {
 
     public void unSubscribeAllTopics(ArrayList<String> lstTopic) {
         for (String s : lstTopic) {
-            FirebaseMessaging.getInstance().unsubscribeFromTopic(s);
+            unSubscribeTopic(s);
         }
     }
 
@@ -70,7 +68,9 @@ public class Utils {
     public void subscribeTopic(ArrayList<String> lstTopic) {
         for (final String s : lstTopic) {
             Log.d(TAG, "subscribeTopic: Start subscribe: " + s);
-            FirebaseMessaging.getInstance().subscribeToTopic(s).addOnSuccessListener(new OnSuccessListener<Void>() {
+            FirebaseMessaging.getInstance().subscribeToTopic(
+                    dotToUnderLine(s)
+            ).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Log.d(TAG, "onSuccess: Finish subscribe: " + s);
@@ -80,12 +80,17 @@ public class Utils {
     }
 
     public void unSubscribeTopic(String topic) {
-        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(
+                dotToUnderLine(topic)
+        );
     }
 
     public void subscribeTopic(String topic) {
         Log.d(TAG, "subscribeTopic: Start Subscribe: " + topic );
-        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+        //replace . by _
+        FirebaseMessaging.getInstance().subscribeToTopic(
+                dotToUnderLine(topic)
+        );
         Log.d(TAG, "subscribeTopic: Finish subscribe topic: " + topic);
     }
 
@@ -102,6 +107,8 @@ public class Utils {
         });
     }
 
+
+
     public boolean isNetworkConnected(Context context) {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -117,6 +124,35 @@ public class Utils {
         } catch (Exception e) {
             return false;
         }
+    }
 
+    public String underLineToDot(String str) {
+        return str.replace('_', '.');
+    }
+
+    public ArrayList<String> underLineToDot(ArrayList<String> strs) {
+        ArrayList<String> res = new ArrayList<>();
+        for(String s : strs) {
+            res.add(
+                    underLineToDot(s)
+            );
+        }
+
+        return res;
+    }
+
+    public String dotToUnderLine(String str) {
+        return str.replace('.', '_');
+    }
+
+    public ArrayList<String> dotToUnderLine(ArrayList<String> strs) {
+        ArrayList<String> res = new ArrayList<>();
+        for(String s : strs) {
+            res.add(
+                    dotToUnderLine(s)
+            );
+        }
+
+        return res;
     }
 }

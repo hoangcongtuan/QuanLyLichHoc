@@ -177,5 +177,6 @@
     <string name="about.about">About</string>
     <string name="about.contact">Contact</string>
     <string name="about.email">congtuanspm97@gmail.com</string>
+    <string name="FCM_details">FCM Details</string>
 
 </resources>

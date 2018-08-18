@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.example.hoangcongtuan.quanlylichhoc.R;
+import com.example.hoangcongtuan.quanlylichhoc.activity.SplashActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.main.MainActivity;
 import com.example.hoangcongtuan.quanlylichhoc.activity.setup.SetupActivity;
@@ -313,10 +314,16 @@ public class LoginActivity extends BaseActivity
                         DBLopHPHelper.getsInstance().deleteAllUserMaHocPhan();
 
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            DBLopHPHelper.getsInstance().insertUserMaHocPhan((String)snapshot.getValue());
+                            String id = (String)snapshot.getValue();
+                            //change _ to .
+                            id = Utils.getsInstance(LoginActivity.this).underLineToDot(id);
+
+                            DBLopHPHelper.getsInstance().insertUserMaHocPhan(id);
                         }
 
-                        ArrayList<String> list_topic = DBLopHPHelper.getsInstance().getListUserMaHP();
+                        final ArrayList<String> list_topic = Utils.getsInstance(LoginActivity.this).dotToUnderLine(
+                                DBLopHPHelper.getsInstance().getListUserMaHP()
+                        );
                         //subscribe new topic
                         Utils.getsInstance(getApplicationContext()).subscribeTopic(list_topic);
                         Utils.getsInstance(getApplicationContext()).subscribeTopic(LoginActivity.TOPIC_TBCHUNG);
