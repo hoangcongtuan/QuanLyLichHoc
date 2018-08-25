@@ -152,6 +152,7 @@ public class LoadFeedHelper {
                         };
                         int position = lstTBChung.indexOf(post);
                         smoothScroller.setTargetPosition(position);
+                        //rvtbAdapter.highLightPost(position);
 
                         rvtbAdapter.getLinearLayoutManager().startSmoothScroll(smoothScroller);
                         setScrollToCallBack(null);
@@ -168,7 +169,7 @@ public class LoadFeedHelper {
                 loadMore();
             }
         });
-        //no need to call loaddmore() here, it will automatic call on the firt load
+        //no need to call loaddmore() here, it will automatic call on the first load
         //loadMore();
     }
 

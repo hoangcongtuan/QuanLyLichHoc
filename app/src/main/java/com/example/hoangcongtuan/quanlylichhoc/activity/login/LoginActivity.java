@@ -60,8 +60,11 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Man hinh dang nhap
@@ -373,6 +376,14 @@ public class LoginActivity extends BaseActivity
                     startActivity(intent);
                     finish();
                 }
+
+                //gather some information
+                SimpleDateFormat sdfDate = new SimpleDateFormat("EEEE dd/MM/yyyy hh:mm a", Locale.US);
+                String latest_online = sdfDate.format(Calendar.getInstance().getTime());
+                DatabaseReference ref_user_online = FirebaseDatabase.getInstance().getReference()
+                        .child(LoginActivity.KEY_FIRBASE_USER).child(firebaseUser.getUid())
+                        .child(LoginActivity.KEY_FIREBASE_USERINFO).child(LoginActivity.KEY_FIREBASE_USER_LATEST_ONLINE);
+                ref_user_online.setValue(latest_online);
             }
 
             @Override

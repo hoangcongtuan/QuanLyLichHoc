@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.hoangcongtuan.quanlylichhoc.R;
@@ -21,6 +24,7 @@ import com.example.hoangcongtuan.quanlylichhoc.activity.alarm.AddAlarmActivity;
 import com.example.hoangcongtuan.quanlylichhoc.models.Post;
 
 import java.util.ArrayList;
+
 
 /**
  * Created by hoangcongtuan on 9/12/17.
@@ -42,6 +46,8 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public boolean isLoading;
     public boolean allItemLoaded;
     public boolean isFirstTimeLoaded = false;
+
+    private String highLightPost_hash = "";
 
     public RVPostAdapter(final RecyclerView recyclerView, Context context) {
         this.lstPost = new ArrayList<>();
@@ -78,6 +84,7 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public class PostViewHolder extends RecyclerView.ViewHolder {
         private TextView tvTBThoiGian, tvTBTieuDe, tvThongBaoNoiDung;
         private ImageView btnDots;
+        private FrameLayout layout_border;
 
         PostViewHolder(View itemView) {
             super(itemView);
@@ -86,10 +93,21 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             tvTBTieuDe = itemView.findViewById(R.id.tvTBTieude);
             tvThongBaoNoiDung = itemView.findViewById(R.id.tvTBNoiDung);
             btnDots = itemView.findViewById(R.id.btnDots);
+            layout_border = itemView.findViewById(R.id.layout_border);
 
             tvThongBaoNoiDung.setClickable(true);
             tvThongBaoNoiDung.setMovementMethod(LinkMovementMethod.getInstance());
         }
+
+        void setHighLight() {
+            layout_border.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+        }
+
+        void unHighLight() {
+            layout_border.setBackgroundColor(0);
+
+        }
+
     }
 
     public class PostLoadingViewHolder extends RecyclerView.ViewHolder {
@@ -129,8 +147,20 @@ public class RVPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     showPopupNewFeed(tbHolder.btnDots, holder.getAdapterPosition());
                 }
             });
+
+            if (!highLightPost_hash.isEmpty() &&
+                    lstPost.get(position).getKey().compareTo(highLightPost_hash) == 0)
+                tbHolder.setHighLight();
+            else
+                tbHolder.unHighLight();
         }
     }
+
+
+    public void highLightPost(String hash) {
+       this.highLightPost_hash = hash;
+    }
+
 
     private void showPopupNewFeed(final View view, final int position) {
         PopupMenu popupMenu = new PopupMenu(mContext, view);

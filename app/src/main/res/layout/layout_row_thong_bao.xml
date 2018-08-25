@@ -8,7 +8,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/card_margin"
         android:layout_marginBottom="@dimen/card_margin"
@@ -17,93 +17,101 @@
         android:elevation="2dp"
         card_view:cardCornerRadius="@dimen/card_album_radius">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/layout_border"
+            android:padding="2dp">
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/colorNewFeedHeader"
-                android:id="@+id/layout_contain">
+                android:background="@android:color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:background="@color/colorNewFeedHeader"
-                    android:padding="@dimen/view_padding">
+                    android:id="@+id/layout_date">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_book_black_24dp"
-                        android:id="@+id/imgIcnThongBao"
-                        android:layout_margin="@dimen/text_margin"
-                        android:tint="@color/colorPrimary"
-                        android:layout_gravity="center_vertical"
-                        android:fontFamily="sans-serif-light"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/view_padding">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_book_black_24dp"
+                            android:id="@+id/imgIcnThongBao"
+                            android:layout_margin="@dimen/text_margin"
+                            android:tint="@color/colorPrimary"
+                            android:layout_gravity="center_vertical"
+                            android:fontFamily="sans-serif-light"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="07/09/2017"
+                            android:layout_margin="@dimen/text_margin"
+                            android:id="@+id/tvTBThoiGian"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/time_size"
+                            android:layout_gravity="center_vertical"/>
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"/>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_dots"
+                            android:layout_gravity="right"
+                            android:id="@+id/btnDots"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorNewFeedHeaderBorder"
+                        android:layout_gravity="bottom"/>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_below="@+id/layout_date">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="07/09/2017"
+                        android:text="@string/sample_title"
+                        android:id="@+id/tvTBTieude"
                         android:layout_margin="@dimen/text_margin"
-                        android:id="@+id/tvTBThoiGian"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/time_size"
-                        android:layout_gravity="center_vertical"/>
+                        android:textColor="@color/colorSecondaryText"
+                        android:textSize="@dimen/tittle_size"
+                        android:textStyle="bold"
+                        android:lineSpacingMultiplier="@dimen/lineSpaceMultiplier"/>
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"/>
-
-                    <ImageView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_dots"
-                        android:layout_gravity="right"
-                        android:id="@+id/btnDots"/>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorNewFeedHeaderBorder"
-                    android:layout_gravity="bottom"/>
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_below="@+id/layout_contain">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sample_title"
-                    android:id="@+id/tvTBTieude"
-                    android:layout_margin="@dimen/text_margin"
-                    android:textColor="@color/colorSecondaryText"
-                    android:textSize="@dimen/tittle_size"
-                    android:textStyle="bold"
-                    android:lineSpacingMultiplier="@dimen/lineSpaceMultiplier"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sample_content"
-                    android:id="@+id/tvTBNoiDung"
-                    android:layout_margin="@dimen/text_margin"
-                    android:textColorLink="@color/colorLinkText"
-                    android:layout_below="@+id/tvTBTieude"
-                    android:textSize="@dimen/content_size"
-                    android:textColor="@color/colorPrimaryText"
-                    android:lineSpacingMultiplier="@dimen/lineSpaceMultiplier"/>
+                        android:text="@string/sample_content"
+                        android:id="@+id/tvTBNoiDung"
+                        android:layout_margin="@dimen/text_margin"
+                        android:textColorLink="@color/colorLinkText"
+                        android:layout_below="@+id/tvTBTieude"
+                        android:textSize="@dimen/content_size"
+                        android:textColor="@color/colorPrimaryText"
+                        android:lineSpacingMultiplier="@dimen/lineSpaceMultiplier"/>
+                </RelativeLayout>
             </RelativeLayout>
-        </RelativeLayout>
+        </FrameLayout>
+
+
     </android.support.v7.widget.CardView>
 </RelativeLayout>

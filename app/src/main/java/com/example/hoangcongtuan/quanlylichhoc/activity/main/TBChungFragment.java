@@ -30,7 +30,7 @@ public class TBChungFragment extends Fragment implements RVPostAdapter.ILoadMore
     private ImageView img_empty_state;
     private LoadFeedHelper loadPostHelper;
     //if hash not null, scroll to new feed has hashkey == hash
-    private String hash;
+    private String hash = "";
     private boolean isScrollTo = false;
     private boolean isEmptyState = false;
 
@@ -86,6 +86,9 @@ public class TBChungFragment extends Fragment implements RVPostAdapter.ILoadMore
         img_empty_state = getView().findViewById(R.id.img_empty_state);
         tbChungAdapter = new RVPostAdapter(recyclerView, getContext());
         recyclerView.setAdapter(tbChungAdapter);
+
+        if (!hash.isEmpty())
+            tbChungAdapter.highLightPost(hash);
     }
 
     /**

@@ -28,7 +28,7 @@ public class TBHocPhanFragment extends Fragment implements RVPostAdapter.ILoadMo
     private RecyclerView recyclerView;
     private LoadFeedHelper loadPostHelper;
     private ImageView img_empty_state;
-    private String hash;
+    private String hash = "";
     private boolean isScrollTo = false;
     private boolean isEmptyState = false;
 
@@ -50,6 +50,9 @@ public class TBHocPhanFragment extends Fragment implements RVPostAdapter.ILoadMo
         RVPostAdapter hocPhanAdapter = new RVPostAdapter(recyclerView, getContext());
         img_empty_state = rootView.findViewById(R.id.img_empty_state);
         recyclerView.setAdapter(hocPhanAdapter);
+
+        if (!hash.isEmpty())
+            hocPhanAdapter.highLightPost(hash);
 
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         DatabaseReference tbHPhanRef = database.child("lop_hoc_phan/data/");
