@@ -53,6 +53,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setAutoCancel(true)
                 .setContentText(msg.getData().get("body"))
                 .setSound(notificationSound)
+                .setWhen(Long.valueOf(msg.getData().get("timestamp")))
                 .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText(msg.getData().get("body")))

@@ -17,12 +17,26 @@ import com.example.hoangcongtuan.quanlylichhoc.activity.base.BaseActivity;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 
+import io.github.inflationx.calligraphy3.CalligraphyConfig;
+import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
+import io.github.inflationx.viewpump.ViewPump;
+
 public class AboutActivity extends BaseActivity {
     private final static String TITLE = "About";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Calligraphy
+        ViewPump.init(ViewPump.builder()
+                .addInterceptor(new CalligraphyInterceptor(
+                        new CalligraphyConfig.Builder()
+                                .setDefaultFontPath("fonts/SourceSansPro-Light.ttf")
+                                .setFontAttrId(R.attr.fontPath)
+                                .build()
+                )).build());
+
         setContentView(R.layout.activity_about);
 
         MaterialViewPager mViewPager = findViewById(R.id.materialViewPager);

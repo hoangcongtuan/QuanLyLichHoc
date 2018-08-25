@@ -29,62 +29,45 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_margin="16dp">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:textColor="@android:color/white"
-                    android:background="@color/blueGrey"
-                    android:text="@string/about.about"
-                    android:textAllCaps="true"
-                    android:textAlignment="center"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/blueGrey"
-                    android:text="@string/about.app_description"
-                    android:textSize="@dimen/textSizeSmall"
-                    android:textAlignment="center"
-                    android:layout_marginBottom="8dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="@string/about.app_description"
+                    android:textSize="@dimen/textSizeSmall"
+                    android:textAlignment="center"
+                    android:layout_marginBottom="16dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:background="@color/blueGrey"
                     android:layout_gravity="center_vertical"
                     android:textSize="@dimen/textSizeSmall"
-                    android:textColor="@android:color/white"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
                     android:text="@string/about.team_member"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/blueGrey"
-                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginBottom="16dp"
                     android:textAlignment="center"
                     android:textSize="@dimen/textSizeSmall"
-                    android:text="@string/about.members"/>
+                    android:text="@string/about.members" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
                     android:layout_marginBottom="8dp"
-                    android:background="@color/blueGrey"
-                    android:textColor="@android:color/white"
-                    android:text="@string/about.contact"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"/>
+                    android:textColor="@color/colorPrimary"
+                    android:text="@string/about.contact"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/about.email"
-                    android:textColor="@color/blueGrey"
+                    android:textColor="@color/colorPrimary"
                     android:textAlignment="center"
                     android:textSize="@dimen/textSizeSmall" />
             </LinearLayout>
