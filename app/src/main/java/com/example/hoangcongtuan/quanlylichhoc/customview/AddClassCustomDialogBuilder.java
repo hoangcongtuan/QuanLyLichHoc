@@ -80,9 +80,12 @@ public class AddClassCustomDialogBuilder extends AlertDialog.Builder {
         );
     }
 
-    public void setAutoCompleteList(ArrayList<String> lstId, ArrayList<String> lstName) {
-        ArrayAdapter<String> adapterMaHP = new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_custome, lstId);
-        ArrayAdapter<String> adapterTenHP = new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_custome, lstName);
+    public void setAutoCompleteList() {
+        ArrayList<String> listId = DBLopHPHelper.getsInstance().getListMaHP();
+        ArrayList<LopHP> listHP = DBLopHPHelper.getsInstance().getAllListHP();
+
+        ArrayAdapter<String> adapterMaHP = new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_custome, listId);
+        ArrayAdapter<LopHP> adapterTenHP = new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_custome, listHP);
 
         autoTenHP.setAdapter(adapterTenHP);
         autoMaHP.setAdapter(adapterMaHP);
@@ -100,7 +103,8 @@ public class AddClassCustomDialogBuilder extends AlertDialog.Builder {
         autoTenHP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                updateUI(DBLopHPHelper.getsInstance().getLopHPbyName(autoTenHP.getText().toString()));
+                LopHP lopHP = (LopHP) adapterView.getItemAtPosition(i);
+                updateUI(lopHP);
             }
         });
 

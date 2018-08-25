@@ -70,7 +70,6 @@ public class LopHP {
 
     @Override
     public String toString() {
-        return maHP + " - " + tenHP + " - "
-                + tenGV + " - " + tkb;
+        return tenHP + '\n' + maHP;
     }
 }
