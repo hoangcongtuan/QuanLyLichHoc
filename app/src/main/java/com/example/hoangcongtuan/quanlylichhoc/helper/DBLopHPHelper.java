@@ -243,6 +243,23 @@ public class DBLopHPHelper extends SQLiteOpenHelper {
         return lstTenHP;
     }
 
+    public ArrayList<LopHP> getAllListHP() {
+        ArrayList<LopHP> lstHP = new ArrayList<>();
+        Cursor cursor  = getAllLopHocPhan();
+        if(cursor.moveToFirst()) {
+            do {
+                String maHP = cursor.getString(cursor.getColumnIndex(ALL_HOCPHAN_COLUMN_MAHP));
+                String tenHP = cursor.getString(cursor.getColumnIndex(ALL_HOCPHAN_COLUMN_LOP_HOC_PHAN));
+                String tenGV = cursor.getString(cursor.getColumnIndex(ALL_HOCPHAN_COLUMN_GIANG_VIEN));
+                String tkb = cursor.getString(cursor.getColumnIndex(HOCPHAN_COLUMN_TKB));
+                lstHP.add(new LopHP(maHP, tenHP, tenGV, tkb));
+            }
+            while (cursor.moveToNext());
+        }
+        Utils.getsInstance(mContext).sortWithName(lstHP);
+        return lstHP;
+    }
+
     public Integer deleteLopHocPhan(String id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(ALL_HOCPHAN_TABLE_NAME,
