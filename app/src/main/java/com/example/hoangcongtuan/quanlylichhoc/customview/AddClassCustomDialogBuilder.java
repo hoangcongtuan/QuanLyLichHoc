@@ -80,9 +80,7 @@ public class AddClassCustomDialogBuilder extends AlertDialog.Builder {
         );
     }
 
-    public void setAutoCompleteList() {
-        ArrayList<String> listId = DBLopHPHelper.getsInstance().getListMaHP();
-        ArrayList<LopHP> listHP = DBLopHPHelper.getsInstance().getAllListHP();
+    public void setAutoCompleteList(ArrayList<String> listId, ArrayList<LopHP> listHP) {
 
         ArrayAdapter<String> adapterMaHP = new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_custome, listId);
         ArrayAdapter<LopHP> adapterTenHP = new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_custome, listHP);

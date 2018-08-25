@@ -174,7 +174,10 @@ public class RecognizeFragment extends Fragment implements RecyclerItemTouchHelp
 
     public void showAddLopHPDialog() {
         final AddClassCustomDialogBuilder addClassCustomDialogBuilder = new AddClassCustomDialogBuilder(getContext());
-        addClassCustomDialogBuilder.setAutoCompleteList();
+        addClassCustomDialogBuilder.setAutoCompleteList(
+                DBLopHPHelper.getsInstance().getListMaHP(),
+                DBLopHPHelper.getsInstance().getAllListHP()
+        );
         addClassCustomDialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
