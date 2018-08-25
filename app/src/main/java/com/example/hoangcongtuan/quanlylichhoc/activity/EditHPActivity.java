@@ -113,10 +113,7 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
     public void showAddLopHPDialog() {
         final AddClassCustomDialogBuilder addClassCustomDialogBuilder = new AddClassCustomDialogBuilder(this);
 
-        addClassCustomDialogBuilder.setAutoCompleteList(
-                DBLopHPHelper.getsInstance().getListMaHP(),
-                DBLopHPHelper.getsInstance().getListTenHP()
-        );
+        addClassCustomDialogBuilder.setAutoCompleteList();
 
         addClassCustomDialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
