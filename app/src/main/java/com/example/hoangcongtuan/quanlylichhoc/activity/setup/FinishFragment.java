@@ -240,7 +240,7 @@ public class FinishFragment extends Fragment implements View.OnClickListener,
         final AddClassCustomDialogBuilder addClassCustomDialogBuilder = new AddClassCustomDialogBuilder(getContext());
         addClassCustomDialogBuilder.setAutoCompleteList(
                 DBLopHPHelper.getsInstance().getListMaHP(),
-                DBLopHPHelper.getsInstance().getListTenHP()
+                DBLopHPHelper.getsInstance().getAllListHP()
         );
 
         addClassCustomDialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {

@@ -106,6 +106,14 @@ public class Utils {
             }
         });
     }
+    public void sortWithName(ArrayList<LopHP> lstLopHP) {
+        Collections.sort(lstLopHP, new Comparator<LopHP>() {
+            @Override
+            public int compare(LopHP lopHP, LopHP lopHP2) {
+                return lopHP.toString().compareTo(lopHP2.toString());
+            }
+        });
+    }
 
 
 

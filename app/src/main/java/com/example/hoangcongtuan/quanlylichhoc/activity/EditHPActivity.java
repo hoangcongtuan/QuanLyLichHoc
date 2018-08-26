@@ -115,7 +115,7 @@ public class EditHPActivity extends BaseActivity implements View.OnClickListener
 
         addClassCustomDialogBuilder.setAutoCompleteList(
                 DBLopHPHelper.getsInstance().getListMaHP(),
-                DBLopHPHelper.getsInstance().getListTenHP()
+                DBLopHPHelper.getsInstance().getAllListHP()
         );
 
         addClassCustomDialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
