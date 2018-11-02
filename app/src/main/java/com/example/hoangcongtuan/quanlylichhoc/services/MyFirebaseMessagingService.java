@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -30,12 +31,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         //check if contain data payload
         if (remoteMessage.getData().size() > 0) {
+            sendNotification(remoteMessage);
         }
-        //check if containt notification
-        if (remoteMessage.getNotification() != null) {
-        }
-        sendNotification(remoteMessage);
-
     }
 
 
@@ -55,6 +52,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSound(notificationSound)
                 .setWhen(Long.valueOf(msg.getData().get("timestamp")))
                 .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .setLargeIcon(BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.img_bkdn))
                 .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText(msg.getData().get("body")))
                 .setPriority(NotificationCompat.PRIORITY_HIGH);

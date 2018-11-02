@@ -48,12 +48,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -134,6 +139,37 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             tbChungFragment.show_empty_state();
             tbHPhanFragment.show_empty_state();
         }
+
+        //test callable functions
+        Utils.getsInstance(this).searchPost("chung", "google").addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "onComplete: success = " + task.getResult());
+                }
+                else {
+                    Log.d(TAG, "onComplete: Error");
+                }
+            }
+        });
+
+    }
+
+    //callable function
+    private Task<String> echoCallable(String text) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("text", text);
+        data.put("push", true);
+
+        return FirebaseFunctions.getInstance().getHttpsCallable("echoCallable")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, String>() {
+                    @Override
+                    public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        Map<String, Object> result = (Map<String, Object>) task.getResult().getData();
+                        return (String)result.get("TextReturn");
+                    }
+                });
     }
 
     /**

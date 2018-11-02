@@ -7,19 +7,26 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.hoangcongtuan.quanlylichhoc.R;
 import com.example.hoangcongtuan.quanlylichhoc.models.LopHP;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by hoangcongtuan on 9/15/17.
@@ -162,5 +169,29 @@ public class Utils {
         }
 
         return res;
+    }
+
+    public Task<String> searchPost(String category, String text) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("category", category);
+        data.put("text", text);
+        data.put("post", true);
+
+        return FirebaseFunctions.getInstance()
+                .getHttpsCallable("searchPost")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, String>() {
+                    @Override
+                    public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        if (task.isSuccessful()) {
+                            Map<String, Object> result = (Map<String, Object>) task.getResult().getData();
+                            return result.toString();
+                        }
+                        else {
+                            //TODO: Error handle
+                        }
+                        return "";
+                    }
+                });
     }
 }

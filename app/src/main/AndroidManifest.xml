@@ -84,21 +84,6 @@
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="ocr" />
-        <!--
-           Set custom default ic_app. This is used when no ic_app is set for incoming notification messages.
-           See README(https://goo.gl/l4GJaQ) for more.
-        -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_chat_white_24dp" />
-
-        <!--
-           Set color used with incoming notification messages. This is used when no color is set for the incoming
-           notification message. See README(https://goo.gl/6BKBk7) for more.
-        -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorPrimary" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -120,6 +105,22 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <!--
+          Set custom default ic_app. This is used when no ic_app is set for incoming notification messages.
+          See README(https://goo.gl/l4GJaQ) for more.
+       -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_chat_white_24dp" />
+
+        <!--
+           Set color used with incoming notification messages. This is used when no color is set for the incoming
+           notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimary" />
 
         <service
             android:name=".services.ReminderService"
